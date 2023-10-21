@@ -1,0 +1,50 @@
+<div>
+    <table>
+        <tr>
+            <th>Status</th>
+            <th>Cover</th>
+            <th>Name</th>
+            <th>Format</th>
+            <th>Volume</th>
+            <th>Cost</th>
+            <th>Store</th>
+            <th>Date</th>
+            <th>Read</th>
+            <th></th>
+        </tr>
+        <tr *ngFor="let volume of volumes$ | async" class="volume-row"
+            (mouseover)="volume.hovered = true"
+            (mouseleave)="volume.hovered = false">
+            <td>
+                <p>{{volume.state}}</p>
+            </td>
+            <td>
+                <img [src]="volume.primary_cover" class="volume-cover">
+            </td>
+            <td>
+                <p class="volume-title">{{volume.name}}</p>
+            </td>
+            <td>
+                <p>{{volume.format}}</p>
+            </td>
+            <td>
+                <p>Volume {{volume.volume}}</p>
+            </td>
+            <td>
+                <p>{{volume.cost | currency}} | {{volume.merchant}}</p>
+            </td>
+            <td>
+                <p>{{volume.merchant}}</p>
+            </td>
+            <td>
+                <p>{{volume.purchaseDate}}</p>
+            </td>
+            <td>
+                <p>{{volume.read}}</p>
+            </td>
+            <td>
+                <button class="menu-button" [hidden]="!volume.hovered" [@fade]="volume.hovered" (click)="edit(volume)">...</button>
+            </td>
+        </tr>
+    </table>
+</div>

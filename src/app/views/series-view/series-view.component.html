@@ -1,0 +1,13 @@
+<div style="justify-content: left;">
+    <div *ngFor="let series of series$ | async" class="series-item">
+        <img [src]="series.cover" style="max-width: 16em; height: fit-content; max-height: 28vh; border-radius: 5px; box-shadow: 2px 2px 14px 1px rgb(0 0 0 / 56%);">
+        <div style="margin-left: 14px">
+            <span style="font-size: 1.5em; font-weight: bold; color: #dfdfdf">{{series.title}} {{series.format}}</span>
+            <div style="display: flex; flex-wrap: wrap;">
+                <div class="series-volume" *ngFor="let vol of series.volumes" [ngStyle]="getVolumeStyle(vol)">
+                    {{vol.volume}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
