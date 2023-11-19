@@ -5,7 +5,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 })
 export class AuthorizerService {
 
-  userIDs = ['f69c759a-00dd-4dbe-8e58-96cd7a05969e'];
+  userIDs = [''];
 
   activeUser: string | null = null;
   isAuthorized = false;

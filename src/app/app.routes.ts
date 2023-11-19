@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { CollectionComponent } from './page-components/collection/collection.component';
 import { SeriesViewComponent } from './views/series-view/series-view.component';
 import { ListViewComponent } from './views/list-view/list-view.component';

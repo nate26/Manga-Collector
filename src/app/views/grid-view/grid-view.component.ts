@@ -1,6 +1,6 @@
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IManga } from '../../interfaces/iManga.interface';
 
@@ -23,7 +23,7 @@ import { IManga } from '../../interfaces/iManga.interface';
         ])
     ]
 })
-export class GridViewComponent implements OnInit {
+export class GridViewComponent {
 
     @Input()
     volumes$!: Observable<IManga[]>;
@@ -32,9 +32,6 @@ export class GridViewComponent implements OnInit {
     editVolume = new EventEmitter<IManga>();
 
     constructor() { }
-
-    ngOnInit(): void {
-    }
 
     edit(vol: IManga) {
         this.editVolume.emit(vol)

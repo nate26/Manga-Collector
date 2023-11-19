@@ -12,7 +12,7 @@ import { ICollectionResponse } from '../interfaces/iCollection.interface';
 })
 export class CollectionService {
 
-    private serviceURL = 'http://localhost:8050'; //'https://syrrzyi0qf.execute-api.us-east-2.amazonaws.com/v1';
+    private serviceURL = 'http://localhost:8050';
     private defaultCoverURL = 'https://drupal.nypl.org/sites-drupal/default/files/styles/medium/public/blogs/sJ3CT4V.gif';
 
     defaultSeries = { title: 'Unknown', series_id: 'unknown', editions: {} };
@@ -20,11 +20,11 @@ export class CollectionService {
 
     constructor(private http: HttpClient, private authorizer: AuthorizerService) { }
 
-    addItems(items: any[], newItems: boolean): Observable<any[]> {
+    addItems(items: any[]): Observable<any[]> {
         if (this.authorizer.isUserAuthorized() && items && items.length > 0) {
             // return this.http.post<CollectionData[]>(this.serviceURL + '/add-collection', items.map(item => {
             //     const record =  {
-            //         user_id: 'f69c759a-00dd-4dbe-8e58-96cd7a05969e',
+            //         user_id: '',
             //         isbn: item.isbn,
             //         state: item.state,
             //         purchaseDate: item.purchaseDate,
@@ -108,9 +108,9 @@ export class CollectionService {
         return this.http.get<ICollectionResponse>(this.serviceURL + '/user-collection?user_id=' + userId).pipe(
             share(),
             tap(console.log),
-            catchError((err: any, caught: Observable<ICollectionResponse>) => {
+            catchError((err: Error) => {
                 alert('Could not get Library... ' + err)
-                return throwError(() => new Error(err));
+                return throwError(() => new Error(err.message)); // validate
             })
         );
     }

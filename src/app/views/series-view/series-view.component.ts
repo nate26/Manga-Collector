@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IManga } from '../../interfaces/iManga.interface';
 import { ISeriesEditionParsed } from '../../interfaces/iSeries.interface';
@@ -11,7 +11,7 @@ import { ISeriesEditionParsed } from '../../interfaces/iSeries.interface';
     templateUrl: './series-view.component.html',
     styleUrl: './series-view.component.css'
 })
-export class SeriesViewComponent implements OnInit {
+export class SeriesViewComponent {
 
     @Input()
     series$!: Observable<ISeriesEditionParsed[]>;
@@ -20,9 +20,6 @@ export class SeriesViewComponent implements OnInit {
     editVolume = new EventEmitter<IManga>();
 
     constructor() { }
-
-    ngOnInit(): void {
-    }
 
     getVolumeStyle(vol: IManga) {
         const style = {

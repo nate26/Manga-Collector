@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IManga } from '../../interfaces/iManga.interface';
 
@@ -10,7 +10,7 @@ import { IManga } from '../../interfaces/iManga.interface';
     templateUrl: './list-view.component.html',
     styleUrl: './list-view.component.css'
 })
-export class ListViewComponent implements OnInit {
+export class ListViewComponent {
 
     @Input()
     volumes$!: Observable<IManga[]>;
@@ -19,9 +19,6 @@ export class ListViewComponent implements OnInit {
     editVolume = new EventEmitter<IManga>();
 
     constructor() { }
-
-    ngOnInit(): void {
-    }
 
     edit(vol: IManga) {
         this.editVolume.emit(vol)

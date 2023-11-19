@@ -14,12 +14,13 @@
         </tr>
         <tr *ngFor="let volume of volumes$ | async" class="volume-row"
             (mouseover)="volume.hovered = true"
+            (focus)="volume.hovered = true"
             (mouseleave)="volume.hovered = false">
             <td>
                 <p>{{volume.state}}</p>
             </td>
             <td>
-                <img [src]="volume.primary_cover" class="volume-cover">
+                <img [src]="volume.primary_cover" alt="primary cover image for the manga" class="volume-cover">
             </td>
             <td>
                 <p class="volume-title">{{volume.name}}</p>
