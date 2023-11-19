@@ -8,7 +8,7 @@ describe('ListViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListViewComponent ]
+      imports: [ ListViewComponent ]
     })
     .compileComponents();
 

@@ -1,12 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IManga } from 'src/app/interfaces/iManga.interface';
-import { ISeriesEditionParsed } from 'src/app/interfaces/iSeries.interface';
+import { IManga } from '../../interfaces/iManga.interface';
+import { ISeriesEditionParsed } from '../../interfaces/iSeries.interface';
 
 @Component({
     selector: 'app-series-view',
+    standalone: true,
+    imports: [CommonModule],
     templateUrl: './series-view.component.html',
-    styleUrls: ['./series-view.component.css']
+    styleUrl: './series-view.component.css'
 })
 export class SeriesViewComponent implements OnInit {
 

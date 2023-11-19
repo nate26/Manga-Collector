@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CollectionService } from 'src/app/services/collection.service';
-import { IManga } from 'src/app/interfaces/iManga.interface';
-import { ISeriesEditionParsed } from 'src/app/interfaces/iSeries.interface';
+import { IManga } from '../../interfaces/iManga.interface';
+import { ISeriesEditionParsed } from '../../interfaces/iSeries.interface';
+import { CollectionService } from '../../services/collection.service';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 
 export enum EViewLayout {
     SERIES, TABLE, VOLUME
@@ -10,8 +12,10 @@ export enum EViewLayout {
 
 @Component({
     selector: 'app-collection',
+    standalone: true,
+    imports: [CommonModule, RouterOutlet],
     templateUrl: './collection.component.html',
-    styleUrls: ['./collection.component.css']
+    styleUrl: './collection.component.css'
 })
 export class CollectionComponent implements OnInit {
 

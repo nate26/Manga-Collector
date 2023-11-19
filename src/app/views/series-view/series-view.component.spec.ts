@@ -8,7 +8,7 @@ describe('SeriesViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SeriesViewComponent ]
+      imports: [ SeriesViewComponent ]
     })
     .compileComponents();
 

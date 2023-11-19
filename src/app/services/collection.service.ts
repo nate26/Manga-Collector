@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, EMPTY, map, Observable, tap, of, throwError, share } from 'rxjs';
-import { CollectionData } from '../../../archive/app.models';
+// import { CollectionData } from '../../../archive/app.models';
 import { AuthorizerService } from './authorizer.service';
 import { ISeriesEditionParsed } from '../interfaces/iSeries.interface';
 import { IManga } from '../interfaces/iManga.interface';
@@ -20,7 +20,7 @@ export class CollectionService {
 
     constructor(private http: HttpClient, private authorizer: AuthorizerService) { }
 
-    addItems(items: any[], newItems: boolean): Observable<CollectionData[]> {
+    addItems(items: any[], newItems: boolean): Observable<any[]> {
         if (this.authorizer.isUserAuthorized() && items && items.length > 0) {
             // return this.http.post<CollectionData[]>(this.serviceURL + '/add-collection', items.map(item => {
             //     const record =  {

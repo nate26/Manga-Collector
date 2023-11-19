@@ -1,12 +1,15 @@
 import { trigger, transition, style, animate } from '@angular/animations';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IManga } from 'src/app/interfaces/iManga.interface';
+import { IManga } from '../../interfaces/iManga.interface';
 
 @Component({
     selector: 'app-grid-view',
+    standalone: true,
+    imports: [CommonModule],
     templateUrl: './grid-view.component.html',
-    styleUrls: ['./grid-view.component.css'],
+    styleUrl: './grid-view.component.css',
     animations: [
         trigger('fade', [
             transition('false => true', [

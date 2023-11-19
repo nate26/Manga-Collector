@@ -1,11 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IManga } from 'src/app/interfaces/iManga.interface';
+import { IManga } from '../../interfaces/iManga.interface';
 
 @Component({
     selector: 'app-list-view',
+    standalone: true,
+    imports: [CommonModule],
     templateUrl: './list-view.component.html',
-    styleUrls: ['./list-view.component.css']
+    styleUrl: './list-view.component.css'
 })
 export class ListViewComponent implements OnInit {
 
