@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter } from '@angular/core';
 import { IManga } from '../../interfaces/iManga.interface';
-import { ISeriesEditionParsed } from '../../interfaces/iSeries.interface';
+import { CollectionService } from '../../services/collection.service';
 
 @Component({
     selector: 'app-series-view',
@@ -13,13 +12,12 @@ import { ISeriesEditionParsed } from '../../interfaces/iSeries.interface';
 })
 export class SeriesViewComponent {
 
-    @Input()
-    series$!: Observable<ISeriesEditionParsed[]>;
+    series$ = this.collectionService.collectionAsSeries$;
 
-    @Output()
+    // put edit in service smh
     editVolume = new EventEmitter<IManga>();
 
-    constructor() { }
+    constructor(private collectionService: CollectionService) { }
 
     getVolumeStyle(vol: IManga) {
         const style = {

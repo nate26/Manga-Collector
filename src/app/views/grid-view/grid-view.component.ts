@@ -1,8 +1,8 @@
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter } from '@angular/core';
 import { IManga } from '../../interfaces/iManga.interface';
+import { CollectionService } from '../../services/collection.service';
 
 @Component({
     selector: 'app-grid-view',
@@ -25,13 +25,12 @@ import { IManga } from '../../interfaces/iManga.interface';
 })
 export class GridViewComponent {
 
-    @Input()
-    volumes$!: Observable<IManga[]>;
+    protected readonly volumes$ = this.collectionService.collectionAsVolume$;
 
-    @Output()
+    // put edit in service smh
     editVolume = new EventEmitter<IManga>();
 
-    constructor() { }
+    constructor(private collectionService: CollectionService) { }
 
     edit(vol: IManga) {
         this.editVolume.emit(vol)

@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component } from '@angular/core';
 import { IManga } from '../../interfaces/iManga.interface';
-import { ISeriesEditionParsed } from '../../interfaces/iSeries.interface';
 import { CollectionService } from '../../services/collection.service';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 
 export enum EViewLayout {
     SERIES, TABLE, VOLUME
@@ -13,32 +11,18 @@ export enum EViewLayout {
 @Component({
     selector: 'app-collection',
     standalone: true,
-    imports: [CommonModule, RouterOutlet],
+    imports: [CommonModule, RouterOutlet, RouterModule],
     templateUrl: './collection.component.html',
     styleUrl: './collection.component.css'
 })
-export class CollectionComponent implements OnInit {
+export class CollectionComponent {
 
-    userId = ''; //TODO CHANGE
-
-    series$!: Observable<ISeriesEditionParsed[]>;
-    volumes$!: Observable<IManga[]>;
-
-    viewLayout: EViewLayout = EViewLayout.SERIES;
-
-    constructor(private collectionService: CollectionService) { }
-
-    ngOnInit(): void {
-        this.volumes$ = this.collectionService.getCollectionAsVolume(this.userId);
-        this.series$ = this.collectionService.getCollectionAsSeries(this.userId);
+    constructor(private collectionService: CollectionService) {
+        collectionService.userId$.next('1234')
     }
 
     editVolume(vol: (IManga)) {
         console.log(vol)
-    }
-
-    setView(layout: EViewLayout) {
-        this.viewLayout = layout;
     }
 
 }

@@ -1,11 +1,12 @@
-<div>
-    <div *ngFor="let volume of volumes$ | async" class="volume-item"
-        (mouseover)="volume.hovered = true"
-        (focus)="volume.hovered = true"
+<div class="flex-wrap">
+    @for (volume of volumes$ | async; track volume.id) {
+    <div class="volume-item" (mouseover)="volume.hovered = true" (focus)="volume.hovered = true"
         (mouseleave)="volume.hovered = false">
         <div class="volume-read" *ngIf="volume.read">Read</div>
-        <button class="menu-button" [hidden]="!volume.hovered" [@fade]="volume.hovered" (click)="edit(volume)">...</button>
-        <img [src]="volume.primary_cover" alt="primary cover image for the manga" class="volume-cover">
+        <button class="menu-button" [hidden]="!volume.hovered" [@fade]="volume.hovered"
+            (click)="edit(volume)">...</button>
+        <img [src]="volume.primary_cover" alt="Primary cover image for {{volume.name}}"
+            class="volume-cover">
         <div class="volume-info">
             <div class="volume-title">{{volume.name}}</div>
             <div class="volume-info-content">
@@ -20,4 +21,5 @@
             </div>
         </div>
     </div>
+    }
 </div>

@@ -13,6 +13,8 @@ logger = MangaLogger(host, __name__)
 data = Data(host)
 collection = Collection(host)
 
+# todo, create log folder automatically on first load
+
 @app.route('/get-library', methods=['GET'])
 def get_library():
     try:
@@ -26,7 +28,7 @@ def get_collection():
     try:
         user_id = request.args.get('user_id')
         return jsonify(collection.get_collection(user_id))
-    except e:
+    except:
         logger.error('Failed to get collection data for ' + user_id, traceback.format_exc())
         return Response('Failed to get collection data for ' + user_id + '... \n' + traceback.format_exc(), 500)
 
