@@ -28,7 +28,7 @@
                         <div style="width: 13%; font-size: 9pt;">
                             <!-- selectedVol ? selectedVol.primary_cover :  -->
                             <img [src]="series.cover" alt="Primary cover image for {{series.title}}"
-                                style="width: 110px; height: 150px; object-fit: cover; border-radius: 5px; box-shadow: 2px 2px 14px 1px rgb(0 0 0 / 56%);">
+                                style="width: 120px; height: 170px; object-fit: cover; border-radius: 5px; box-shadow: 2px 2px 14px 1px rgb(0 0 0 / 56%);">
                             @if (selectedVol) {
                                 <p style="text-align: center;">{{selectedVol.isbn}}</p>
                                 <p><span style="font-weight: bold">Author:</span> {{selectedVol.author}}</p>
@@ -69,12 +69,19 @@
                             }
                         </div>
                         @if (selectedVol && selectedVol.updated) {
-                            <div style="width: 20%;">
-                                <p>{{selectedVol.state}}</p>
-                                <p>{{selectedVol.cost | currency}}</p>
-                                <p>{{selectedVol.merchant}}</p>
-                                <p>{{selectedVol.purchaseDate | date}}</p>
-                                <p>{{selectedVol.read}}</p>
+                            <div style="width: 20%; text-align: center; background-color: #35343b; border-radius: 10px; height: fit-content; padding: 8px 0;">
+                                <p>Purchase Details:</p>
+                                <div style="text-align: left; padding-left: 8px; font-size: 11pt;">
+                                    <p><span style="font-weight: bold">State:</span> {{selectedVol.state}}</p>
+                                    <p><span style="font-weight: bold">Cost:</span> {{selectedVol.cost | currency}}</p>
+                                    <p><span style="font-weight: bold">Store:</span> {{selectedVol.merchant}}</p>
+                                    <p><span style="font-weight: bold">Date:</span> {{selectedVol.purchaseDate | date}}</p>
+                                    <p>
+                                        <span style="font-weight: bold">Read:</span>
+                                        <mat-checkbox color="accent" [checked]="selectedVol.read" [disableRipple]="true"
+                                            (click)="$event.preventDefault()"></mat-checkbox>
+                                    </p>
+                                </div>
                             </div>
                         }
                     </div>

@@ -4,6 +4,7 @@ import { IManga } from '../../interfaces/iManga.interface';
 import { CollectionService } from '../../services/collection.service';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ISeriesEditionParsed } from '../../interfaces/iSeries.interface';
 
@@ -18,7 +19,7 @@ export interface TableColumn {
 @Component({
     selector: 'app-series-view',
     standalone: true,
-    imports: [CommonModule, CdkTableModule, MatButtonModule],
+    imports: [CommonModule, CdkTableModule, MatButtonModule, MatCheckboxModule],
     templateUrl: './series-view.component.html',
     styleUrl: './series-view.component.css',
     animations: [
