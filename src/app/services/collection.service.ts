@@ -32,8 +32,7 @@ export class CollectionService {
     readonly collectionAsVolume$ = this._collection$.pipe(
         map((data: ICollectionResponse) => {
             return this.sortVolumes(
-                // todo remove slice
-                data.lists.volumes.slice(0, 200).map(isbn => data.ref.volume_data[isbn]).map(vol => {
+                data.lists.volumes.map(isbn => data.ref.volume_data[isbn]).map(vol => {
                     vol.primary_cover = this.getPrimaryCoverImage(vol);
                     return vol;
                 }),

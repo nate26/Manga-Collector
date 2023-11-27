@@ -1,16 +1,90 @@
-<div style="justify-content: left;">
-    @for (series of series$ | async; track series.edition_id) {
-    <div class="series-item">
-        <img [src]="series.cover" alt="Primary cover image for {{series.title}}"
-            style="max-width: 16em; height: fit-content; max-height: 28vh; border-radius: 5px; box-shadow: 2px 2px 14px 1px rgb(0 0 0 / 56%);">
-        <div style="margin-left: 14px">
-            <span style="font-size: 1.5em; font-weight: bold; color: #dfdfdf">{{series.title}} {{series.format}}</span>
-            <div style="display: flex; flex-wrap: wrap;">
-                <div class="series-volume" *ngFor="let vol of series.volumes" [ngStyle]="getVolumeStyle(vol)">
-                    {{vol.volume}}
-                </div>
-            </div>
-        </div>
-    </div>
+<table cdk-table [dataSource]="series" multiTemplateDataRows>
+
+    @for (column of seriesColumns; track column.key) {
+        <ng-container cdkColumnDef="{{column.key}}">
+            <th cdk-header-cell *cdkHeaderCellDef [style.text-align]="column.align">
+                <p>{{column.header}}</p>
+            </th>
+            <td cdk-cell *cdkCellDef="let series" class="table-row" [ngStyle]="column.style" [style.text-align]="column.align">
+                @switch (column.render) {
+                    @case ('image') {
+                        <img [src]="series.cover" alt="Primary cover image for {{series.edition}}" class="volume-cover">
+                    }
+                    @default {
+                        <p>{{series[column.key]}}</p>
+                    }
+                }
+                
+            </td>
+        </ng-container>
     }
-</div>
+
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container cdkColumnDef="volumes">
+        <td cdk-cell *cdkCellDef="let series" [attr.colspan]="seriesColumns.length">
+            <!-- @if (series === expandedElement) { -->
+                <div [@detailExpand]="series === expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden;">
+                    <div class="flex-wrap" style="padding: 10px;">
+                        <div style="width: 13%; font-size: 9pt;">
+                            <!-- selectedVol ? selectedVol.primary_cover :  -->
+                            <img [src]="series.cover" alt="Primary cover image for {{series.title}}"
+                                style="width: 110px; height: 150px; object-fit: cover; border-radius: 5px; box-shadow: 2px 2px 14px 1px rgb(0 0 0 / 56%);">
+                            @if (selectedVol) {
+                                <p style="text-align: center;">{{selectedVol.isbn}}</p>
+                                <p><span style="font-weight: bold">Author:</span> {{selectedVol.author}}</p>
+                                <p><span style="font-weight: bold">Artist:</span> {{selectedVol.artist}}</p>
+                                <p><span style="font-weight: bold">Retail Price:</span> {{selectedVol.retail_price | currency}}</p>
+                                <p><span style="font-weight: bold">Rated:</span> {{selectedVol.age_rating}}</p>
+                                <p><span style="font-weight: bold">Page Count:</span>{{selectedVol.page_count}}</p>
+                                <button mat-button color="primary">Search Series</button> <!-- TODO -->
+                            }
+                        </div>
+                        <div style="margin-left: 10px; font-size: 11pt; color: #dfdfdf" [style.width]="selectedVol?.updated ? '65%' : '84%'">
+                            <span style="font-size: 16pt; font-weight: bold">
+                                {{series.title}}
+                            </span>
+                            <span style="font-size: 14pt;">
+                                &ndash; {{series.format}}
+                                @if (selectedVol && selectedVol.volume) {
+                                    {{selectedVol.volume}}
+                                }
+                            </span>
+                            <div class="flex-wrap">
+                                @for (vol of series.volumes; track vol.id) {
+                                    <button mat-button class="series-volume" [ngStyle]="getVolumeStyle(vol)"
+                                        [style.border]="selectedVol === vol ? '2px solid #566878' : 'none'" (click)="selectedVol = vol">
+                                        {{vol.volume}}
+                                    </button>
+                                }
+                            </div>
+                            @if (selectedVol) {
+                                <p>{{selectedVol.description}}</p>
+                                <p><span style="font-weight: bold">Genres:</span> {{selectedVol.genres.join(', ')}}</p>
+                                <p><span style="font-weight: bold">Themes:</span> {{selectedVol.themes.join(', ')}}</p>
+                                <p><span style="font-weight: bold">Publisher:</span> {{selectedVol.publisher}}</p>
+                                <p><span style="font-weight: bold">Released:</span> {{selectedVol.release_date | date}}</p>
+                            }
+                            @else {
+                                <p>Looks like we don't have any volumes for this one yet...</p>
+                            }
+                        </div>
+                        @if (selectedVol && selectedVol.updated) {
+                            <div style="width: 20%;">
+                                <p>{{selectedVol.state}}</p>
+                                <p>{{selectedVol.cost | currency}}</p>
+                                <p>{{selectedVol.merchant}}</p>
+                                <p>{{selectedVol.purchaseDate | date}}</p>
+                                <p>{{selectedVol.read}}</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            <!-- } -->
+        </td>
+    </ng-container>
+
+    <tr cdk-header-row *cdkHeaderRowDef="seriesColumnKeys"></tr>
+    <tr cdk-row *cdkRowDef="let row; columns: seriesColumnKeys;" [class.expanded-row]="expandedElement === row"
+        (click)="setExpanded(row)"></tr>
+    <tr cdk-row *cdkRowDef="let vols; columns: ['volumes']"></tr>
+</table>

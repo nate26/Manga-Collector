@@ -1,4 +1,4 @@
-<div class="flex-wrap">
+<div class="flex-wrap" style="justify-content: center;">
     @for (volume of volumes$ | async; track volume.id) {
     <div class="volume-item" (mouseover)="volume.hovered = true" (focus)="volume.hovered = true"
         (mouseleave)="volume.hovered = false">
