@@ -7,11 +7,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ISeriesEditionParsed } from '../../interfaces/iSeries.interface';
+import { CoverImageSlideshowComponent } from '../../common/cover-image-slideshow/cover-image-slideshow.component';
+import { FormsModule } from '@angular/forms';
 
 export interface TableColumn {
     header: string;
     key: string;
     align: string;
+    width?: string;
     style?: () => { [key: string]: string };
     render?: 'text' | 'image' | 'checkbox';
 }
@@ -19,7 +22,7 @@ export interface TableColumn {
 @Component({
     selector: 'app-series-view',
     standalone: true,
-    imports: [CommonModule, CdkTableModule, MatButtonModule, MatCheckboxModule],
+    imports: [CommonModule, FormsModule, CdkTableModule, MatButtonModule, MatCheckboxModule, CoverImageSlideshowComponent],
     templateUrl: './series-view.component.html',
     styleUrl: './series-view.component.css',
     animations: [
@@ -33,7 +36,6 @@ export interface TableColumn {
 export class SeriesViewComponent {
 
     series$ = this.collectionService.collectionAsSeries$;
-    series: ISeriesEditionParsed[] = []
 
     expandedElement!: ISeriesEditionParsed | null;
     selectedVol!: IManga | null;
@@ -43,6 +45,7 @@ export class SeriesViewComponent {
             header: '',
             key: 'cover',
             align: 'center',
+            width: '50px',
             render: 'image'
         },
         {
@@ -53,7 +56,8 @@ export class SeriesViewComponent {
         {
             header: 'Format',
             key: 'format',
-            align: 'center'
+            align: 'center',
+            width: '100px'
         }
     ];
     seriesColumnKeys = this.seriesColumns.map(col => col.key);
@@ -61,16 +65,15 @@ export class SeriesViewComponent {
     // put edit in service smh
     editVolume = new EventEmitter<IManga>();
 
-    constructor(private collectionService: CollectionService) {
-        this.series$.subscribe(data => this.series = data)
-    }
+    constructor(private collectionService: CollectionService) { }
 
     getVolumeStyle(vol: IManga) {
         const style = {
             background: '',
             color: 'black',
             border: '',
-            'text-shadow': ''
+            'text-shadow': '',
+            'box-shadow': ''
         }
         if (vol.state == 'Pre-Order') style.background = '#f3b16b';
         else if (vol.state == 'Shipping') style.background = '#ff8d8d';
@@ -85,12 +88,18 @@ export class SeriesViewComponent {
         else if (vol.stock_status == 'Out of Print') style.background = '#a3a3a3';
         else style.background = '#ebebeb';
 
-
-
         if ((new Date(vol.release_date)) > (new Date())) style.color = '#e69138';
 
         if (vol.is_on_sale && !vol.purchaseDate) style.border = '3px solid rgb(219 85 85 / 60%)';
+
+        if (this.selectedVol === vol) {
+            style['box-shadow'] = '0px 0px 2px 2px #f5f5f5bf'
+        }
         return style;
+    }
+
+    getAttr(item: ISeriesEditionParsed, column: TableColumn): unknown {
+        return item[column.key as keyof ISeriesEditionParsed]
     }
 
     edit(vol: IManga) {

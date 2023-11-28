@@ -37,7 +37,7 @@ export class CollectionService {
                     return vol;
                 }),
                 data
-            );
+            ).slice(0,50);
         })
     );
 
@@ -114,13 +114,13 @@ export class CollectionService {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private getPrimaryCoverImage(vol: IManga): string {
-        // if (!vol) return this.defaultCoverURL;
+        if (!vol) return this.defaultCoverURL;
         // // move to service
         const covers = vol.cover_images ? vol.cover_images : [];
         const primary = covers.find(cover => cover.name == 'primary');
-        // return primary ? primary.url : (covers.length > 0 ? covers[0].url : this.defaultCoverURL);
-        const img = 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/nx99022-Hh2WdyNgR8HM.jpg';
-        return primary ? img : this.defaultCoverURL;
+        return primary ? primary.url.replace('www','legacy') : (covers.length > 0 ? covers[0].url.replace('www','legacy') : this.defaultCoverURL);
+        // const img = 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/nx99022-Hh2WdyNgR8HM.jpg';
+        // return primary ? img : this.defaultCoverURL;
     }
 
     private sortVolumes(manga: IManga[], data: ICollectionResponse): IManga[] {

@@ -4,10 +4,12 @@
     min-width: 28px;
     margin: 5px;
     text-align: center;
-    box-shadow: 2px 2px 14px 1px rgb(0 0 0 / 56%);
+    box-shadow: 1px 1px 4px 1px var(--shadow-color);
     font-family: var(--manga-font);
     font-size: 12pt;
+    line-height: 12pt;
     padding: 0 8px 0 9px;
+    border: 1px solid var(--tile-border-color);
 }
 
 table {
@@ -18,7 +20,7 @@ table {
 
 th, td {
     font-family: var(--manga-font);
-    color: #dfdfdf;
+    color: var(--text-color);
 }
 
 td:first-child {
@@ -39,17 +41,11 @@ tr.expanded-row td:last-child {
     border-bottom-right-radius: 0px;
 }
 
-/* td:last-child:has(> tr[class="expanded-row"]) {
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-} */
-
 .table-row {
     padding: 0 4px;
     font-size: 11pt;
-    background-color: #35343b;
+    background-color: var(--element-bg-color);
     cursor: pointer;
-    /* rgb(58, 58, 58); #3d3950*/
 }
 
 p {
@@ -63,5 +59,36 @@ p {
     object-fit: cover;
     border-radius: 6px;
     margin-top: 4px;
-    border: 1.5px solid #3b374f;
+    border: 1.5px solid var(--tile-border-color);
+}
+
+.sale-chip {
+    width: -moz-fit-content;
+    width: fit-content;
+    border: 2px solid rgb(50 94 73);
+    color: rgb(60 82 72);
+    font-size: 10pt;
+    padding: 0px 6px;
+    border-radius: 5px;
+    background-color: rgb(138 218 180);
+    line-height: 18px;
+    height: fit-content;
+    box-shadow: 1px 1px 3px 1px var(--shadow-color);
+}
+
+hr {
+    margin: 0.5em;
+    border-color: darkgray;
+}
+
+.store-status {
+    font-size: 9pt;
+    padding: 0;
+    margin: 0 8px;
+}
+
+.add-button {
+    margin: 4px 8px;
+    width: calc(100% - 16px);
+    font-size: 8pt;
 }
