@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 *.pyc
 *.log
+bin/database/database_conf.json

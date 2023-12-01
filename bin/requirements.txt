@@ -1,0 +1,6 @@
+ariadne
+flask
+flask-cors
+flask-sqlalchemy
+psycopg2
+sqlalchemy_json

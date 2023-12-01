@@ -1,0 +1,104 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type CoverImage {
+    name: String!
+    url: String!
+}
+
+type MangaRecord {
+    isbn: ID!
+    record_added_date: String!
+    record_updated_date: String!
+    name: String!
+    format: String!
+    volume: String
+    primary_cover_image_url: String
+    other_images: [CoverImage]
+    series: String
+    artist: String
+    author: String
+    description: String
+    genres: [String]
+    themes: [String]
+    publisher: String!
+    age_rating: String
+    age_rating_bucket: String
+    page_count: Int
+    adult: Boolean!
+    weight: Float
+    url_component: String!
+    image_not_final: Boolean!
+    retail_price: Float
+    release_date: String
+    reprint_date: String
+    pre_book_date: String
+    series_id: String
+    edition_id: String
+}
+
+type MangaRecordResult {
+    success: Boolean!
+    errors: [String]
+    manga_record: MangaRecord
+}
+
+type MangaRecordsResult {
+    success: Boolean!
+    errors: [String]
+    manga_records: [MangaRecord]
+}
+
+type Query {
+    list_manga_records: MangaRecordsResult!
+    get_manga_record(m_id: ID!): MangaRecordResult!
+}
+
+input CoverImageInput {
+    name: String!
+    url: String!
+}
+
+input MangaRecordInput {
+    isbn: ID!
+    record_added_date: String
+    record_updated_date: String
+    name: String
+    format: String
+    volume: String
+    primary_cover_image_url: String
+    other_images: [CoverImageInput]
+    series: String
+    artist: String
+    author: String
+    description: String
+    genres: [String]
+    themes: [String]
+    publisher: String
+    age_rating: String
+    age_rating_bucket: String
+    page_count: Int
+    adult: Boolean
+    weight: Float
+    url_component: String
+    image_not_final: Boolean
+    retail_price: Float
+    release_date: String
+    reprint_date: String
+    pre_book_date: String
+    series_id: String
+    edition_id: String
+}
+
+type Mutation {
+    create_manga(
+        manga_input: MangaRecordInput!
+    ): MangaRecordResult!
+    update_manga(
+        m_id: ID!
+        manga_update: MangaRecordInput!
+    ): MangaRecordResult!
+    delete_manga(m_id: ID!): MangaRecordResult!
+}
