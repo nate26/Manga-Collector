@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError, EMPTY, map, Observable, tap, of, throwError, ReplaySubject, switchMap, shareReplay } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { catchError, EMPTY, map, Observable, tap, of, throwError, switchMap, shareReplay, filter } from 'rxjs';
 import { AuthorizerService } from './authorizer.service';
 import { ISeriesEditionParsed } from '../interfaces/iSeries.interface';
 import { IManga } from '../interfaces/iManga.interface';
@@ -17,9 +18,12 @@ export class CollectionService {
     defaultSeries = { title: 'Unknown', series_id: 'unknown', editions: {} };
     defaultEdition = { edition: 'Unknown', edition_id: 'unknown', format: 'Unknown', volumes: [] };
 
-    readonly userId$ = new ReplaySubject<string>(1);
+    // get user ID
+    readonly userId = signal('');
 
-    private readonly _collection$ = this.userId$.pipe(
+    // get user collection by ID / share result
+    private readonly _collection$ = toObservable(this.userId).pipe(
+        filter(id => Boolean(id)),
         switchMap(userId => this.http.get<ICollectionResponse>(this.serviceURL + '/user-collection?user_id=' + userId)),
         shareReplay(),
         catchError((err: Error) => {
@@ -28,9 +32,12 @@ export class CollectionService {
         })
     );
 
+    // get sorted user collection
     readonly collectionAsVolume$ = this._collection$.pipe(
         map((data: ICollectionResponse) => {
             return this.sortVolumes(
+                // maps volume isbn to full data object
+                // get primary cover
                 data.lists.volumes.map(isbn => data.ref.volume_data[isbn]).map(vol => {
                     vol.primary_cover = this.getPrimaryCoverImage(vol);
                     return vol;
@@ -40,11 +47,15 @@ export class CollectionService {
         })
     );
 
+    // Gets all user collection editions with enriched volume data
     readonly collectionAsSeries$ = this._collection$.pipe(
         map((data: ICollectionResponse) => {
-            const editions: ISeriesEditionParsed[] = []
+            const editions: ISeriesEditionParsed[] = [];
+            // maps series IDs to ISeries
             data.lists.series.map(seriesId => data.ref.series_data[seriesId]).forEach(series => {
+                // gets all editions from series / update cover to primary or a default
                 editions.push(...Object.values(series.editions).map(edition => {
+                    // enrich volume data from edition volumes
                     const volumes = edition.volumes.map(vol => data.ref.volume_data[vol.isbn] || vol);
                     return {
                         edition: edition.edition,
@@ -55,10 +66,11 @@ export class CollectionService {
                         volumes: volumes
                     }
                 }));
-            })
+            });
+            // sort editions
             return editions.sort((a, b) => (a.title + a.edition) < (b.title + b.edition) ? -1 : 1);
         })
-    )
+    );
 
 
     constructor(private http: HttpClient, private authorizer: AuthorizerService) { }
@@ -67,14 +79,8 @@ export class CollectionService {
         if (this.authorizer.isUserAuthorized() && items && items.length > 0) {
             // return this.http.post<CollectionData[]>(this.serviceURL + '/add-collection', items.map(item => {
             //     const record =  {
-            //         user_id: '',
-            //         isbn: item.isbn,
-            //         state: item.state,
-            //         purchaseDate: item.purchaseDate,
-            //         cost: item.cost,
-            //         merchant: item.merchant,
-            //         giftToMe: item.giftToMe,
-            //         read: item.read,
+            //         ...item,
+            //         user_id: this.userId(),
             //         tags: item.tags ? item.tags : [],
             //     } as CollectionData;
             //     if (!newItems) {
