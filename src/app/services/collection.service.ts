@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, EMPTY, map, Observable, tap, of, throwError, ReplaySubject, switchMap, shareReplay } from 'rxjs';
-// import { CollectionData } from '../../../archive/app.models';
 import { AuthorizerService } from './authorizer.service';
 import { ISeriesEditionParsed } from '../interfaces/iSeries.interface';
 import { IManga } from '../interfaces/iManga.interface';
@@ -37,7 +36,7 @@ export class CollectionService {
                     return vol;
                 }),
                 data
-            ).slice(0,50);
+            ).slice(0, 50);
         })
     );
 
@@ -98,7 +97,7 @@ export class CollectionService {
     }
 
     removeItems(keys: { id: string, user_id: string }[]): Observable<string> {
-        console.log('deleting...',keys, keys.length)
+        console.log('deleting...', keys, keys.length)
         if (this.authorizer.isUserAuthorized() && keys && keys.length > 0) {
             // return this.http.post<string>(this.serviceURL + '/delete-collection', keys).pipe(
             return of('deleting...').pipe(
@@ -118,7 +117,7 @@ export class CollectionService {
         // // move to service
         const covers = vol.cover_images ? vol.cover_images : [];
         const primary = covers.find(cover => cover.name == 'primary');
-        return primary ? primary.url.replace('www','legacy') : (covers.length > 0 ? covers[0].url.replace('www','legacy') : this.defaultCoverURL);
+        return primary ? primary.url.replace('www', 'legacy') : (covers.length > 0 ? covers[0].url.replace('www', 'legacy') : this.defaultCoverURL);
         // const img = 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/nx99022-Hh2WdyNgR8HM.jpg';
         // return primary ? img : this.defaultCoverURL;
     }
