@@ -70,6 +70,20 @@ def parse_volume(display_name: str, category: str):
         ).group(0)
     return None
 
+def filter_item(item):
+    '''Filters out items that are not manga volumes or series.'''
+    if item['categoryID'] in ['art-books', 'manga-bundles', 'graphic-novels',
+                                      'light-novels', 'manga', 'manhua', 'manhwa']:
+        return True
+    else:
+        print(f'Item {item["id"]} - {item["name"]} is not in a valid format ' +
+            f'({item["categoryID"]}). Skipping...')
+        return False
+
+def exists(data, item_id):
+    '''Checks if the given item already exists in the given dictionary.'''
+    return item_id in data
+
 def scrape_page(soup, volumes, series, shop):
     '''
     Scrapes the given URL for manga volumes and series,
@@ -87,6 +101,8 @@ def scrape_page(soup, volumes, series, shop):
     - shop (dict): Updated dictionary of manga shop information.
     '''
     for item in soup.find_all('div', {'class': 'product'}):
+
+        # bs4 object to dict
         cr_attr = {
             **json.loads(item.attrs['data-gtmdata']),
             **json.loads(item.find('div', {'class': 'product-tile'}).attrs['data-segmentdata'])
@@ -98,18 +114,26 @@ def scrape_page(soup, volumes, series, shop):
                         .attrs['content']
         cover_image = item.find('img', {'class': 'tile-image'}).attrs['src']
         category_id = cr_attr['categoryID'] if 'categoryID' in cr_attr else None
+
+        # check if the item is valid
+        if not filter_item(cr_attr):
+            break
+
         volume_number = parse_volume(cr_attr['name'], cr_attr['category'])
 
+        # get the product
+        shop_id = cr_attr['id'] + '-crunchyroll'
         product = {
             'isbn': cr_attr['id'],
             'retain_price': retail_price,
-            'store_price': cr_attr['price'],
+            'store_price': cr_attr['price'], # split into mega fans (10% off) and ultamate fans (15% off)
             'stock_status': cr_attr['Inventory_Status'],
-            'preorderStatus': cr_attr['pre_order_status'],
-            'coupon': cr_attr['coupon']
+            'coupon': cr_attr['coupon'],
+            'is_on_sale': item.find('div', {'class': 'sale'}) is not None,
         }
-        shop[cr_attr['id']] = product
+        shop[shop_id] = product
 
+        # get the volume
         volume = {
             'isbn': cr_attr['id'],
             'series': cr_attr['brand'],
@@ -117,17 +141,36 @@ def scrape_page(soup, volumes, series, shop):
             'category': cr_attr['category'],
             'categoryID': category_id,
             'volume': volume_number,
-            'url': cr_attr['url'],
-            'cover_image': cover_image
+            'url': cr_attr['url']
         }
-        volumes[cr_attr['id']] = volume
+        if not exists(volumes, cr_attr['id']):
+            # fetch url
+            soup_volume = BeautifulSoup(requests.get(volume['url'], timeout=5).text, 'html.parser')
+            descriptions = soup_volume.find('div', {'class': 'product-description'}) \
+                .find('div', {'class': 'short-description'}) \
+                    .find_all('p')
+            volume['description'] = descriptions[1].text + ' ' + descriptions[0].text
+            volume['cover-images'] = [{ 'name': 'primary', 'url': cover_image }]
+            slick_imgs = filter(
+                lambda x: 'slick-cloned' not in x.attrs['class'],
+                soup_volume.find('div', {'class': 'product-image-carousel'}) \
+                    .find_all('div', {'class': 'slick-slide'})
+            )
+            all_images = [img.find('img').attrs['src'] for img in slick_imgs]
+            volume['cover-images'].extend(
+                [{ 'name': 'alt', 'url': img } for img in all_images if img is not cover_image]
+            )
+            # get release date more accurately...
+            volumes[cr_attr['id']] = volume
+        else:
+            volumes[cr_attr['id']] = volume
 
+        # get the series
         series_volume = {
             'isbn': volume['isbn'],
             'volume': volume['volume'],
             'category': volume['category']
         }
-
         if cr_attr['brand'] not in series:
             series[cr_attr['brand']] = {
                 'name': cr_attr['brand'],
