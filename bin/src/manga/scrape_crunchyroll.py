@@ -11,12 +11,22 @@ the data into a JSON format.
 and updates the given data structures with the results.
 '''
 
+import datetime
 import json
 import math
 import re
-import time
 from bs4 import BeautifulSoup
 import requests
+
+# TO DO:
+# - cache api calls
+# - write to log files
+# - add more error handling
+# - smart match series by brand, title, artist, etc.
+# - flag series matches for manual review if less than 100% match
+# - get more accurate release dates
+
+log_name = './logs/' + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + '.log'
 
 def open_file(file_path):
     '''Gets the data from a JSON file and copies it into a return object'''
@@ -27,7 +37,7 @@ def open_file(file_path):
             outfile.close()
             return data
     except (FileNotFoundError, json.JSONDecodeError, TypeError):
-        print('Could not load file ' + file_path + ' ... ending process')
+        log('Could not load file ' + file_path + ' ... ending process')
         raise
 
 def save_file(file_path, data):
@@ -38,7 +48,17 @@ def save_file(file_path, data):
             json.dump(data, outfile, indent=4, separators=(',', ': '))
             outfile.close()
     except (FileNotFoundError, TypeError):
-        print('Could not save file ' + file_path + ' ... ending process')
+        log('Could not save file ' + file_path + ' ... ending process')
+        raise
+
+def log(message: str):
+    '''Writes the given message to a log file.'''
+    try:
+        with open(log_name, 'a', encoding='UTF-8') as logfile:
+            logfile.write(str(message) + '\n')
+            logfile.close()
+    except (FileNotFoundError, TypeError):
+        log('Could not write to log file... ending process')
         raise
 
 def parse_volume(display_name: str, category: str):
@@ -70,43 +90,95 @@ def parse_volume(display_name: str, category: str):
         ).group(0)
     return None
 
-def filter_item(item):
-    '''Filters out items that are not manga volumes or series.'''
-    if item['categoryID'] in ['art-books', 'manga-bundles', 'graphic-novels',
-                                      'light-novels', 'manga', 'manhua', 'manhwa']:
-        return True
-    else:
-        print(f'Item {item["id"]} - {item["name"]} is not in a valid format ' +
-            f'({item["categoryID"]}). Skipping...')
-        return False
+# def filter_item(item):
+#     '''Filters out items that are not manga volumes or series.'''
+#     if item['categoryID'] in ['art-books', 'manga-bundles', 'graphic-novels',
+#                                       'light-novels', 'manga', 'manhua', 'manhwa']:
+#         return True
+#     else:
+#         log(f'Item {item['id']} - {item['name']} is not in a valid format ' +
+#             f'({item['categoryID']}). Skipping...')
+#         return False
 
 def exists(data, item_id):
     '''Checks if the given item already exists in the given dictionary.'''
     return item_id in data
 
-def scrape_page(soup, volumes, series, shop):
+def get_series_by_id(series_id: int):
+    '''Gets the series information from the given series ID.'''
+    log(f'Getting series details for {series_id}...')
+    try:
+        series_resp = requests.get('https://api.mangaupdates.com/v1/series/' + str(series_id),
+                                    timeout=5).json()
+        return {
+            'series_id': series_resp['series_id'],
+            'title': series_resp['title'],
+            'associated_titles': [title['title'] for title in series_resp['associated']],
+            'url': series_resp['url'],
+            'type': series_resp['type']
+        }
+    except requests.exceptions.RequestException as e:
+        log(e)
+        log(f'Could not get series details for {series_id}... ending process')
+        raise
+
+def search_series(series_name: str, series_type: str):
+    '''Gets the series ID from the given series name and format.'''
+    log(f'Searching for series ID for ["{series_name}", "{series_type}" ]...')
+    search_data = {
+        'search': series_name,
+        'stype': 'title'
+    }
+    try:
+        series_resp = requests.post('https://api.mangaupdates.com/v1/series/search',
+                                    search_data, timeout=5).json()
+        for series in [series_resp['results'][0]]: # fix later for match logic
+            series_details = get_series_by_id(series['record']['series_id'])
+            log('Checking series: ' + json.dumps(series_details))
+            if series_details['title'].lower() == series_name.lower() and \
+                series_details['type'].lower() == series_type.lower():
+                return series_details
+            else:
+                if len([title for title in series_details['associated_titles']
+                        if title.lower() == series_name.lower()]) > 0:
+                    return series_details
+    except requests.exceptions.RequestException as e_search:
+        log(e_search)
+        log(f'Could not get series ID for "{series_name}"... ending process')
+
+    log(f'Could not find any matching series ID for {series_name}... ending process')
+    return {
+        'series_id': None,
+        'title': None,
+        'associated_titles': [],
+        'url': None,
+        'type': None
+    }
+
+def scrape_page(soup, all_volumes, all_series, all_shop):
     '''
     Scrapes the given URL for manga volumes and series,
     and updates the given data structures with the results.
 
     Parameters:
     - soup (str): The Beautiful soup object for a page of the Crunchyroll store website.
-    - volumes (dict): A dictionary containing manga volumes information.
-    - series (dict): A dictionary containing manga series information.
-    - shop (dict): A dictionary containing manga shop information.
+    - all_volumes (dict): A dictionary containing manga volumes information.
+    - all_series (dict): A dictionary containing manga series information.
+    - all_shop (dict): A dictionary containing manga shop information.
 
     Returns:
-    - volumes (dict): Updated dictionary of manga volumes information.
-    - series (dict): Updated dictionary of manga series information.
-    - shop (dict): Updated dictionary of manga shop information.
+    - all_volumes (dict): Updated dictionary of manga volumes information.
+    - all_series (dict): Updated dictionary of manga series information.
+    - all_shop (dict): Updated dictionary of manga shop information.
     '''
     for item in soup.find_all('div', {'class': 'product'}):
-
         # bs4 object to dict
         cr_attr = {
             **json.loads(item.attrs['data-gtmdata']),
             **json.loads(item.find('div', {'class': 'product-tile'}).attrs['data-segmentdata'])
         }
+        log('Scraping item... ' + cr_attr['id'] + ' | ' + cr_attr['name'])
+
         retail_price = item \
             .find('div', {'class': 'price'}) \
                 .find('span', {'class': 'strike-through'}) \
@@ -115,9 +187,9 @@ def scrape_page(soup, volumes, series, shop):
         cover_image = item.find('img', {'class': 'tile-image'}).attrs['src']
         category_id = cr_attr['categoryID'] if 'categoryID' in cr_attr else None
 
-        # check if the item is valid
-        if not filter_item(cr_attr):
-            break
+        # # check if the item is valid
+        # if not filter_item(cr_attr):
+        #     break
 
         volume_number = parse_volume(cr_attr['name'], cr_attr['category'])
 
@@ -126,30 +198,42 @@ def scrape_page(soup, volumes, series, shop):
         product = {
             'isbn': cr_attr['id'],
             'retain_price': retail_price,
-            'store_price': cr_attr['price'], # split into mega fans (10% off) and ultamate fans (15% off)
+            # split into mega fans (10% off) and ultamate fans (15% off)
+            'store_price': cr_attr['price'],
             'stock_status': cr_attr['Inventory_Status'],
             'coupon': cr_attr['coupon'],
             'is_on_sale': item.find('div', {'class': 'sale'}) is not None,
         }
-        shop[shop_id] = product
+        all_shop[shop_id] = product
+
+        category_conversion = {
+            '': None,
+            'light-novels': 'novel',
+            'manhwa': 'manhwa',
+            'manhua': 'manhua',
+            'novels': 'novel',
+            'manga': 'manga'
+        }
+        series_details = search_series(cr_attr['brand'], category_conversion[cr_attr['category']])
 
         # get the volume
         volume = {
             'isbn': cr_attr['id'],
             'series': cr_attr['brand'],
+            'series_id': series_details['series_id'],
             'name': cr_attr['name'],
             'category': cr_attr['category'],
-            'categoryID': category_id,
+            'category_id': category_id,
             'volume': volume_number,
             'url': cr_attr['url']
         }
-        if not exists(volumes, cr_attr['id']):
+        if not exists(all_volumes, cr_attr['id']):
             # fetch url
             soup_volume = BeautifulSoup(requests.get(volume['url'], timeout=5).text, 'html.parser')
             descriptions = soup_volume.find('div', {'class': 'product-description'}) \
                 .find('div', {'class': 'short-description'}) \
                     .find_all('p')
-            volume['description'] = descriptions[1].text + ' ' + descriptions[0].text
+            volume['description'] = '\n'.join([desc.text for desc in descriptions])
             volume['cover-images'] = [{ 'name': 'primary', 'url': cover_image }]
             slick_imgs = filter(
                 lambda x: 'slick-cloned' not in x.attrs['class'],
@@ -161,64 +245,78 @@ def scrape_page(soup, volumes, series, shop):
                 [{ 'name': 'alt', 'url': img } for img in all_images if img is not cover_image]
             )
             # get release date more accurately...
-            volumes[cr_attr['id']] = volume
+            all_volumes[cr_attr['id']] = volume
         else:
-            volumes[cr_attr['id']] = volume
+            all_volumes[cr_attr['id']] = volume
 
-        # get the series
+        # update the series
         series_volume = {
             'isbn': volume['isbn'],
             'volume': volume['volume'],
             'category': volume['category']
         }
-        if cr_attr['brand'] not in series:
-            series[cr_attr['brand']] = {
-                'name': cr_attr['brand'],
-                'cover_image': cover_image,
-                'volumes': [series_volume]
-            }
-        else:
-            series_volumes = sorted(
-                [
-                    *series[cr_attr['brand']]['volumes'],
-                    series_volume
-                ],
-                key = lambda x: (x['category'], x['volume'])
-            )
-            if series_volumes[0]['isbn'] == volume['isbn']:
-                series[cr_attr['brand']]['cover_image'] = cover_image
-            series[cr_attr['brand']]['volumes'] = series_volumes
+        if series_details['series_id'] is not None:
+            if series_details['series_id'] not in all_series:
+                all_series[series_details['series_id']] = {
+                    **series_details,
+                    'volumes': [series_volume]
+                }
+            else:
+                existing_volumes = [
+                    vol['isbn'] for vol in all_series[series_details['series_id']]['volumes']
+                ]
+                if series_volume['isbn'] not in existing_volumes:
+                    series_volumes = sorted(
+                        [
+                            *all_series[series_details['series_id']]['volumes'],
+                            series_volume
+                        ],
+                        key = lambda x: (x['category'], x['volume'])
+                    )
+                    all_series[series_details['series_id']]['volumes'] = series_volumes
+                else:
+                    idx = existing_volumes.index(series_volume['isbn'])
+                    all_series[series_details['series_id']]['volumes'][idx] = series_volumes
 
-    return volumes, series, shop
+    return all_volumes, all_series, all_shop
 
-volumes_data = open_file('./volumes.json')
-series_data = open_file('./series.json')
-shop_data = open_file('./shop.json')
+RUN_SCRAPER = True
+if RUN_SCRAPER:
+    volumes_data = open_file('./volumes.json')
+    series_data = open_file('./series.json')
+    shop_data = open_file('./shop.json')
 
-PAGE_URL = 'https://store.crunchyroll.com/collections/manga-books/'
-first_soup = BeautifulSoup(
-    requests.get(PAGE_URL + '?cgid=manga-books&start=0&sz=100', timeout=5).text,
-    'html.parser'
-)
-total_count = int(first_soup.find('div', {'class': 'pagination-text'}).attrs['data-totalcount'])
-total_pages = math.ceil(total_count / 100)
-print(total_pages)
+    PAGE_BASE_URL = 'https://store.crunchyroll.com/collections/manga-books/?cgid=manga-books'
+    CATEGORY_QUERY = '&prefn1=subcategory&prefv1=Novels|Manhwa|Manhua|Light%20Novels|Manga'
+    PAGE_URL = PAGE_BASE_URL + CATEGORY_QUERY
 
-volumes_new, series_new, shop_new = scrape_page(first_soup, volumes_data, series_data, shop_data)
+    first_soup = BeautifulSoup(
+        requests.get(PAGE_URL + '&start=100&sz=100', timeout=5).text,
+        'html.parser'
+    )
+    total_count = int(first_soup.find('div', {'class': 'pagination-text'}).attrs['data-totalcount'])
+    total_pages = math.ceil(total_count / 100)
+    log(total_pages)
 
-START = 100
-print(f'?cgid=manga-books&start={START}&sz=100')
+    volumes_new, series_new, shop_new \
+        = scrape_page(first_soup, volumes_data, series_data, shop_data)
 
-for i in range(1, total_pages):
-    time.sleep(3)
-    print(PAGE_URL + f'?cgid=manga-books&start={START}&sz=100')
-    # next_soup = BeautifulSoup(
-    #     requests.get(PAGE_URL + f'?cgid=manga-books&start={START}&sz=100', timeout=5).text,
-    #     'html.parser'
-    # )
-    # volumes_new, series_new, shop_new = scrape_page(next_soup, volumes_new, series_new, shop_new)
-    START += 100
+    START = 100
+    log(PAGE_URL + f'&start={START}&sz=100')
 
-save_file('./volumes.json', volumes_new)
-save_file('./series.json', series_new)
-save_file('./shop.json', shop_new)
+    # for i in range(1, total_pages):
+    #     log(PAGE_URL + f'&start={START}&sz=100')
+    #     # next_soup = BeautifulSoup(
+    #     #     requests.get(PAGE_URL + f'&start={START}&sz=100', timeout=5).text,
+    #     #     'html.parser'
+    #     # )
+    #     # volumes_new, series_new, shop_new \
+    #     #     = scrape_page(next_soup, volumes_new, series_new, shop_new)
+    #     START += 100
+
+    save_file('./volumes.json', volumes_new)
+    save_file('./series.json', series_new)
+    save_file('./shop.json', shop_new)
+
+
+# print(search_series('The Summer Hikaru Died', 'manga'))
