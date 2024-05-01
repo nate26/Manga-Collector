@@ -14,13 +14,13 @@ and updates the given data structures with the results.
 import datetime
 import json
 import math
+import os
 import re
 from bs4 import BeautifulSoup
 import requests
 
 # TO DO:
 # - cache api calls
-# - write to log files
 # - add more error handling
 # - smart match series by brand, title, artist, etc.
 # - flag series matches for manual review if less than 100% match
@@ -28,8 +28,11 @@ import requests
 
 log_name = './logs/' + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + '.log'
 
+series_cache = {}
+
 def open_file(file_path):
     '''Gets the data from a JSON file and copies it into a return object'''
+    info('Loading file ' + file_path + '...')
     try:
         with open(file_path, 'r', encoding='UTF-8') as outfile:
             outfile.flush()
@@ -37,29 +40,42 @@ def open_file(file_path):
             outfile.close()
             return data
     except (FileNotFoundError, json.JSONDecodeError, TypeError):
-        log('Could not load file ' + file_path + ' ... ending process')
+        error('Could not load file ' + file_path + ' ... ending process')
         raise
 
 def save_file(file_path, data):
     '''Writes the given data to the given file path, and converts the data into a JSON format'''
+    info('Saving file ' + file_path + '...')
     try:
         with open(file_path, 'w', encoding='UTF-8') as outfile:
             outfile.flush()
             json.dump(data, outfile, indent=4, separators=(',', ': '))
             outfile.close()
     except (FileNotFoundError, TypeError):
-        log('Could not save file ' + file_path + ' ... ending process')
+        error('Could not save file ' + file_path + ' ... ending process')
         raise
 
-def log(message: str):
+def log(type: str, message: str):
     '''Writes the given message to a log file.'''
     try:
         with open(log_name, 'a', encoding='UTF-8') as logfile:
-            logfile.write(str(message) + '\n')
+            logfile.write(type + ' [' + os.path + '] ' + str(message) + '\n')
             logfile.close()
     except (FileNotFoundError, TypeError):
-        log('Could not write to log file... ending process')
+        print('Could not write to log file... ending process')
         raise
+
+def info(message: str):
+    '''Writes the given message to the console and log file as an info log.'''
+    log('[INFO]', message)
+
+def warn(message: str):
+    '''Writes the given message to the console and log file as an warn log.'''
+    log('[WARN]', message)
+
+def error(message: str):
+    '''Writes the given message to the console and log file as an error log.'''
+    log('[ERROR]', message)
 
 def parse_volume(display_name: str, category: str):
     '''Parses the volume number from the given display name.'''
@@ -90,23 +106,9 @@ def parse_volume(display_name: str, category: str):
         ).group(0)
     return None
 
-# def filter_item(item):
-#     '''Filters out items that are not manga volumes or series.'''
-#     if item['categoryID'] in ['art-books', 'manga-bundles', 'graphic-novels',
-#                                       'light-novels', 'manga', 'manhua', 'manhwa']:
-#         return True
-#     else:
-#         log(f'Item {item['id']} - {item['name']} is not in a valid format ' +
-#             f'({item['categoryID']}). Skipping...')
-#         return False
-
-def exists(data, item_id):
-    '''Checks if the given item already exists in the given dictionary.'''
-    return item_id in data
-
 def get_series_by_id(series_id: int):
     '''Gets the series information from the given series ID.'''
-    log(f'Getting series details for {series_id}...')
+    info(f'Getting series details for {series_id}...')
     try:
         series_resp = requests.get('https://api.mangaupdates.com/v1/series/' + str(series_id),
                                     timeout=5).json()
@@ -118,13 +120,13 @@ def get_series_by_id(series_id: int):
             'type': series_resp['type']
         }
     except requests.exceptions.RequestException as e:
-        log(e)
-        log(f'Could not get series details for {series_id}... ending process')
+        error(e)
+        error(f'Could not get series details for {series_id}... ending process')
         raise
 
 def search_series(series_name: str, series_type: str):
     '''Gets the series ID from the given series name and format.'''
-    log(f'Searching for series ID for ["{series_name}", "{series_type}" ]...')
+    info(f'Searching for series ID for ["{series_name}", "{series_type}" ]...')
     search_data = {
         'search': series_name,
         'stype': 'title'
@@ -134,19 +136,18 @@ def search_series(series_name: str, series_type: str):
                                     search_data, timeout=5).json()
         for series in [series_resp['results'][0]]: # fix later for match logic
             series_details = get_series_by_id(series['record']['series_id'])
-            log('Checking series: ' + json.dumps(series_details))
+            info('Checking series: ' + json.dumps(series_details))
             if series_details['title'].lower() == series_name.lower() and \
                 series_details['type'].lower() == series_type.lower():
                 return series_details
-            else:
-                if len([title for title in series_details['associated_titles']
-                        if title.lower() == series_name.lower()]) > 0:
-                    return series_details
+            if len([title for title in series_details['associated_titles']
+                    if title.lower() == series_name.lower()]) > 0:
+                return series_details
     except requests.exceptions.RequestException as e_search:
-        log(e_search)
-        log(f'Could not get series ID for "{series_name}"... ending process')
+        error(e_search)
+        error(f'Could not get series ID for "{series_name}"... ending process')
 
-    log(f'Could not find any matching series ID for {series_name}... ending process')
+    warn(f'Could not find any matching series ID for {series_name}... ending process')
     return {
         'series_id': None,
         'title': None,
@@ -177,7 +178,7 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
             **json.loads(item.attrs['data-gtmdata']),
             **json.loads(item.find('div', {'class': 'product-tile'}).attrs['data-segmentdata'])
         }
-        log('Scraping item... ' + cr_attr['id'] + ' | ' + cr_attr['name'])
+        info('Scraping item... ' + cr_attr['id'] + ' | ' + cr_attr['name'])
 
         retail_price = item \
             .find('div', {'class': 'price'}) \
@@ -227,7 +228,7 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
             'volume': volume_number,
             'url': cr_attr['url']
         }
-        if not exists(all_volumes, cr_attr['id']):
+        if cr_attr['id'] in all_volumes:
             # fetch url
             soup_volume = BeautifulSoup(requests.get(volume['url'], timeout=5).text, 'html.parser')
             descriptions = soup_volume.find('div', {'class': 'product-description'}) \
@@ -296,16 +297,15 @@ if RUN_SCRAPER:
     )
     total_count = int(first_soup.find('div', {'class': 'pagination-text'}).attrs['data-totalcount'])
     total_pages = math.ceil(total_count / 100)
-    log(total_pages)
+    info('pages to scrape: ' + str(total_pages))
 
     volumes_new, series_new, shop_new \
         = scrape_page(first_soup, volumes_data, series_data, shop_data)
 
     START = 100
-    log(PAGE_URL + f'&start={START}&sz=100')
 
     # for i in range(1, total_pages):
-    #     log(PAGE_URL + f'&start={START}&sz=100')
+    #     info('Calling: ' + PAGE_URL + f'&start={START}&sz=100')
     #     # next_soup = BeautifulSoup(
     #     #     requests.get(PAGE_URL + f'&start={START}&sz=100', timeout=5).text,
     #     #     'html.parser'
