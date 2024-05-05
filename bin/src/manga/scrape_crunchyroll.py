@@ -11,6 +11,7 @@ the data into a JSON format.
 and updates the given data structures with the results.
 '''
 
+import difflib
 import json
 import logging
 import math
@@ -29,6 +30,7 @@ from bs4 import BeautifulSoup
 # - enable saving between volumes
 # - fix amazon stock status
 
+RUN_SCRAPER = False
 series_cache = {}
 
 logging.basicConfig(
@@ -93,7 +95,8 @@ def parse_volume(display_name: str, category: str):
         ).group(0)
     return None
 
-def get_series_data(isbn: str, series_name: str, category: str, all_series, all_volumes):
+def get_series_data(isbn: str, series_name: str, category: str, volume_name: str,
+                    all_series, all_volumes):
     '''Gets the series information from the given series name and format.'''
     if isbn in all_volumes and all_volumes[isbn]['series_id'] in all_series:
         logger.info('Series found in data... using that instead: %s %s',
@@ -108,7 +111,7 @@ def get_series_data(isbn: str, series_name: str, category: str, all_series, all_
         'novels': 'novel',
         'manga': 'manga'
     }
-    return search_series(series_name, category_conversion[category])
+    return search_series(series_name, category_conversion[category], volume_name)
 
 def get_series_by_id(series_id: str):
     '''Gets the series information from the given series ID.'''
@@ -120,21 +123,35 @@ def get_series_by_id(series_id: str):
         else:
             series_resp = requests.get('https://api.mangaupdates.com/v1/series/' + series_id,
                                     timeout=5).json()
-            series_cache[series_id] = series_resp
-            logger.info('Added series to local cache: %s', json.dumps(series_resp))
-        return {
-            'series_id': str(series_resp['series_id']),
-            'title': series_resp['title'],
-            'associated_titles': [title['title'] for title in series_resp['associated']],
-            'url': series_resp['url'],
-            'type': series_resp['type']
-        }
+            parsed_series_data = {
+                'series_id': str(series_resp['series_id']),
+                'title': series_resp['title'],
+                'associated_titles': [title['title'] for title in series_resp['associated']],
+                'url': series_resp['url'],
+                'type': series_resp['type']
+            }
+            series_cache[series_id] = parsed_series_data
+            logger.info('Added series to local cache: %s', json.dumps(parsed_series_data))
+        return parsed_series_data
     except requests.exceptions.RequestException as e:
         logger.error(e)
         logger.error('Could not get series details for %s... ending process', series_id)
         raise
 
-def search_series(series_name: str, series_type: str):
+def set_confidence(current_confidence, new_confidence: float):
+    '''Sets the confidence level for the given confidence values.'''
+    if current_confidence is None:
+        return new_confidence
+    return max(current_confidence['series_match_confidence'], new_confidence)
+
+def calculate_confidence(series_name: str, title: str):
+    '''Calculates the confidence level for the given series name and title.'''
+    return 1 - (len([
+        li for li in difflib.ndiff(series_name.lower(), title.lower())
+        if li[0] != ' '
+    ]) / max(len(series_name), len(title)))
+
+def search_series(series_name: str, series_type: str, volume_name: str):
     '''Gets the series ID from the given series name and format.'''
     logger.info('Searching for series ID for ["%s", "%s" ]...', series_name, series_type)
     search_data = {
@@ -144,15 +161,78 @@ def search_series(series_name: str, series_type: str):
     try:
         series_resp = requests.post('https://api.mangaupdates.com/v1/series/search',
                                     search_data, timeout=5).json()
+        # only used if no exact match is found
+        closest_series_match = None
         for series in [series_resp['results'][0]]: # fix later for match logic
             series_details = get_series_by_id(str(series['record']['series_id']))
             logger.info('Checking series: %s', json.dumps(series_details))
-            if series_details['title'].lower() == series_name.lower() and \
-                series_details['type'].lower() == series_type.lower():
-                return series_details
-            if len([title for title in series_details['associated_titles']
-                    if title.lower() == series_name.lower()]) > 0:
-                return series_details
+
+            # series type must match
+            if series_details['type'].lower() == series_type.lower():
+                all_titles = [
+                    title.lower() for title
+                    in [ series_details['title'], *series_details['associated_titles'] ]
+                ]
+
+                # check for exact equality in title or associated titles
+                if len([
+                    title for title
+                    in all_titles
+                    if title == series_name.lower()
+                ]) > 0:
+                    series_details['series_match_confidence'] = 1
+                    return series_details
+
+                # set first found to match type to a low confidence match
+                series_details['series_match_confidence'] = \
+                    set_confidence(closest_series_match, 0.1)
+                closest_series_match = series_details
+
+                # check for partial equality in title or associated titles
+
+                # if series title or associated title is in volume name
+                # case: 'Re:ZERO Ex' in 'Re:Zero Ex Novel Volume 1' = True
+                # if len([
+                #     title for title
+                #     in all_titles
+                #     if title in volume_name.lower()
+                # ]) > 0:
+                #     series_details['series_match_confidence'] = \
+                #         set_confidence(closest_series_match, 0.1)
+                #     closest_series_match = series_details
+
+                # if series name is in title or associated title, or vice versa
+                # case: 'Re:Zero' in 'Re:ZERO -Starting Life in Another World- Ex (Novel)' = True
+                for title in all_titles:
+                    # match = None
+                    # if series_name.lower() in title or title in series_name.lower():
+                    #     match = series_name.lower()
+                    # elif title in volume_name.lower():
+                    #     match = volume_name.lower():
+                    confidence = max(
+                        # if series title or associated title is in volume name
+                        # case: 'Re:ZERO Ex' in 'Re:Zero Ex Novel Volume 1' = True
+                        calculate_confidence(series_name, title),
+                        # if series name is in title or associated title, or vice versa
+                        # case: 'Re:Zero' in 'Re:ZERO Ex (Novel)' = True
+                        calculate_confidence(volume_name, title)
+                    )
+                    series_details['series_match_confidence'] = \
+                        set_confidence(closest_series_match, confidence)
+                    closest_series_match = series_details
+                # if len([
+                #     title for title
+                #     in all_titles
+                #     if series_name.lower() in title or title in series_name.lower()
+                # ]) > 0:
+                #     diff = [li for li in difflib.ndiff(case_a, case_b) if li[0] != ' ']
+                #     closest_series_match = (series_details, 0.5)
+
+        if closest_series_match is not None:
+            logger.info('Closest series match with confidence %s: %s',
+                        closest_series_match['series_match_confidence'],
+                        json.dumps(closest_series_match))
+            return closest_series_match
     except requests.exceptions.RequestException as e_search:
         logger.error(e_search)
         logger.error('Could not get series ID for "%s"... ending process', series_name)
@@ -309,7 +389,7 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
         logger.info('All shop details added: %s', json.dumps(product))
 
         series_details = get_series_data(isbn, cr_attr['brand'], cr_attr['category'],
-                                         all_series, all_volumes)
+                                         cr_attr['name'], all_series, all_volumes)
         logger.info('Series details: %s', json.dumps(series_details))
 
         # get the volume
@@ -317,6 +397,7 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
             'isbn': isbn,
             'series': cr_attr['brand'],
             'series_id': series_details['series_id'],
+            'series_match_confidence': series_details['series_match_confidence'],
             'name': cr_attr['name'],
             'category': cr_attr['category'],
             'category_id': category_id,
@@ -381,7 +462,6 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
 
     return all_volumes, all_series, all_shop
 
-RUN_SCRAPER = True
 if RUN_SCRAPER:
     volumes_data = open_file('./volumes.json')
     series_data = open_file('./series.json')
@@ -419,4 +499,6 @@ if RUN_SCRAPER:
     save_file('./shop.json', shop_new)
 
 
-# print(search_series('The Summer Hikaru Died', 'manga'))
+
+# print(calculate_confidence('Re:ZERO', 'Re:ZERO -Starting Life in Another World- Ex (Novel)')),
+# print(calculate_confidence('Re:ZERO Starting Life in Another World Ex Novel Volume 1', 'Re:ZERO -Starting Life in Another World- Ex (Novel)'))
