@@ -26,16 +26,17 @@ from bs4 import BeautifulSoup
 # - add more shops
 # - get better additional images / better way to get images/descriptions
 # - fix amazon stock status
+# - find a way to get age ratings / adult tag
 
 RUN_SCRAPER = True
 
 QUERY_ISBN_DB = True
-QUERY_CR_FOR_DETAILS = True
+QUERY_CR_FOR_DETAILS = False
 
 # only used if requires a full refresh of all data
-FORCE_CR_FOR_DETAILS = True
-REFRESH_VOLUME_DETAILS = True
-REFRESH_SERIES_DATA = True
+FORCE_CR_FOR_DETAILS = False
+REFRESH_VOLUME_DETAILS = False
+REFRESH_SERIES_DATA = False
 
 series_cache = {}
 
@@ -286,6 +287,7 @@ def get_shop_data(soup_isbn_data):
                     'store_price': float(store.find('td', {'class': 'total'})
                         .text.strip().replace('$', '')),
                     'stock_status': None,
+                    'last_stock_update': None,
                     'coupon': '',
                     'is_on_sale': False
                 })
@@ -351,6 +353,11 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
         volume_number = parse_volume(cr_attr['name'], cr_attr['category'])
 
         # get the product
+        stock_status = cr_attr['Inventory_Status']
+        # update if stock status is different or new volume
+        last_stock_update = str(datetime.now()) \
+            if is_new_volume or stock_status != all_volumes[isbn]['stock_status'] \
+                else all_volumes[isbn]['last_stock_update']
         product = {
             'isbn': isbn,
             'retail_price': float(retail_price),
@@ -362,6 +369,7 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
                     'url': cr_attr['url'],
                     'store_price': float(cr_attr['price']),
                     'stock_status': cr_attr['Inventory_Status'],
+                    'last_stock_update': last_stock_update,
                     'coupon': cr_attr['coupon'],
                     'is_on_sale': item.find('div', {'class': 'sale'}) is not None
                 },
@@ -385,7 +393,7 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
             series_details = search_series(series_name, cr_attr['category'], cr_attr['name'])
         else:
             logger.info('Skipping series search on existing volume: %s', isbn)
-            series_details = { 'series_id': None }
+            series_details = { 'series_id': None, 'title': cr_attr['brand'] }
         logger.info('Series details: %s', json.dumps(series_details))
         series_id = series_details['series_id']
 
@@ -394,13 +402,18 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
             'isbn': isbn,
             'series': series_name,
             'series_id': series_id,
-            'name': cr_attr['name'],
+            'display_name': cr_attr['name'],
+            'name': series_details['title'],
             'category': cr_attr['category'],
             'category_id': category_id,
             'volume': volume_number,
             'url': cr_attr['url'],
+            'record_added_date': str(datetime.now()) if is_new_volume \
+                else all_volumes[isbn]['record_added_date'],
+            'record_updated_date': str(datetime.now()),
             **isbn_results['details']
         }
+
         if is_new_volume \
             or (REFRESH_VOLUME_DETAILS and (QUERY_CR_FOR_DETAILS or FORCE_CR_FOR_DETAILS)):
             volume['cover_images'] = [{ 'name': 'primary', 'url': cover_image }]
@@ -478,7 +491,7 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
                     logger.info('Series details forcefully updated: %s',
                                 json.dumps(all_series[series_id]))
 
-    save_all_files(volumes_new, series_new, shop_new)
+    save_all_files(all_volumes, all_series, all_shop)
     return all_volumes, all_series, all_shop
 
 if RUN_SCRAPER:
