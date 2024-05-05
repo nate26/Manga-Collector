@@ -29,6 +29,7 @@ from bs4 import BeautifulSoup
 # - find a way to get age ratings / adult tag
 
 RUN_SCRAPER = True
+SCRAPE_ALL_PAGES = True
 
 QUERY_ISBN_DB = True
 QUERY_CR_FOR_DETAILS = False
@@ -503,8 +504,9 @@ if RUN_SCRAPER:
     CATEGORY_QUERY = '&prefn1=subcategory&prefv1=Novels|Manhwa|Manhua|Light%20Novels|Manga'
     PAGE_URL = PAGE_BASE_URL + CATEGORY_QUERY
 
+    logger.info('Calling: %s&start=0&sz=100', PAGE_URL)
     first_soup = BeautifulSoup(
-        requests.get(PAGE_URL + '&start=100&sz=100', timeout=5).text,
+        requests.get(PAGE_URL + '&start=0&sz=100', timeout=5).text,
         'html.parser'
     )
     total_count = int(first_soup.find('div', {'class': 'pagination-text'}).attrs['data-totalcount'])
@@ -516,15 +518,16 @@ if RUN_SCRAPER:
 
     START = 100
 
-    # for i in range(1, total_pages):
-    #     logger.info('Calling: ' + PAGE_URL + f'&start={START}&sz=100')
-    #     # next_soup = BeautifulSoup(
-    #     #     requests.get(PAGE_URL + f'&start={START}&sz=100', timeout=5).text,
-    #     #     'html.parser'
-    #     # )
-    #     # volumes_new, series_new, shop_new \
-    #     #     = scrape_page(next_soup, volumes_new, series_new, shop_new)
-    #     START += 100
+    if SCRAPE_ALL_PAGES:
+        for i in range(1, total_pages):
+            logger.info('Calling: %s&start=%s&sz=100', PAGE_URL, START)
+            next_soup = BeautifulSoup(
+                requests.get(PAGE_URL + f'&start={START}&sz=100', timeout=5).text,
+                'html.parser'
+            )
+            volumes_new, series_new, shop_new \
+                = scrape_page(next_soup, volumes_new, series_new, shop_new)
+            START += 100
 
 # print(calculate_confidence(
     # 'Re:ZERO',
