@@ -23,14 +23,20 @@ from bs4 import BeautifulSoup
 
 # TO DO:
 # - add more error handling
-# - smart match series by brand, title, artist, etc.
-# - flag series matches for manual review if less than 100% match
 # - add more shops
-# - fix getting additional images
-# - enable saving between volumes
+# - get better additional images / better way to get images/descriptions
 # - fix amazon stock status
 
-RUN_SCRAPER = False
+RUN_SCRAPER = True
+
+QUERY_ISBN_DB = True
+QUERY_CR_FOR_DETAILS = True
+
+# only used if requires a full refresh of all data
+FORCE_CR_FOR_DETAILS = True
+REFRESH_VOLUME_DETAILS = True
+REFRESH_SERIES_DATA = True
+
 series_cache = {}
 
 logging.basicConfig(
@@ -66,6 +72,12 @@ def save_file(file_path, data):
         logger.critical('Could not save file %s ... ending process', file_path)
         raise
 
+def save_all_files(volumes_provided, series_provided, shop_provided):
+    '''Saves all the given data structures to their respective files.'''
+    save_file('./volumes.json', volumes_provided)
+    save_file('./series.json', series_provided)
+    save_file('./shop.json', shop_provided)
+
 def parse_volume(display_name: str, category: str):
     '''Parses the volume number from the given display name.'''
     if re.search(r' [()]?Volume[a-z]?[()]? \d+\.?\-?\d*', display_name):
@@ -94,24 +106,6 @@ def parse_volume(display_name: str, category: str):
             re.search(r' [()]?' + category + r'[a-z]?[()]? \d+\.?\-?\d*', display_name).group(0)
         ).group(0)
     return None
-
-def get_series_data(isbn: str, series_name: str, category: str, volume_name: str,
-                    all_series, all_volumes):
-    '''Gets the series information from the given series name and format.'''
-    if isbn in all_volumes and all_volumes[isbn]['series_id'] in all_series:
-        logger.info('Series found in data... using that instead: %s %s',
-                    series_name, all_volumes[isbn]['series_id'])
-        return all_series[all_volumes[isbn]['series_id']]
-    logger.info('Series not found in data... searching for series ID: %s', series_name)
-    category_conversion = {
-        '': None,
-        'light-novels': 'novel',
-        'manhwa': 'manhwa',
-        'manhua': 'manhua',
-        'novels': 'novel',
-        'manga': 'manga'
-    }
-    return search_series(series_name, category_conversion[category], volume_name)
 
 def get_series_by_id(series_id: str):
     '''Gets the series information from the given series ID.'''
@@ -151,8 +145,17 @@ def calculate_confidence(series_name: str, title: str):
         if li[0] != ' '
     ]) / max(len(series_name), len(title)))
 
-def search_series(series_name: str, series_type: str, volume_name: str):
+def search_series(series_name: str, category: str, volume_name: str):
     '''Gets the series ID from the given series name and format.'''
+    category_conversion = {
+        '': None,
+        'light-novels': 'novel',
+        'manhwa': 'manhwa',
+        'manhua': 'manhua',
+        'novels': 'novel',
+        'manga': 'manga'
+    }
+    series_type = category_conversion[category]
     logger.info('Searching for series ID for ["%s", "%s" ]...', series_name, series_type)
     search_data = {
         'search': series_name,
@@ -189,26 +192,7 @@ def search_series(series_name: str, series_type: str, volume_name: str):
                 closest_series_match = series_details
 
                 # check for partial equality in title or associated titles
-
-                # if series title or associated title is in volume name
-                # case: 'Re:ZERO Ex' in 'Re:Zero Ex Novel Volume 1' = True
-                # if len([
-                #     title for title
-                #     in all_titles
-                #     if title in volume_name.lower()
-                # ]) > 0:
-                #     series_details['series_match_confidence'] = \
-                #         set_confidence(closest_series_match, 0.1)
-                #     closest_series_match = series_details
-
-                # if series name is in title or associated title, or vice versa
-                # case: 'Re:Zero' in 'Re:ZERO -Starting Life in Another World- Ex (Novel)' = True
                 for title in all_titles:
-                    # match = None
-                    # if series_name.lower() in title or title in series_name.lower():
-                    #     match = series_name.lower()
-                    # elif title in volume_name.lower():
-                    #     match = volume_name.lower():
                     confidence = max(
                         # if series title or associated title is in volume name
                         # case: 'Re:ZERO Ex' in 'Re:Zero Ex Novel Volume 1' = True
@@ -220,13 +204,6 @@ def search_series(series_name: str, series_type: str, volume_name: str):
                     series_details['series_match_confidence'] = \
                         set_confidence(closest_series_match, confidence)
                     closest_series_match = series_details
-                # if len([
-                #     title for title
-                #     in all_titles
-                #     if series_name.lower() in title or title in series_name.lower()
-                # ]) > 0:
-                #     diff = [li for li in difflib.ndiff(case_a, case_b) if li[0] != ' ']
-                #     closest_series_match = (series_details, 0.5)
 
         if closest_series_match is not None:
             logger.info('Closest series match with confidence %s: %s',
@@ -288,7 +265,7 @@ def get_isbn_details(soup_isbn_data):
         if None in details.values():
             raise NotFoundErr
     except (AttributeError, NotFoundErr) as err:
-        logger.warning('Could not find book details from isbn... ending process %s', err)
+        logger.warning('Could not find book details from isbn... ending process because %s', err)
     return details
 
 def get_shop_data(soup_isbn_data):
@@ -300,7 +277,7 @@ def get_shop_data(soup_isbn_data):
             try:
                 if store.find('td', {'class': 'logo'}).find('span').attrs['title'].strip() \
                     != 'Amazon Mkt Used':
-                    raise AttributeError
+                    raise AttributeError('could not find "Amazon Mkt Used" in page')
                 logger.info('Found record for shop: Amazon')
                 shops.append({
                     'store': 'Amazon',
@@ -315,8 +292,8 @@ def get_shop_data(soup_isbn_data):
                 logger.info('Shop details added: %s', shops[-1])
             except AttributeError:
                 continue
-    except AttributeError:
-        logger.warning('Could not find shop details from isbn... ending process')
+    except AttributeError as err:
+        logger.warning('Could not find shop details from isbn... ending process because %s', err)
     return shops
 
 def isbn_search(isbn: str):
@@ -356,7 +333,13 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
         isbn = cr_attr['id']
         logger.info('---------- Scraping item... %s | %s ----------', isbn, cr_attr['name'])
 
-        isbn_results = isbn_search(isbn)
+        is_new_volume = isbn not in all_volumes
+        if (QUERY_ISBN_DB and not is_new_volume) or is_new_volume:
+            isbn_results = isbn_search(isbn)
+        else:
+            isbn_results = { 'details': {}, 'shops': [] }
+            logger.info('Volume exists, ISBN search skipped...')
+
         retail_price = item \
             .find('div', {'class': 'price'}) \
                 .find('span', {'class': 'strike-through'}) \
@@ -388,16 +371,29 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
         all_shop[isbn] = product
         logger.info('All shop details added: %s', json.dumps(product))
 
-        series_details = get_series_data(isbn, cr_attr['brand'], cr_attr['category'],
-                                         cr_attr['name'], all_series, all_volumes)
+        # get the series data
+        series_name = cr_attr['brand']
+        # query series if volume is new or series is not in data
+        if not REFRESH_SERIES_DATA and isbn in all_volumes \
+            and all_volumes[isbn]['series_id'] in all_series:
+            logger.info('Series found in data... using that instead: %s %s',
+                        series_name, all_volumes[isbn]['series_id'])
+            series_details = all_series[all_volumes[isbn]['series_id']]
+        elif is_new_volume or REFRESH_SERIES_DATA:
+            logger.info('Series not found in data or forcefully updating series...' +
+                        ' searching for series ID: %s', series_name)
+            series_details = search_series(series_name, cr_attr['category'], cr_attr['name'])
+        else:
+            logger.info('Skipping series search on existing volume: %s', isbn)
+            series_details = { 'series_id': None }
         logger.info('Series details: %s', json.dumps(series_details))
+        series_id = series_details['series_id']
 
         # get the volume
         volume = {
             'isbn': isbn,
-            'series': cr_attr['brand'],
-            'series_id': series_details['series_id'],
-            'series_match_confidence': series_details['series_match_confidence'],
+            'series': series_name,
+            'series_id': series_id,
             'name': cr_attr['name'],
             'category': cr_attr['category'],
             'category_id': category_id,
@@ -405,27 +401,43 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
             'url': cr_attr['url'],
             **isbn_results['details']
         }
-        if isbn in all_volumes:
-            # fetch data for description and more images
-            soup_volume = BeautifulSoup(requests.get(volume['url'], timeout=5).text, 'html.parser')
-            descriptions = soup_volume.find('div', {'class': 'product-description'}) \
-                .find('div', {'class': 'short-description'}) \
-                    .find_all('p')
-            volume['description'] = '\n'.join([desc.text for desc in descriptions])
+        if is_new_volume \
+            or (REFRESH_VOLUME_DETAILS and (QUERY_CR_FOR_DETAILS or FORCE_CR_FOR_DETAILS)):
             volume['cover_images'] = [{ 'name': 'primary', 'url': cover_image }]
-            slick_imgs = filter(
-                lambda x: 'slick-cloned' not in x.attrs['class'],
-                soup_volume.find('div', {'class': 'product-image-carousel'}) \
-                    .find_all('div', {'class': 'slick-slide'})
-            )
-            all_images = [img.find('img').attrs['src'] for img in slick_imgs]
-            logger.info('All images: %s for %s', json.dumps(all_images), cr_attr['name'])
-            volume['cover_images'].extend(
-                [{ 'name': 'alt', 'url': img } for img in all_images if img is not cover_image]
-            )
+            # fetch data for description and more images
+            if (QUERY_CR_FOR_DETAILS and not is_new_volume) or FORCE_CR_FOR_DETAILS:
+                logger.info('Scraping CR page for description and more cover images: %s', isbn)
+                soup_volume = BeautifulSoup(
+                    requests.get(volume['url'], timeout=5).text,
+                    'html.parser'
+                )
+                # get the description
+                descriptions = soup_volume.find('div', {'class': 'product-description'}) \
+                    .find('div', {'class': 'short-description'}) \
+                        .find_all('p')
+                volume['description'] = '\n'.join([desc.text for desc in descriptions])
+                # get the thumbnail carousel images
+                carousel = soup_volume.find_all('div', {'class': 'slick-paging-image-container'})
+                all_images = [
+                    img.find('img', {'class': 'img-fluid'}).attrs['src'] for img in carousel
+                ]
+                logger.info('All images: %s for %s', json.dumps(all_images), cr_attr['name'])
+                volume['cover_images'].extend(
+                    [
+                        { 'name': 'thumbnail', 'url': img } for img in all_images
+                        if img is not cover_image # will not catch because they are thumbnails now
+                    ]
+                )
+            else:
+                logger.info('Volume details already exist... skipping CR page scraping: %s', isbn)
             all_volumes[isbn] = volume
+        # override existing volume details with new volume details
+        elif REFRESH_VOLUME_DETAILS:
+            volume['series_id'] = all_volumes[isbn]['series_id']
+            all_volumes[isbn] = volume
+            logger.info('Volume details refreshed: %s', json.dumps(volume))
         else:
-            all_volumes[isbn] = volume
+            logger.info('Volume exists, not refreshing volume details...')
         logger.info('Volume details added: %s', json.dumps(volume))
 
         # update the series
@@ -434,32 +446,39 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
             'volume': volume['volume'],
             'category': volume['category']
         }
-        if series_details['series_id'] is not None:
-            if series_details['series_id'] not in all_series:
-                all_series[series_details['series_id']] = {
+        if series_id is not None:
+            if series_id not in all_series:
+                all_series[series_id] = {
                     **series_details,
                     'volumes': [series_volume]
                 }
-                logger.info('Added series to data: %s', series_details['series_id'])
+                logger.info('Added series to data: %s', series_id)
             else:
                 existing_volumes = [
-                    vol['isbn'] for vol in all_series[series_details['series_id']]['volumes']
+                    vol['isbn'] for vol in all_series[series_id]['volumes']
                 ]
                 if series_volume['isbn'] not in existing_volumes:
                     series_volumes = sorted(
                         [
-                            *all_series[series_details['series_id']]['volumes'],
+                            *all_series[series_id]['volumes'],
                             series_volume
                         ],
                         key = lambda x: (x['category'], x['volume'])
                     )
-                    all_series[series_details['series_id']]['volumes'] = series_volumes
+                    all_series[series_id]['volumes'] = series_volumes
+                    logger.info('Series exists, added volume: %s to %s', isbn,
+                                json.dumps(all_series[series_id]['volumes']))
                 else:
                     idx = existing_volumes.index(series_volume['isbn'])
-                    all_series[series_details['series_id']]['volumes'][idx] = series_volume
-                logger.info('Series exists, added volume: %s to %s', isbn,
-                            json.dumps(all_series[series_details['series_id']]['volumes']))
+                    all_series[series_id]['volumes'][idx] = series_volume
+                    logger.info('Series exists, updated volume: %s to %s', isbn,
+                                json.dumps(all_series[series_id]['volumes']))
+                if REFRESH_SERIES_DATA:
+                    all_series[series_id] = { **all_series[series_id], **series_details }
+                    logger.info('Series details forcefully updated: %s',
+                                json.dumps(all_series[series_id]))
 
+    save_all_files(volumes_new, series_new, shop_new)
     return all_volumes, all_series, all_shop
 
 if RUN_SCRAPER:
@@ -494,11 +513,9 @@ if RUN_SCRAPER:
     #     #     = scrape_page(next_soup, volumes_new, series_new, shop_new)
     #     START += 100
 
-    save_file('./volumes.json', volumes_new)
-    save_file('./series.json', series_new)
-    save_file('./shop.json', shop_new)
-
-
-
-# print(calculate_confidence('Re:ZERO', 'Re:ZERO -Starting Life in Another World- Ex (Novel)')),
-# print(calculate_confidence('Re:ZERO Starting Life in Another World Ex Novel Volume 1', 'Re:ZERO -Starting Life in Another World- Ex (Novel)'))
+# print(calculate_confidence(
+    # 'Re:ZERO',
+    # 'Re:ZERO -Starting Life in Another World- Ex (Novel)')),
+# print(calculate_confidence(
+    # 'Re:ZERO Starting Life in Another World Ex Novel Volume 1',
+    # 'Re:ZERO -Starting Life in Another World- Ex (Novel)'))
