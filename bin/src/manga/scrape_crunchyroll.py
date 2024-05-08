@@ -34,7 +34,7 @@ from bs4 import BeautifulSoup
 RUN_SCRAPER = True
 SCRAPE_ALL_PAGES = True
 
-START = 600
+START = 3300
 
 QUERY_ISBN_DB = True
 QUERY_CR_FOR_DETAILS = False
@@ -45,6 +45,7 @@ FORCE_CR_FOR_DETAILS = False
 REFRESH_VOLUME_DETAILS = False
 REFRESH_SERIES_DATA = False
 
+# might need to do some memory management here cause it gets big with a lot of data
 series_cache = {}
 
 logging.basicConfig(
