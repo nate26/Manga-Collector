@@ -18,7 +18,7 @@ export enum EViewLayout {
 export class CollectionComponent {
 
     constructor(private collectionService: CollectionService) {
-        collectionService.userId.set('1234')
+        // collectionService.userId.set('1234')
     }
 
     editVolume(vol: (IManga)) {

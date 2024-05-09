@@ -15,9 +15,6 @@ export class CollectionService {
     private serviceURL = 'http://localhost:8050';
     private defaultCoverURL = 'https://drupal.nypl.org/sites-drupal/default/files/styles/medium/public/blogs/sJ3CT4V.gif';
 
-    defaultSeries = { title: 'Unknown', series_id: 'unknown', editions: {} };
-    defaultEdition = { edition: 'Unknown', edition_id: 'unknown', format: 'Unknown', volumes: [] };
-
     // get user ID
     readonly userId = signal('');
 
@@ -27,7 +24,7 @@ export class CollectionService {
         switchMap(userId => this.http.get<ICollectionResponse>(this.serviceURL + '/user-collection?user_id=' + userId)),
         shareReplay(),
         catchError((err: Error) => {
-            alert('Could not get Library... ' + err.message)
+            alert('Could not get Library... ' + err.message);
             return throwError(() => new Error(err.message)); // validate
         })
     );

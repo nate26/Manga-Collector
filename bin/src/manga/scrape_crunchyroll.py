@@ -31,7 +31,7 @@ from bs4 import BeautifulSoup
 # - find a way to get age ratings / adult tag -> Amazon has this
 # - fix b&n query and check if b&n ever has a sale?
 
-RUN_SCRAPER = True
+RUN_SCRAPER = False
 SCRAPE_ALL_PAGES = True
 
 START = 3300
@@ -483,12 +483,20 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
             or (REFRESH_VOLUME_DETAILS and (QUERY_CR_FOR_DETAILS or FORCE_CR_FOR_DETAILS)):
             volume['cover_images'] = [{ 'name': 'primary', 'url': cover_image }]
             # fetch data for description and more images
-            if (QUERY_CR_FOR_DETAILS and not is_new_volume) or FORCE_CR_FOR_DETAILS:
+            if (QUERY_CR_FOR_DETAILS and not is_new_volume) \
+                or FORCE_CR_FOR_DETAILS:
                 logger.info('Scraping CR page for description and more cover images: %s', isbn)
                 soup_volume = BeautifulSoup(
                     requests.get(volume['url'], timeout=30).text,
                     'html.parser'
                 )
+                # get the release date
+                sp_pre_order = soup_volume.find('div', {'class': 'pre-order-street-date'})
+                if sp_pre_order is not None:
+                    release_date = sp_pre_order \
+                        .text.replace('Release date:', '').strip()
+                    volume['release_date'] = \
+                        str(datetime.strptime(release_date, '%m/%d/%Y').date())
                 # get the description
                 descriptions = soup_volume.find('div', {'class': 'product-description'}) \
                     .find('div', {'class': 'short-description'}) \
