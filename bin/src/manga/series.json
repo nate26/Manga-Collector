@@ -34,11 +34,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974746996",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974727148",
                 "volume": "2",
                 "category": "manga"
@@ -76,6 +71,11 @@
             {
                 "isbn": "9781974743018",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974746996",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -146,6 +146,31 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781974709946",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974720712",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974720965",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974722785",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974724048",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974727117",
                 "volume": "11",
                 "category": "manga"
@@ -173,31 +198,6 @@
             {
                 "isbn": "9781974748747",
                 "volume": "16",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974709946",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974720712",
-                "volume": "6",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974720965",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974722785",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974724048",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -228,6 +228,26 @@
         "type": "Manga",
         "series_match_confidence": 1,
         "volumes": [
+            {
+                "isbn": "9781974710034",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974714827",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974718719",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974718726",
+                "volume": "9",
+                "category": "manga"
+            },
             {
                 "isbn": "9781974720750",
                 "volume": "10",
@@ -274,11 +294,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974710034",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974738748",
                 "volume": "20",
                 "category": "manga"
@@ -296,21 +311,6 @@
             {
                 "isbn": "9781974746293",
                 "volume": "23",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974714827",
-                "volume": "6",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974718719",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974718726",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -343,11 +343,6 @@
         "series_match_confidence": 0.9310344827586207,
         "volumes": [
             {
-                "isbn": "9781974748983",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974727230",
                 "volume": "2",
                 "category": "manga"
@@ -360,6 +355,11 @@
             {
                 "isbn": "9781974738601",
                 "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974748983",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -385,21 +385,6 @@
             {
                 "isbn": "9780316342032",
                 "volume": "1",
-                "category": "manga"
-            },
-            {
-                "isbn": "9780316416054",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975347314",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975391423",
-                "volume": "17",
                 "category": "manga"
             },
             {
@@ -440,6 +425,21 @@
             {
                 "isbn": "9780316473309",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9780316416054",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975347314",
+                "volume": "16",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975391423",
+                "volume": "17",
                 "category": "manga"
             }
         ]
@@ -687,21 +687,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974740673",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974743292",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974747054",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974721030",
                 "volume": "4",
                 "category": "manga"
@@ -729,6 +714,21 @@
             {
                 "isbn": "9781974736287",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974740673",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974743292",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974747054",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -769,21 +769,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9798888434024",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888436516",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888438626",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781638585725",
                 "volume": "2",
                 "category": "manga"
@@ -821,6 +806,21 @@
             {
                 "isbn": "9781685799588",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888434024",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888436516",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888438626",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -872,16 +872,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781632366306",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781632368034",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646519798",
                 "volume": "2",
                 "category": "manga"
@@ -919,6 +909,16 @@
             {
                 "isbn": "9781632364456",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632366306",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632368034",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -969,11 +969,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781646518128",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646517602",
                 "volume": "5",
                 "category": "manga"
@@ -991,6 +986,11 @@
             {
                 "isbn": "9781646518111",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646518128",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -1071,16 +1071,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9798888770443",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888770450",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646515103",
                 "volume": "2",
                 "category": "manga"
@@ -1118,6 +1108,16 @@
             {
                 "isbn": "9798888770436",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888770443",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888770450",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -1537,21 +1537,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646092284",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646092475",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646093038",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646090334",
                 "volume": "2",
                 "category": "manga"
@@ -1589,6 +1574,21 @@
             {
                 "isbn": "9781646091959",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646092284",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646092475",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646093038",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -1919,6 +1919,16 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781646516636",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646516643",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781646516674",
                 "volume": "10",
                 "category": "manga"
@@ -1941,16 +1951,6 @@
             {
                 "isbn": "9781646516711",
                 "volume": "14",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646516636",
-                "volume": "6",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646516643",
-                "volume": "7",
                 "category": "manga"
             }
         ]
@@ -2038,26 +2038,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646519002",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646519491",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888770634",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888770641",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646514830",
                 "volume": "2",
                 "category": "manga"
@@ -2095,6 +2075,26 @@
             {
                 "isbn": "9781646518296",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646519002",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646519491",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888770634",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888770641",
+                "volume": "13",
                 "category": "manga"
             }
         ]
@@ -2370,33 +2370,8 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646513079",
-                "volume": "18",
-                "category": "manga"
-            },
-            {
                 "isbn": "9798888772225",
                 "volume": "2",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646515967",
-                "volume": "20",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646517206",
-                "volume": "21",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646517213",
-                "volume": "22",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646519071",
-                "volume": "23",
                 "category": "manga"
             },
             {
@@ -2432,6 +2407,31 @@
             {
                 "isbn": "9781646513000",
                 "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646513079",
+                "volume": "18",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646515967",
+                "volume": "20",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646517206",
+                "volume": "21",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646517213",
+                "volume": "22",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646519071",
+                "volume": "23",
                 "category": "manga"
             }
         ]
@@ -2683,6 +2683,16 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781646515585",
+                "volume": "4",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646517121",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781646515844",
                 "volume": "25",
                 "category": "manga"
@@ -2695,16 +2705,6 @@
             {
                 "isbn": "9798888770597",
                 "volume": "27",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646515585",
-                "volume": "4",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646517121",
-                "volume": "6",
                 "category": "manga"
             }
         ]
@@ -2783,16 +2783,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9798888436318",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798891602069",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781685796006",
                 "volume": "7",
                 "category": "manga"
@@ -2805,6 +2795,16 @@
             {
                 "isbn": "9798888434086",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888436318",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798891602069",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -2916,13 +2916,33 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781421587929",
-                "volume": "11",
+                "isbn": "9781421587837",
+                "volume": "2",
                 "category": "manga"
             },
             {
-                "isbn": "9781421587837",
-                "volume": "2",
+                "isbn": "9781421587844",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421587851",
+                "volume": "4",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421587868",
+                "volume": "5",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421587882",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421587929",
+                "volume": "11",
                 "category": "manga"
             },
             {
@@ -2956,18 +2976,8 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421587844",
-                "volume": "3",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974717385",
                 "volume": "30",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421587851",
-                "volume": "4",
                 "category": "manga"
             },
             {
@@ -2978,16 +2988,6 @@
             {
                 "isbn": "9781974748914",
                 "volume": "42",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421587868",
-                "volume": "5",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421587882",
-                "volume": "7",
                 "category": "manga"
             }
         ]
@@ -3009,21 +3009,6 @@
         "type": "Manga",
         "series_match_confidence": 1,
         "volumes": [
-            {
-                "isbn": "9781974741137",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974745890",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974748884",
-                "volume": "13",
-                "category": "manga"
-            },
             {
                 "isbn": "9781974732197",
                 "volume": "3",
@@ -3057,6 +3042,21 @@
             {
                 "isbn": "9781974738960",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974741137",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974745890",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974748884",
+                "volume": "13",
                 "category": "manga"
             }
         ]
@@ -3330,16 +3330,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9798888433447",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888438473",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9798888430385",
                 "volume": "8",
                 "category": "manga"
@@ -3347,6 +3337,16 @@
             {
                 "isbn": "9798888432105",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888433447",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888438473",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -3626,26 +3626,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974735716",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974743636",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974745784",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974748723",
-                "volume": "17",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974725908",
                 "volume": "6",
                 "category": "manga"
@@ -3663,6 +3643,26 @@
             {
                 "isbn": "9781974734221",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974735716",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974743636",
+                "volume": "15",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974745784",
+                "volume": "16",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974748723",
+                "volume": "17",
                 "category": "manga"
             }
         ]
@@ -3683,6 +3683,16 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781646511242",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646511266",
+                "volume": "4",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781646516858",
                 "volume": "13",
                 "category": "manga"
@@ -3695,16 +3705,6 @@
             {
                 "isbn": "9798888770290",
                 "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646511242",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646511266",
-                "volume": "4",
                 "category": "manga"
             }
         ]
@@ -3738,6 +3738,11 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781647293208",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781647292263",
                 "volume": "15",
                 "category": "manga"
@@ -3750,11 +3755,6 @@
             {
                 "isbn": "9781647293055",
                 "volume": "17",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781647293208",
-                "volume": "2",
                 "category": "manga"
             }
         ]
@@ -3829,6 +3829,21 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781646513857",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646510634",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646510641",
+                "volume": "4",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781646515370",
                 "volume": "18",
                 "category": "manga"
@@ -3836,11 +3851,6 @@
             {
                 "isbn": "9781646515387",
                 "volume": "19",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646513857",
-                "volume": "2",
                 "category": "manga"
             },
             {
@@ -3876,16 +3886,6 @@
             {
                 "isbn": "9781646517992",
                 "volume": "26",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646510634",
-                "volume": "3",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646510641",
-                "volume": "4",
                 "category": "manga"
             }
         ]
@@ -4577,6 +4577,16 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781646514694",
+                "volume": "5",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646517251",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9798888770726",
                 "volume": "11",
                 "category": "manga"
@@ -4594,16 +4604,6 @@
             {
                 "isbn": "9798888772065",
                 "volume": "13",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646514694",
-                "volume": "5",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646517251",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -4652,26 +4652,6 @@
             {
                 "isbn": "9781975390686",
                 "volume": "1",
-                "category": "light-novels"
-            },
-            {
-                "isbn": "9781975348564",
-                "volume": "11",
-                "category": "light-novels"
-            },
-            {
-                "isbn": "9781975367862",
-                "volume": "12",
-                "category": "light-novels"
-            },
-            {
-                "isbn": "9781975375232",
-                "volume": "13",
-                "category": "light-novels"
-            },
-            {
-                "isbn": "9781975304188",
-                "volume": "16",
                 "category": "light-novels"
             },
             {
@@ -4732,6 +4712,26 @@
             {
                 "isbn": "9781975343385",
                 "volume": "8",
+                "category": "light-novels"
+            },
+            {
+                "isbn": "9781975348564",
+                "volume": "11",
+                "category": "light-novels"
+            },
+            {
+                "isbn": "9781975367862",
+                "volume": "12",
+                "category": "light-novels"
+            },
+            {
+                "isbn": "9781975375232",
+                "volume": "13",
+                "category": "light-novels"
+            },
+            {
+                "isbn": "9781975304188",
+                "volume": "16",
                 "category": "light-novels"
             }
         ]
@@ -4797,6 +4797,21 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781974748860",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421580807",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421583341",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974720958",
                 "volume": "11",
                 "category": "manga"
@@ -4817,16 +4832,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974748860",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421580807",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974745548",
                 "volume": "20",
                 "category": "manga"
@@ -4839,11 +4844,6 @@
             {
                 "isbn": "9781421591162",
                 "volume": "21",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421583341",
-                "volume": "3",
                 "category": "manga"
             }
         ]
@@ -4981,13 +4981,13 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781646519538",
-                "volume": "10",
+                "isbn": "9781646518258",
+                "volume": "9",
                 "category": "manga"
             },
             {
-                "isbn": "9781646518258",
-                "volume": "9",
+                "isbn": "9781646519538",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -5485,16 +5485,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781646092536",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646093014",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646092123",
                 "volume": "8",
                 "category": "manga"
@@ -5502,6 +5492,16 @@
             {
                 "isbn": "9781646092130",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646092536",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646093014",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -5520,13 +5520,13 @@
         "series_match_confidence": 0.13235294117647056,
         "volumes": [
             {
-                "isbn": "9798891600386",
-                "volume": "10",
+                "isbn": "9798888433423",
+                "volume": "9",
                 "category": "manga"
             },
             {
-                "isbn": "9798888433423",
-                "volume": "9",
+                "isbn": "9798891600386",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -5622,6 +5622,11 @@
         "series_match_confidence": 0.6818181818181819,
         "volumes": [
             {
+                "isbn": "9781648274961",
+                "volume": "5",
+                "category": "manga"
+            },
+            {
                 "isbn": "9798888430613",
                 "volume": "10",
                 "category": "manga"
@@ -5639,11 +5644,6 @@
             {
                 "isbn": "9798888434222",
                 "volume": "17",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781648274961",
-                "volume": "5",
                 "category": "manga"
             }
         ]
@@ -5721,6 +5721,11 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781949980165",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781647292973",
                 "volume": "21",
                 "category": "manga"
@@ -5728,11 +5733,6 @@
             {
                 "isbn": "9781647292980",
                 "volume": "22",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781949980165",
-                "volume": "3",
                 "category": "manga"
             }
         ]
@@ -5796,11 +5796,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9798855401998",
-                "volume": "24",
-                "category": "manga"
-            },
-            {
                 "isbn": "9780316468152",
                 "volume": "3",
                 "category": "manga"
@@ -5858,6 +5853,11 @@
             {
                 "isbn": "9781975340414",
                 "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798855401998",
+                "volume": "24",
                 "category": "manga"
             }
         ]
@@ -5936,6 +5936,11 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781974741175",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974743513",
                 "volume": "10",
                 "category": "manga"
@@ -5948,11 +5953,6 @@
             {
                 "isbn": "9781974746316",
                 "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974741175",
-                "volume": "8",
                 "category": "manga"
             }
         ]
@@ -5981,21 +5981,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974743230",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974745821",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974748853",
-                "volume": "17",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974725113",
                 "volume": "3",
                 "category": "manga"
@@ -6008,6 +5993,21 @@
             {
                 "isbn": "9781974727131",
                 "volume": "5",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974743230",
+                "volume": "15",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974745821",
+                "volume": "16",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974748853",
+                "volume": "17",
                 "category": "manga"
             }
         ]
@@ -6093,11 +6093,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974743933",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974743261",
                 "volume": "2",
                 "category": "manga"
@@ -6120,6 +6115,11 @@
             {
                 "isbn": "9781974711239",
                 "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974743933",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -6368,6 +6368,11 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781974720828",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974743650",
                 "volume": "16",
                 "category": "manga"
@@ -6380,11 +6385,6 @@
             {
                 "isbn": "9781974748846",
                 "volume": "18",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974720828",
-                "volume": "3",
                 "category": "manga"
             }
         ]
@@ -6492,6 +6492,11 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781974745593",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974746071",
                 "volume": "10",
                 "category": "manga"
@@ -6499,11 +6504,6 @@
             {
                 "isbn": "9781974748785",
                 "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974745593",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -6546,26 +6546,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421591001",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421591018",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421591025",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421591032",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974747108",
                 "volume": "2",
                 "category": "manga"
@@ -6581,18 +6561,8 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974707430",
-                "volume": "33",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781421587691",
                 "volume": "4",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974718122",
-                "volume": "41",
                 "category": "manga"
             },
             {
@@ -6618,6 +6588,36 @@
             {
                 "isbn": "9781421590998",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421591001",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421591018",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421591025",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421591032",
+                "volume": "13",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974707430",
+                "volume": "33",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974718122",
+                "volume": "41",
                 "category": "manga"
             }
         ]
@@ -7039,13 +7039,13 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781975391638",
-                "volume": "10",
+                "isbn": "9781975387815",
+                "volume": "9",
                 "category": "manga"
             },
             {
-                "isbn": "9781975387815",
-                "volume": "9",
+                "isbn": "9781975391638",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -7089,16 +7089,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646092628",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646093168",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646090570",
                 "volume": "2",
                 "category": "manga"
@@ -7106,6 +7096,16 @@
             {
                 "isbn": "9781646090587",
                 "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646092628",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646093168",
+                "volume": "13",
                 "category": "manga"
             }
         ]
@@ -7152,11 +7152,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781646519149",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646518081",
                 "volume": "8",
                 "category": "manga"
@@ -7164,6 +7159,11 @@
             {
                 "isbn": "9781646519132",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646519149",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -7443,6 +7443,41 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781421582702",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421585109",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421585116",
+                "volume": "4",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974745630",
+                "volume": "5",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974707720",
+                "volume": "5",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421590400",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974719792",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781421597010",
                 "volume": "12",
                 "category": "manga"
@@ -7450,11 +7485,6 @@
             {
                 "isbn": "9781974704378",
                 "volume": "18",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421582702",
-                "volume": "2",
                 "category": "manga"
             },
             {
@@ -7475,11 +7505,6 @@
             {
                 "isbn": "9781974721016",
                 "volume": "27",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421585109",
-                "volume": "3",
                 "category": "manga"
             },
             {
@@ -7515,31 +7540,6 @@
             {
                 "isbn": "9781974745845",
                 "volume": "38",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421585116",
-                "volume": "4",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974745630",
-                "volume": "5",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974707720",
-                "volume": "5",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421590400",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974719792",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -8088,16 +8088,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974714780",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974718115",
-                "volume": "19",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974743407",
                 "volume": "2",
                 "category": "manga"
@@ -8115,6 +8105,16 @@
             {
                 "isbn": "9781974700554",
                 "volume": "4",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974714780",
+                "volume": "15",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974718115",
+                "volume": "19",
                 "category": "manga"
             }
         ]
@@ -8864,6 +8864,11 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781974741212",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974743803",
                 "volume": "10",
                 "category": "manga"
@@ -8876,11 +8881,6 @@
             {
                 "isbn": "9781974747061",
                 "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974741212",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -8983,11 +8983,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781642733402",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781642731279",
                 "volume": "4",
                 "category": "manga"
@@ -8995,6 +8990,11 @@
             {
                 "isbn": "9781642731989",
                 "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781642733402",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -9043,11 +9043,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781975376857",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781975325206",
                 "volume": "2",
                 "category": "manga"
@@ -9080,6 +9075,11 @@
             {
                 "isbn": "9781975372217",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975376857",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -9464,26 +9464,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646090105",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646090136",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646090143",
-                "volume": "14",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646090150",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646090020",
                 "volume": "2",
                 "category": "manga"
@@ -9501,6 +9481,26 @@
             {
                 "isbn": "9781646090082",
                 "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646090105",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646090136",
+                "volume": "13",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646090143",
+                "volume": "14",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646090150",
+                "volume": "15",
                 "category": "manga"
             }
         ]
@@ -9587,21 +9587,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646091362",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646092529",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646092963",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646090716",
                 "volume": "2",
                 "category": "manga"
@@ -9639,6 +9624,21 @@
             {
                 "isbn": "9781646091355",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646091362",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646092529",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646092963",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -9716,6 +9716,16 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781646515486",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888770382",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9798888770399",
                 "volume": "10",
                 "category": "manga"
@@ -9723,11 +9733,6 @@
             {
                 "isbn": "9798888770405",
                 "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646515486",
-                "volume": "2",
                 "category": "manga"
             },
             {
@@ -9778,11 +9783,6 @@
             {
                 "isbn": "9781646518005",
                 "volume": "34",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888770382",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -9909,11 +9909,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781632365972",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781632361530",
                 "volume": "2",
                 "category": "manga"
@@ -9961,6 +9956,11 @@
             {
                 "isbn": "9781632365965",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632365972",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -10134,31 +10134,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781975399474",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975325329",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975362713",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975376833",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975393809",
-                "volume": "17",
-                "category": "manga"
-            },
-            {
                 "isbn": "9780316469333",
                 "volume": "3",
                 "category": "manga"
@@ -10186,6 +10161,31 @@
             {
                 "isbn": "9781975359546",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975399474",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975325329",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975362713",
+                "volume": "15",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975376833",
+                "volume": "16",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975393809",
+                "volume": "17",
                 "category": "manga"
             }
         ]
@@ -10313,11 +10313,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9798888436714",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9798888434093",
                 "volume": "8",
                 "category": "manga"
@@ -10325,6 +10320,11 @@
             {
                 "isbn": "9798888436394",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888436714",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -10375,21 +10375,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646516186",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646517459",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888770795",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781632368041",
                 "volume": "2",
                 "category": "manga"
@@ -10437,6 +10422,21 @@
             {
                 "isbn": "9781646514472",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646516186",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646517459",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888770795",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -10588,11 +10588,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781646519521",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781646518135",
                 "volume": "8",
                 "category": "manga"
@@ -10600,6 +10595,11 @@
             {
                 "isbn": "9781646518142",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646519521",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -10868,16 +10868,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781421588544",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974745906",
-                "volume": "30",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781647293109",
                 "volume": "4",
                 "category": "manga"
@@ -10895,6 +10885,16 @@
             {
                 "isbn": "9781421582641",
                 "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421588544",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974745906",
+                "volume": "30",
                 "category": "manga"
             }
         ]
@@ -10954,11 +10954,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9798888436752",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781648276248",
                 "volume": "2",
                 "category": "manga"
@@ -10996,6 +10991,11 @@
             {
                 "isbn": "9781685795283",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888436752",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -11531,13 +11531,13 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9798888436745",
-                "volume": "10",
+                "isbn": "9798888433317",
+                "volume": "9",
                 "category": "manga"
             },
             {
-                "isbn": "9798888433317",
-                "volume": "9",
+                "isbn": "9798888436745",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -11808,11 +11808,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9798888436455",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781638582069",
                 "volume": "2",
                 "category": "manga"
@@ -11825,6 +11820,11 @@
             {
                 "isbn": "9798888434185",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888436455",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -11852,6 +11852,11 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781646092109",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781646092116",
                 "volume": "10",
                 "category": "manga"
@@ -11859,11 +11864,6 @@
             {
                 "isbn": "9781646092437",
                 "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646092109",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -12288,21 +12288,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781638587538",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781638589822",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888433782",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781645052074",
                 "volume": "2",
                 "category": "manga"
@@ -12350,6 +12335,21 @@
             {
                 "isbn": "9781638583592",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781638587538",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781638589822",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888433782",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -12487,11 +12487,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9798888433706",
-                "volume": "14",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781626927933",
                 "volume": "2",
                 "category": "manga"
@@ -12509,6 +12504,11 @@
             {
                 "isbn": "9798888437803",
                 "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888433706",
+                "volume": "14",
                 "category": "manga"
             }
         ]
@@ -12841,6 +12841,11 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781974707188",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974734016",
                 "volume": "23",
                 "category": "manga"
@@ -12853,11 +12858,6 @@
             {
                 "isbn": "9781974746101",
                 "volume": "30",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974707188",
-                "volume": "7",
                 "category": "manga"
             }
         ]
@@ -12936,13 +12936,13 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781646092611",
-                "volume": "10",
+                "isbn": "9781646092291",
+                "volume": "9",
                 "category": "manga"
             },
             {
-                "isbn": "9781646092291",
-                "volume": "9",
+                "isbn": "9781646092611",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -13336,16 +13336,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9798888430828",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888438039",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781645051930",
                 "volume": "2",
                 "category": "manga"
@@ -13383,6 +13373,16 @@
             {
                 "isbn": "9781685795351",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888430828",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888438039",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -13669,13 +13669,13 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9798888437995",
-                "volume": "10",
+                "isbn": "9781685794682",
+                "volume": "8",
                 "category": "manga"
             },
             {
-                "isbn": "9781685794682",
-                "volume": "8",
+                "isbn": "9798888437995",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -13701,16 +13701,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974743506",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974746187",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974727124",
                 "volume": "5",
                 "category": "manga"
@@ -13728,6 +13718,16 @@
             {
                 "isbn": "9781974732043",
                 "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974743506",
+                "volume": "15",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974746187",
+                "volume": "16",
                 "category": "manga"
             }
         ]
@@ -14506,16 +14506,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974741106",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974747009",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781772942217",
                 "volume": "2",
                 "category": "manga"
@@ -14538,6 +14528,16 @@
             {
                 "isbn": "9781974728053",
                 "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974741106",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974747009",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -14734,13 +14734,13 @@
         "series_match_confidence": 0.1807228915662651,
         "volumes": [
             {
-                "isbn": "9798888436530",
-                "volume": "10",
+                "isbn": "9798888431238",
+                "volume": "9",
                 "category": "manga"
             },
             {
-                "isbn": "9798888431238",
-                "volume": "9",
+                "isbn": "9798888436530",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -15307,46 +15307,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421504063",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421555041",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974734207",
-                "volume": "101",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974736553",
-                "volume": "102",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974741298",
-                "volume": "104",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974743278",
-                "volume": "105",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974745869",
-                "volume": "106",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421583389",
-                "volume": "18",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974745876",
                 "volume": "2",
                 "category": "manga"
@@ -15362,11 +15322,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974705078",
-                "volume": "28",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781421536279",
                 "volume": "3",
                 "category": "manga"
@@ -15377,11 +15332,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974741090",
-                "volume": "33",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974725960",
                 "volume": "4",
                 "category": "manga"
@@ -15389,16 +15339,6 @@
             {
                 "isbn": "9781421536286",
                 "volume": "4",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421534619",
-                "volume": "45",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421534657",
-                "volume": "49",
                 "category": "manga"
             },
             {
@@ -15424,6 +15364,61 @@
             {
                 "isbn": "9781591168522",
                 "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421500751",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421555010",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421501918",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421555034",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421504063",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421555041",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421583389",
+                "volume": "18",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974705078",
+                "volume": "28",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974741090",
+                "volume": "33",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421534619",
+                "volume": "45",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421534657",
+                "volume": "49",
                 "category": "manga"
             },
             {
@@ -15472,16 +15467,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421500751",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421555010",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781421590240",
                 "volume": "80",
                 "category": "manga"
@@ -15489,16 +15474,6 @@
             {
                 "isbn": "9781974703784",
                 "volume": "88",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421501918",
-                "volume": "9",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421555034",
-                "volume": "9",
                 "category": "manga"
             },
             {
@@ -15549,6 +15524,31 @@
             {
                 "isbn": "9781974729005",
                 "volume": "99",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974734207",
+                "volume": "101",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974736553",
+                "volume": "102",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974741298",
+                "volume": "104",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974743278",
+                "volume": "105",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974745869",
+                "volume": "106",
                 "category": "manga"
             }
         ]
@@ -15731,23 +15731,23 @@
                 "category": "manga"
             },
             {
-                "isbn": "9780316511209",
-                "volume": "24",
-                "category": "manga"
-            },
-            {
                 "isbn": "9780316084260",
                 "volume": "3",
                 "category": "manga"
             },
             {
-                "isbn": "9781975391676",
-                "volume": "33",
+                "isbn": "9780316084307",
+                "volume": "6",
                 "category": "manga"
             },
             {
-                "isbn": "9780316084307",
-                "volume": "6",
+                "isbn": "9780316511209",
+                "volume": "24",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975391676",
+                "volume": "33",
                 "category": "manga"
             }
         ]
@@ -16859,6 +16859,11 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781975375454",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781975313197",
                 "volume": "14",
                 "category": "manga"
@@ -16876,11 +16881,6 @@
             {
                 "isbn": "9781975373719",
                 "volume": "23",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975375454",
-                "volume": "3",
                 "category": "manga"
             }
         ]
@@ -17255,11 +17255,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781975394707",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781975336738",
                 "volume": "2",
                 "category": "manga"
@@ -17267,6 +17262,11 @@
             {
                 "isbn": "9781975353360",
                 "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975394707",
+                "volume": "13",
                 "category": "manga"
             }
         ]
@@ -17707,6 +17707,16 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781974707218",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974707270",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974707294",
                 "volume": "10",
                 "category": "manga"
@@ -17717,18 +17727,8 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974707218",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974745920",
                 "volume": "26",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974707270",
-                "volume": "8",
                 "category": "manga"
             }
         ]
@@ -17882,13 +17882,13 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974746378",
-                "volume": "13",
+                "isbn": "9781974720620",
+                "volume": "2",
                 "category": "manga"
             },
             {
-                "isbn": "9781974720620",
-                "volume": "2",
+                "isbn": "9781974746378",
+                "volume": "13",
                 "category": "manga"
             }
         ]
@@ -18543,6 +18543,11 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781421593081",
+                "volume": "4",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974738687",
                 "volume": "12",
                 "category": "manga"
@@ -18550,11 +18555,6 @@
             {
                 "isbn": "9781974746989",
                 "volume": "13",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421593081",
-                "volume": "4",
                 "category": "manga"
             }
         ]
@@ -18757,6 +18757,11 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781646517343",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781646517350",
                 "volume": "10",
                 "category": "manga"
@@ -18764,11 +18769,6 @@
             {
                 "isbn": "9798888770818",
                 "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646517343",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -18822,11 +18822,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781974743902",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781421542270",
                 "volume": "2",
                 "category": "manga"
@@ -18837,13 +18832,18 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974743674",
-                "volume": "49",
+                "isbn": "9781421554747",
+                "volume": "6",
                 "category": "manga"
             },
             {
-                "isbn": "9781421554747",
-                "volume": "6",
+                "isbn": "9781974743902",
+                "volume": "16",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974743674",
+                "volume": "49",
                 "category": "manga"
             }
         ]
@@ -19402,6 +19402,11 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781975388652",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781975390303",
                 "volume": "10",
                 "category": "manga"
@@ -19409,11 +19414,6 @@
             {
                 "isbn": "9781975390327",
                 "volume": "14",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975388652",
-                "volume": "6",
                 "category": "manga"
             }
         ]
@@ -19633,16 +19633,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781638587170",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888433676",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781638583691",
                 "volume": "4",
                 "category": "manga"
@@ -19655,6 +19645,16 @@
             {
                 "isbn": "9781645057383",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781638587170",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888433676",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -20268,41 +20268,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646512874",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646514342",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646515691",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646516889",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646516896",
-                "volume": "14",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888770306",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888770313",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781632369444",
                 "volume": "2",
                 "category": "manga"
@@ -20340,6 +20305,41 @@
             {
                 "isbn": "9781646512164",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646512874",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646514342",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646515691",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646516889",
+                "volume": "13",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646516896",
+                "volume": "14",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888770306",
+                "volume": "15",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888770313",
+                "volume": "16",
                 "category": "manga"
             }
         ]
@@ -20490,6 +20490,11 @@
                 "category": "manga"
             },
             {
+                "isbn": "9798888433850",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781645054702",
                 "volume": "13",
                 "category": "manga"
@@ -20497,11 +20502,6 @@
             {
                 "isbn": "9798888430521",
                 "volume": "19",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888433850",
-                "volume": "8",
                 "category": "manga"
             }
         ]
@@ -21205,16 +21205,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781647291693",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781647293390",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781949980783",
                 "volume": "3",
                 "category": "manga"
@@ -21222,6 +21212,16 @@
             {
                 "isbn": "9781949980790",
                 "volume": "4",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781647291693",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781647293390",
+                "volume": "16",
                 "category": "manga"
             }
         ]
@@ -21385,36 +21385,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646514229",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646515738",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646516933",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646518906",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646518913",
-                "volume": "14",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888770351",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
                 "isbn": "9798888771471",
                 "volume": "2",
                 "category": "manga"
@@ -21460,11 +21430,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781612624334",
-                "volume": "37",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781632363336",
                 "volume": "4",
                 "category": "manga"
@@ -21502,6 +21467,41 @@
             {
                 "isbn": "9781646513062",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646514229",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646515738",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646516933",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646518906",
+                "volume": "13",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646518913",
+                "volume": "14",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888770351",
+                "volume": "15",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781612624334",
+                "volume": "37",
                 "category": "manga"
             }
         ]
@@ -21853,21 +21853,6 @@
         "series_match_confidence": 0.6428571428571428,
         "volumes": [
             {
-                "isbn": "9781685794835",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888430286",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9798888433331",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781648279102",
                 "volume": "7",
                 "category": "manga"
@@ -21880,6 +21865,21 @@
             {
                 "isbn": "9781638587705",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781685794835",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888430286",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9798888433331",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -21975,6 +21975,26 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781569319222",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421520612",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421520698",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974712366",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974717613",
                 "volume": "11",
                 "category": "manga"
@@ -22017,26 +22037,6 @@
             {
                 "isbn": "9781974746866",
                 "volume": "21",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781569319222",
-                "volume": "3",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421520612",
-                "volume": "3",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421520698",
-                "volume": "6",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974712366",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -22227,13 +22227,13 @@
         "series_match_confidence": 0.75,
         "volumes": [
             {
-                "isbn": "9781646092581",
-                "volume": "10",
+                "isbn": "9781646090822",
+                "volume": "3",
                 "category": "manga"
             },
             {
-                "isbn": "9781646090822",
-                "volume": "3",
+                "isbn": "9781646092581",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -23085,6 +23085,11 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781975385149",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781975335625",
                 "volume": "10",
                 "category": "manga"
@@ -23117,11 +23122,6 @@
             {
                 "isbn": "9781975380618",
                 "volume": "16",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975385149",
-                "volume": "6",
                 "category": "manga"
             }
         ]
@@ -23338,13 +23338,13 @@
         "series_match_confidence": 0.78125,
         "volumes": [
             {
-                "isbn": "9781974745692",
-                "volume": "17",
+                "isbn": "9781421597515",
+                "volume": "8",
                 "category": "manga"
             },
             {
-                "isbn": "9781421597515",
-                "volume": "8",
+                "isbn": "9781974745692",
+                "volume": "17",
                 "category": "manga"
             }
         ]
@@ -23880,6 +23880,46 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781421587196",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421587202",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421590233",
+                "volume": "4",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421591254",
+                "volume": "5",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421591582",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421594323",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421595177",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421596464",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781421597638",
                 "volume": "10",
                 "category": "manga"
@@ -23897,11 +23937,6 @@
             {
                 "isbn": "9781974708789",
                 "volume": "19",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421587196",
-                "volume": "2",
                 "category": "manga"
             },
             {
@@ -23940,11 +23975,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421587202",
-                "volume": "3",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781974732319",
                 "volume": "30",
                 "category": "manga"
@@ -23972,36 +24002,6 @@
             {
                 "isbn": "9781974745944",
                 "volume": "35",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421590233",
-                "volume": "4",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421591254",
-                "volume": "5",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421591582",
-                "volume": "6",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421594323",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421595177",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421596464",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -24299,41 +24299,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421599922",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421599946",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421599953",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974700011",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974700042",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974700059",
-                "volume": "17",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974700066",
-                "volume": "18",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781421599793",
                 "volume": "2",
                 "category": "manga"
@@ -24376,6 +24341,41 @@
             {
                 "isbn": "9781421554976",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421599922",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421599946",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421599953",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974700011",
+                "volume": "15",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974700042",
+                "volume": "16",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974700059",
+                "volume": "17",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974700066",
+                "volume": "18",
                 "category": "manga"
             }
         ]
@@ -24726,21 +24726,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781642731675",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781642731934",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781642733396",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781642730623",
                 "volume": "2",
                 "category": "manga"
@@ -24779,6 +24764,21 @@
                 "isbn": "9781642731668",
                 "volume": "9",
                 "category": "manga"
+            },
+            {
+                "isbn": "9781642731675",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781642731934",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781642733396",
+                "volume": "12",
+                "category": "manga"
             }
         ]
     },
@@ -24801,6 +24801,41 @@
             {
                 "isbn": "9781421533636",
                 "volume": "1",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421533766",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421533773",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421533780",
+                "volume": "4",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421533803",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421533810",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421533827",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421533834",
+                "volume": "9",
                 "category": "manga"
             },
             {
@@ -24854,11 +24889,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421533766",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781421587103",
                 "volume": "20",
                 "category": "manga"
@@ -24876,36 +24906,6 @@
             {
                 "isbn": "9781974708802",
                 "volume": "23",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421533773",
-                "volume": "3",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421533780",
-                "volume": "4",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421533803",
-                "volume": "6",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421533810",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421533827",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421533834",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -24933,6 +24933,11 @@
         "type": "Manga",
         "series_match_confidence": 1,
         "volumes": [
+            {
+                "isbn": "9781421569543",
+                "volume": "5",
+                "category": "manga"
+            },
             {
                 "isbn": "9781421590158",
                 "volume": "10",
@@ -24997,11 +25002,6 @@
                 "isbn": "9781974745654",
                 "volume": "28",
                 "category": "manga"
-            },
-            {
-                "isbn": "9781421569543",
-                "volume": "5",
-                "category": "manga"
             }
         ]
     },
@@ -25028,6 +25028,61 @@
             {
                 "isbn": "9781593070205",
                 "volume": "1",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781506711997",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781593070212",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781593070229",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781506715223",
+                "volume": "5",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781506715230",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781506717906",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781593073282",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781506717913",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781593073299",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781506717920",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781593073305",
+                "volume": "9",
                 "category": "manga"
             },
             {
@@ -25086,16 +25141,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781506711997",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781593070212",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781593077457",
                 "volume": "20",
                 "category": "manga"
@@ -25123,11 +25168,6 @@
             {
                 "isbn": "9781595822109",
                 "volume": "29",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781593070229",
-                "volume": "3",
                 "category": "manga"
             },
             {
@@ -25163,46 +25203,6 @@
             {
                 "isbn": "9781506733777",
                 "volume": "41",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781506715223",
-                "volume": "5",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781506715230",
-                "volume": "6",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781506717906",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781593073282",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781506717913",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781593073299",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781506717920",
-                "volume": "9",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781593073305",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -25404,6 +25404,26 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781421580814",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974703197",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421539942",
+                "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781591169246",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781421500812",
                 "volume": "10",
                 "category": "manga"
@@ -25424,23 +25444,8 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421580814",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781421598703",
                 "volume": "25",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974703197",
-                "volume": "3",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421539942",
-                "volume": "3",
                 "category": "manga"
             },
             {
@@ -25476,11 +25481,6 @@
             {
                 "isbn": "9781421590950",
                 "volume": "71",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781591169246",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -25761,11 +25761,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781974743735",
-                "volume": "21",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781939130198",
                 "volume": "5",
                 "category": "manga"
@@ -25773,6 +25768,11 @@
             {
                 "isbn": "9781939130679",
                 "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974743735",
+                "volume": "21",
                 "category": "manga"
             }
         ]
@@ -26188,11 +26188,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781975375317",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781975387617",
                 "volume": "6",
                 "category": "manga"
@@ -26205,6 +26200,11 @@
             {
                 "isbn": "9781975369217",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975375317",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -26530,6 +26530,16 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781974707782",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974709526",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974720064",
                 "volume": "16",
                 "category": "manga"
@@ -26583,16 +26593,6 @@
                 "isbn": "9781974738670",
                 "volume": "26",
                 "category": "manga"
-            },
-            {
-                "isbn": "9781974707782",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974709526",
-                "volume": "8",
-                "category": "manga"
             }
         ]
     },
@@ -26614,11 +26614,6 @@
             {
                 "isbn": "9781632364692",
                 "volume": "1",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781632366627",
-                "volume": "10",
                 "category": "manga"
             },
             {
@@ -26660,6 +26655,11 @@
                 "isbn": "9781632366610",
                 "volume": "9",
                 "category": "manga"
+            },
+            {
+                "isbn": "9781632366627",
+                "volume": "10",
+                "category": "manga"
             }
         ]
     },
@@ -26690,31 +26690,6 @@
             {
                 "isbn": "9780316259460",
                 "volume": "1",
-                "category": "manga"
-            },
-            {
-                "isbn": "9780316469302",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9780316439602",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9780316473323",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9780316473354",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975300449",
-                "volume": "15",
                 "category": "manga"
             },
             {
@@ -26766,6 +26741,31 @@
                 "isbn": "9780316340120",
                 "volume": "9",
                 "category": "manga"
+            },
+            {
+                "isbn": "9780316469302",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9780316439602",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9780316473323",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9780316473354",
+                "volume": "13",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975300449",
+                "volume": "15",
+                "category": "manga"
             }
         ]
     },
@@ -26788,6 +26788,41 @@
         "type": "Manga",
         "series_match_confidence": 1,
         "volumes": [
+            {
+                "isbn": "9781591167853",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781591169925",
+                "volume": "4",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421501840",
+                "volume": "5",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421501857",
+                "volume": "6",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421503325",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421506432",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421506449",
+                "volume": "9",
+                "category": "manga"
+            },
             {
                 "isbn": "9781421506456",
                 "volume": "10",
@@ -26819,11 +26854,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781591167853",
-                "volume": "2",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781421542614",
                 "volume": "29",
                 "category": "manga"
@@ -26841,36 +26871,6 @@
             {
                 "isbn": "9781421599489",
                 "volume": "34",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781591169925",
-                "volume": "4",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421501840",
-                "volume": "5",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421501857",
-                "volume": "6",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421503325",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421506432",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421506449",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -27084,6 +27084,11 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781421503783",
+                "volume": "2",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781421517469",
                 "volume": "10",
                 "category": "manga"
@@ -27101,11 +27106,6 @@
             {
                 "isbn": "9781421523743",
                 "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421503783",
-                "volume": "2",
                 "category": "manga"
             }
         ]
@@ -27194,6 +27194,16 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781974713240",
+                "volume": "5",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974715305",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974720996",
                 "volume": "10",
                 "category": "manga"
@@ -27206,16 +27216,6 @@
             {
                 "isbn": "9781974728510",
                 "volume": "13",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974713240",
-                "volume": "5",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974715305",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -27305,16 +27305,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421599700",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421599717",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781421599656",
                 "volume": "5",
                 "category": "manga"
@@ -27337,6 +27327,16 @@
             {
                 "isbn": "9781421599694",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421599700",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421599717",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -27616,16 +27616,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781632361400",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781632361417",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781632360700",
                 "volume": "3",
                 "category": "manga"
@@ -27653,6 +27643,16 @@
             {
                 "isbn": "9781632361387",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632361400",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632361417",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -27765,13 +27765,13 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781632362681",
-                "volume": "14",
+                "isbn": "9781612626055",
+                "volume": "4",
                 "category": "manga"
             },
             {
-                "isbn": "9781612626055",
-                "volume": "4",
+                "isbn": "9781632362681",
+                "volume": "14",
                 "category": "manga"
             }
         ]
@@ -28001,16 +28001,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781421515168",
-                "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421524498",
-                "volume": "18",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781591160823",
                 "volume": "2",
                 "category": "manga"
@@ -28018,6 +28008,16 @@
             {
                 "isbn": "9781591161837",
                 "volume": "3",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421515168",
+                "volume": "15",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781421524498",
+                "volume": "18",
                 "category": "manga"
             }
         ]
@@ -28044,13 +28044,13 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781975314569",
-                "volume": "12",
+                "isbn": "9781975304409",
+                "volume": "7",
                 "category": "manga"
             },
             {
-                "isbn": "9781975304409",
-                "volume": "7",
+                "isbn": "9781975314569",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -28106,11 +28106,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781975327996",
-                "volume": "16",
-                "category": "manga"
-            },
-            {
                 "isbn": "9780316102322",
                 "volume": "2",
                 "category": "manga"
@@ -28123,6 +28118,11 @@
             {
                 "isbn": "9780316178266",
                 "volume": "4",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975327996",
+                "volume": "16",
                 "category": "manga"
             }
         ]
@@ -28211,21 +28211,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781632369154",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781632369895",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781646516209",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781632364982",
                 "volume": "2",
                 "category": "manga"
@@ -28263,6 +28248,21 @@
             {
                 "isbn": "9781632368447",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632369154",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632369895",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781646516209",
+                "volume": "12",
                 "category": "manga"
             }
         ]
@@ -28367,16 +28367,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781632365699",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781632365705",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781632363701",
                 "volume": "2",
                 "category": "manga"
@@ -28404,6 +28394,16 @@
             {
                 "isbn": "9781632365125",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632365699",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632365705",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -28513,13 +28513,13 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781975353650",
-                "volume": "15",
+                "isbn": "9781975327620",
+                "volume": "7",
                 "category": "manga"
             },
             {
-                "isbn": "9781975327620",
-                "volume": "7",
+                "isbn": "9781975353650",
+                "volume": "15",
                 "category": "manga"
             }
         ]
@@ -28611,16 +28611,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781975351199",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975364755",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781975383497",
                 "volume": "2",
                 "category": "manga"
@@ -28653,6 +28643,16 @@
             {
                 "isbn": "9781975335649",
                 "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975351199",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975364755",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -28704,26 +28704,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781975340766",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975347390",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975371852",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975375331",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781975326548",
                 "volume": "2",
                 "category": "manga"
@@ -28762,6 +28742,26 @@
                 "isbn": "9781975324506",
                 "volume": "9",
                 "category": "manga"
+            },
+            {
+                "isbn": "9781975340766",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975347390",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975371852",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975375331",
+                "volume": "13",
+                "category": "manga"
             }
         ]
     },
@@ -28788,16 +28788,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781975306441",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781975351823",
-                "volume": "14",
-                "category": "manga"
-            },
-            {
                 "isbn": "9780316263481",
                 "volume": "3",
                 "category": "manga"
@@ -28810,6 +28800,16 @@
             {
                 "isbn": "9780316472340",
                 "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975306441",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781975351823",
+                "volume": "14",
                 "category": "manga"
             }
         ]
@@ -28830,6 +28830,16 @@
         "series_match_confidence": 0.8372093023255813,
         "volumes": [
             {
+                "isbn": "9781974715312",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974718894",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974725205",
                 "volume": "10",
                 "category": "manga"
@@ -28842,16 +28852,6 @@
             {
                 "isbn": "9781974736300",
                 "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974715312",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974718894",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -28897,6 +28897,21 @@
         "series_match_confidence": 1,
         "volumes": [
             {
+                "isbn": "9781974708048",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974708055",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781974708062",
+                "volume": "9",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974709243",
                 "volume": "10",
                 "category": "manga"
@@ -28919,21 +28934,6 @@
             {
                 "isbn": "9781974719938",
                 "volume": "14",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974708048",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974708055",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781974708062",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -28962,13 +28962,13 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781638588771",
-                "volume": "24",
+                "isbn": "9781947804142",
+                "volume": "3",
                 "category": "manga"
             },
             {
-                "isbn": "9781947804142",
-                "volume": "3",
+                "isbn": "9781638588771",
+                "volume": "24",
                 "category": "manga"
             }
         ]
@@ -29146,26 +29146,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781632361066",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781632361080",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781632361271",
-                "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781632362087",
-                "volume": "13",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781612626000",
                 "volume": "4",
                 "category": "manga"
@@ -29188,6 +29168,26 @@
             {
                 "isbn": "9781612629933",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632361066",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632361080",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632361271",
+                "volume": "12",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632362087",
+                "volume": "13",
                 "category": "manga"
             }
         ]
@@ -29396,16 +29396,6 @@
         "series_match_confidence": 0.875,
         "volumes": [
             {
-                "isbn": "9780316190336",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9780316225397",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9780316073240",
                 "volume": "6",
                 "category": "manga"
@@ -29418,6 +29408,16 @@
             {
                 "isbn": "9780316126793",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9780316190336",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9780316225397",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -30253,16 +30253,6 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781616558062",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781616558079",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781616551353",
                 "volume": "2",
                 "category": "manga"
@@ -30300,6 +30290,16 @@
             {
                 "isbn": "9781616555856",
                 "volume": "9",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781616558062",
+                "volume": "10",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781616558079",
+                "volume": "11",
                 "category": "manga"
             }
         ]
@@ -30363,11 +30363,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781506708195",
-                "volume": "10",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781506701721",
                 "volume": "3",
                 "category": "manga"
@@ -30385,6 +30380,11 @@
             {
                 "isbn": "9781506706559",
                 "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781506708195",
+                "volume": "10",
                 "category": "manga"
             }
         ]
@@ -30541,6 +30541,11 @@
                 "category": "manga"
             },
             {
+                "isbn": "9781421527796",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
                 "isbn": "9781974711192",
                 "volume": "11",
                 "category": "manga"
@@ -30548,11 +30553,6 @@
             {
                 "isbn": "9781974732098",
                 "volume": "12",
-                "category": "manga"
-            },
-            {
-                "isbn": "9781421527796",
-                "volume": "8",
                 "category": "manga"
             }
         ]
@@ -30572,6 +30572,21 @@
         "type": "Manga",
         "series_match_confidence": 1,
         "volumes": [
+            {
+                "isbn": "9780316076166",
+                "volume": "7",
+                "category": "manga"
+            },
+            {
+                "isbn": "9780316197250",
+                "volume": "8",
+                "category": "manga"
+            },
+            {
+                "isbn": "9780316197274",
+                "volume": "9",
+                "category": "manga"
+            },
             {
                 "isbn": "9780316197281",
                 "volume": "10",
@@ -30600,21 +30615,6 @@
             {
                 "isbn": "9780316225373",
                 "volume": "15",
-                "category": "manga"
-            },
-            {
-                "isbn": "9780316076166",
-                "volume": "7",
-                "category": "manga"
-            },
-            {
-                "isbn": "9780316197250",
-                "volume": "8",
-                "category": "manga"
-            },
-            {
-                "isbn": "9780316197274",
-                "volume": "9",
                 "category": "manga"
             }
         ]
@@ -30698,11 +30698,6 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781646514922",
-                "volume": "11",
-                "category": "manga"
-            },
-            {
                 "isbn": "9781632361813",
                 "volume": "2",
                 "category": "manga"
@@ -30713,13 +30708,18 @@
                 "category": "manga"
             },
             {
-                "isbn": "9781632367174",
-                "volume": "27",
+                "isbn": "9781646515653",
+                "volume": "7",
                 "category": "manga"
             },
             {
-                "isbn": "9781646515653",
-                "volume": "7",
+                "isbn": "9781646514922",
+                "volume": "11",
+                "category": "manga"
+            },
+            {
+                "isbn": "9781632367174",
+                "volume": "27",
                 "category": "manga"
             }
         ]
@@ -33779,13 +33779,13 @@
         "series_match_confidence": 1,
         "volumes": [
             {
-                "isbn": "9781974743315",
-                "volume": "12",
+                "isbn": "9781974720644",
+                "volume": "3",
                 "category": "manga"
             },
             {
-                "isbn": "9781974720644",
-                "volume": "3",
+                "isbn": "9781974743315",
+                "volume": "12",
                 "category": "manga"
             }
         ]
