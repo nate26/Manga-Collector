@@ -21,9 +21,11 @@ from xml.dom import NotFoundErr
 import requests
 from bs4 import BeautifulSoup
 
+# fix:
+# - release_date nulls
+# - series.volumes sort order
+
 # TO DO:
-# - fix release date!!!!!
-# - fix series vol sort to order by number not string :P
 # - add more error handling
 # - add more shops
 # - get better additional images / better way to get images/descriptions
@@ -403,7 +405,6 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
                 .find_all('span', {'class': 'value'})
         ])
         cover_image = item.find('img', {'class': 'tile-image'}).attrs['src']
-        category_id = cr_attr['categoryID'] if 'categoryID' in cr_attr else None
 
         volume_number = parse_volume(cr_attr['name'], cr_attr['category'])
 
@@ -445,17 +446,17 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
         logger.info('All shop details added: %s', json.dumps(product))
 
         # get the series data
-        series_name = cr_attr['brand']
+        brand_name = cr_attr['brand']
         # query series if volume is new or series is not in data
         if not REFRESH_SERIES_DATA and isbn in all_volumes \
             and all_volumes[isbn]['series_id'] in all_series:
             logger.info('Series found in data... using that instead: %s %s',
-                        series_name, all_volumes[isbn]['series_id'])
+                        brand_name, all_volumes[isbn]['series_id'])
             series_details = all_series[all_volumes[isbn]['series_id']]
         elif is_new_volume or REFRESH_SERIES_DATA:
             logger.info('Series not found in data or forcefully updating series...' +
-                        ' searching for series ID: %s', series_name)
-            series_details = search_series(series_name, cr_attr['category'], cr_attr['name'])
+                        ' searching for series ID: %s', brand_name)
+            series_details = search_series(brand_name, cr_attr['category'], cr_attr['name'])
         else:
             logger.info('Skipping series search on existing volume: %s', isbn)
             series_details = { 'series_id': None, 'title': cr_attr['brand'] }
@@ -465,12 +466,12 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
         # get the volume
         volume = {
             'isbn': isbn,
-            'series': series_name,
+            'brand': brand_name,
+            'series': series_details['title'],
             'series_id': series_id,
             'display_name': cr_attr['name'],
-            'name': series_details['title'],
+            'name': series_details['title'] or brand_name, #fix
             'category': cr_attr['category'],
-            'category_id': category_id,
             'volume': volume_number,
             'url': cr_attr['url'],
             'record_added_date': str(datetime.now()) if is_new_volume \
@@ -551,7 +552,13 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
                         ],
                         key = lambda x: (
                             x['category'],
-                            '-1' if x['volume'] is None else x['volume']
+                            -1
+                            if x['volume'] is None
+                            else (
+                                int(x['volume'].split('-')[0])
+                                if '-' in x['volume']
+                                else int(x['volume'])
+                            )
                         )
                     )
                     all_series[series_id]['volumes'] = series_volumes
