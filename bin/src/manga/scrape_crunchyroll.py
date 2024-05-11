@@ -165,7 +165,7 @@ def get_series_by_id(series_id: str):
                 ],
                 'bayesian_rating': series_resp['bayesian_rating'],
                 'rank': series_resp['rank']['position']['year'],
-                'recommendations': [rec['series_id'] for rec in series_resp['recommendations']],
+                'recommendations': [rec['series_id'] for rec in series_resp['recommendations']]
             }
             series_cache[series_id] = parsed_series_data
             logger.info('Added series to local cache: %s', json.dumps(parsed_series_data))
@@ -267,7 +267,19 @@ def search_series(series_name: str, category: str, volume_name: str):
         'title': None,
         'associated_titles': [],
         'url': None,
-        'category': None
+        'category': None,
+        'description': None,
+        'cover_image': None,
+        'genres': [],
+        'themes': [],
+        'latest_chapter': None,
+        'release_status': None,
+        'status': None,
+        'authors': [],
+        'publishers': [],
+        'bayesian_rating': None,
+        'rank': None,
+        'recommendations': [],
     }
 
 def get_isbn_details(soup_isbn_data):
@@ -289,6 +301,10 @@ def get_isbn_details(soup_isbn_data):
                     parsed_date = re.sub(r'(\d)(st|nd|rd|th)', r'\1', release_date.strip())
                     details['release_date'] = \
                         str(datetime.strptime(parsed_date, '%B %d, %Y').date())
+                    if details['release_date'] == datetime.now().strftime('%B %d, %Y'):
+                        logger.error('Release date is today for future releases (incorrect): %s',
+                                     details['release_date'])
+                        raise ValueError('Release date is not in correct format')
                     logger.info('Found release date: %s', details['release_date'])
                 except ValueError:
                     logger.error('Release date is not in correct format... %s', release_date)
@@ -393,7 +409,7 @@ def get_barnes_and_noble_data(isbn: str, vol_shop_data: list):
         'is_on_sale': False
     }
 
-def scrape_page(soup, all_volumes, all_series, all_shop):
+def scrape_page(soup, all_volumes, all_series, all_shop, total: int, completed: int):
     '''
     Scrapes the given URL for manga volumes and series,
     and updates the given data structures with the results.
@@ -497,7 +513,7 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
             'series': series_details['title'],
             'series_id': series_id,
             'display_name': cr_attr['name'],
-            'name': series_details['title'] or brand_name, #fix
+            'name': series_details['title'] or brand_name, #fix?
             'category': cr_attr['category'],
             'volume': volume_number,
             'url': cr_attr['url'],
@@ -603,6 +619,17 @@ def scrape_page(soup, all_volumes, all_series, all_shop):
 
         # save each volume to file
         save_all_files(all_volumes, all_series, all_shop)
+
+        # update progress bar
+        completed += 1
+        progress = round((completed / total) * 50)
+        remaining = 50 - progress
+        percentage = round((completed / total) * 100, ndigits=2)
+        print('progress: |' + ''
+              .join(['=' for _ in range(progress)]) + ''
+              .join(['-' for _ in range(remaining)]) +
+              '| ' + str(percentage) + '%',
+              end='\r')
     return all_volumes, all_series, all_shop
 
 if RUN_SCRAPER:
@@ -621,10 +648,12 @@ if RUN_SCRAPER:
     )
     total_count = int(first_soup.find('div', {'class': 'pagination-text'}).attrs['data-totalcount'])
     total_pages = math.ceil(total_count / 100)
+    COMPLETED_COUNT = 0
     logger.info('pages to scrape: %s', str(total_pages))
 
     volumes_new, series_new, shop_new \
-        = scrape_page(first_soup, volumes_data, series_data, shop_data)
+        = scrape_page(first_soup, volumes_data, series_data, shop_data,
+                      total_count, COMPLETED_COUNT)
 
     if SCRAPE_ALL_PAGES:
         for i in range(1, total_pages):
@@ -635,7 +664,8 @@ if RUN_SCRAPER:
                 'html.parser'
             )
             volumes_new, series_new, shop_new \
-                = scrape_page(next_soup, volumes_new, series_new, shop_new)
+                = scrape_page(next_soup, volumes_new, series_new, shop_new,
+                              total_count, COMPLETED_COUNT)
 
 # print(calculate_confidence(
     # 'Re:ZERO',
