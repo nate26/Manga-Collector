@@ -23,7 +23,9 @@ from bs4 import BeautifulSoup
 
 # fix:
 # - release_date nulls
-# - series.volumes sort order
+# - series title english
+# - more info from series data
+# - volume names (should not be series names)
 
 # TO DO:
 # - add more error handling
@@ -139,7 +141,31 @@ def get_series_by_id(series_id: str):
                 'title': series_resp['title'],
                 'associated_titles': [title['title'] for title in series_resp['associated']],
                 'url': series_resp['url'],
-                'type': series_resp['type']
+                'category': series_resp['category'],
+                'description': series_resp['description'],
+                'cover_image': series_resp['image']['url']['original'],
+                'genres': [genre['genre'] for genre in series_resp['genres']],
+                'themes': [
+                    category['category']
+                    for category in series_resp['categories']
+                    if (category['votes_plus'] - category['votes_minus']) > 0
+                ],
+                'latest_chapter': series_resp['latest_chapter'],
+                'release_status': series_resp['status'],
+                'status': 'Complete'  if 'Complete' in series_resp['status'] else \
+                    ('Ongoing' if 'Ongoing' in series_resp['status'] else \
+                        ('Hiatus' if 'Hiatus' in series_resp['status'] else 'Unknown')),
+                'authors': [
+                    { 'name': author['name'], 'type': author['type'] }
+                    for author in series_resp['authors']
+                ],
+                'publishers': [
+                    { 'name': publisher['publisher_name'], 'type': publisher['type'] }
+                    for publisher in series_resp['publishers']
+                ],
+                'bayesian_rating': series_resp['bayesian_rating'],
+                'rank': series_resp['rank']['position']['year'],
+                'recommendations': [rec['series_id'] for rec in series_resp['recommendations']],
             }
             series_cache[series_id] = parsed_series_data
             logger.info('Added series to local cache: %s', json.dumps(parsed_series_data))
@@ -172,8 +198,8 @@ def search_series(series_name: str, category: str, volume_name: str):
         'novels': 'novel',
         'manga': 'manga'
     }
-    series_type = category_conversion[category]
-    logger.info('Searching for series ID for ["%s", "%s" ]...', series_name, series_type)
+    series_category = category_conversion[category]
+    logger.info('Searching for series ID for ["%s", "%s" ]...', series_name, series_category)
     search_data = {
         'search': series_name,
         'stype': 'title'
@@ -190,8 +216,8 @@ def search_series(series_name: str, category: str, volume_name: str):
             series_details = get_series_by_id(str(series['record']['series_id']))
             logger.info('Checking series: %s', json.dumps(series_details))
 
-            # series type must match
-            if series_details['type'].lower() == series_type.lower():
+            # series category must match
+            if series_details['category'].lower() == series_category.lower():
                 all_titles = [
                     title.lower() for title
                     in [ series_details['title'], *series_details['associated_titles'] ]
@@ -206,7 +232,7 @@ def search_series(series_name: str, category: str, volume_name: str):
                     series_details['series_match_confidence'] = 1
                     return series_details
 
-                # set first found to match type to a low confidence match
+                # set first found to match category to a low confidence match
                 series_details['series_match_confidence'] = \
                     set_confidence(closest_series_match, 0.1)
                 closest_series_match = series_details
@@ -224,6 +250,7 @@ def search_series(series_name: str, category: str, volume_name: str):
                     series_details['series_match_confidence'] = \
                         set_confidence(closest_series_match, confidence)
                     closest_series_match = series_details
+                    series_details['title'] = title # update title to closest match
 
         if closest_series_match is not None:
             logger.info('Closest series match with confidence %s: %s',
@@ -240,7 +267,7 @@ def search_series(series_name: str, category: str, volume_name: str):
         'title': None,
         'associated_titles': [],
         'url': None,
-        'type': None
+        'category': None
     }
 
 def get_isbn_details(soup_isbn_data):
