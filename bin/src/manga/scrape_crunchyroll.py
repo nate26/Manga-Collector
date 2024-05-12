@@ -35,19 +35,19 @@ from bs4 import BeautifulSoup
 # - find a way to get age ratings / adult tag -> Amazon has this
 # - fix b&n query and check if b&n ever has a sale?
 
-RUN_SCRAPER = False
+RUN_SCRAPER = True
 SCRAPE_ALL_PAGES = True
 
 START = 3300
 
 QUERY_ISBN_DB = True
-QUERY_CR_FOR_DETAILS = False
+QUERY_CR_FOR_DETAILS = True
 QUERY_BARNS_AND_NOBLE = False
 
 # only used if requires a full refresh of all data
-FORCE_CR_FOR_DETAILS = False
-REFRESH_VOLUME_DETAILS = False
-REFRESH_SERIES_DATA = False
+FORCE_CR_FOR_DETAILS = True
+REFRESH_VOLUME_DETAILS = True
+REFRESH_SERIES_DATA = True
 
 # might need to do some memory management here cause it gets big with a lot of data
 series_cache = {}
@@ -136,20 +136,28 @@ def get_series_by_id(series_id: str):
         else:
             series_resp = requests.get('https://api.mangaupdates.com/v1/series/' + series_id,
                                     timeout=30).json()
+            top_themes = sorted(
+                [
+                    {
+                        'theme': category['category'],
+                        'votes': category['votes_plus'] - category['votes_minus']
+                    }
+                    for category in series_resp['categories']
+                    if (category['votes_plus'] - category['votes_minus']) > 0
+                ],
+                key = lambda x: x['votes'],
+                reverse=True
+            )[:15]
             parsed_series_data = {
                 'series_id': str(series_resp['series_id']),
                 'title': series_resp['title'],
                 'associated_titles': [title['title'] for title in series_resp['associated']],
                 'url': series_resp['url'],
-                'category': series_resp['category'],
+                'category': series_resp['type'],
                 'description': series_resp['description'],
                 'cover_image': series_resp['image']['url']['original'],
                 'genres': [genre['genre'] for genre in series_resp['genres']],
-                'themes': [
-                    category['category']
-                    for category in series_resp['categories']
-                    if (category['votes_plus'] - category['votes_minus']) > 0
-                ],
+                'themes': top_themes,
                 'latest_chapter': series_resp['latest_chapter'],
                 'release_status': series_resp['status'],
                 'status': 'Complete'  if 'Complete' in series_resp['status'] else \
@@ -299,15 +307,16 @@ def get_isbn_details(soup_isbn_data):
                 release_date = tag.text.split(': ')[1]
                 try:
                     parsed_date = re.sub(r'(\d)(st|nd|rd|th)', r'\1', release_date.strip())
-                    details['release_date'] = \
-                        str(datetime.strptime(parsed_date, '%B %d, %Y').date())
-                    if details['release_date'] == datetime.now().strftime('%B %d, %Y'):
+                    date = str(datetime.strptime(parsed_date, '%b %d, %Y').date())
+                    if date != datetime.now().strftime('%b %d, %Y'):
+                        details['release_date'] = date
+                    else:
                         logger.error('Release date is today for future releases (incorrect): %s',
                                      details['release_date'])
-                        raise ValueError('Release date is not in correct format')
                     logger.info('Found release date: %s', details['release_date'])
-                except ValueError:
+                except (ValueError, AttributeError) as err:
                     logger.error('Release date is not in correct format... %s', release_date)
+                    logger.error(err)
             if 'Publisher:' in tag.text and details['publisher'] is None:
                 details['publisher'] = tag.text.split(': ')[1].strip()
                 logger.info('Found publisher: %s', details['publisher'])
@@ -332,7 +341,8 @@ def get_isbn_details(soup_isbn_data):
         if None in details.values():
             raise NotFoundErr
     except (AttributeError, NotFoundErr) as err:
-        logger.warning('Could not find book details from isbn... ending process because %s', err)
+        logger.warning('Could not find all book details from isbn... ending process because %s', err)
+        logger.warning('Details found: %s', json.dumps(details))
     return details
 
 def get_shop_data(soup_isbn_data, isbn_10: str):
@@ -535,12 +545,20 @@ def scrape_page(soup, all_volumes, all_series, all_shop, total: int, completed: 
                     'html.parser'
                 )
                 # get the release date
-                sp_pre_order = soup_volume.find('div', {'class': 'pre-order-street-date'})
-                if sp_pre_order is not None:
-                    release_date = sp_pre_order \
-                        .text.replace('Release date:', '').strip()
-                    volume['release_date'] = \
-                        str(datetime.strptime(release_date, '%m/%d/%Y').date())
+                preorder_soup = soup_volume.find('div', {'class': 'pre-order-street-date'})
+                if preorder_soup is not None:
+                    preorder_text = soup_volume.find('div', {'class': 'pre-order-street-date'}).text
+                    if 'Release date:' in preorder_text:
+                        parsed_preorder_date = preorder_text.replace('Release date:', '').strip()
+                        volume['release_date'] = str(datetime.strptime(
+                            parsed_preorder_date, '%m/%d/%Y').date())
+                    else:
+                        parsed_preorder_date = preorder_text.replace('ESTIMATED TO SHIP', '') \
+                            .replace('Ship date is an estimate and not guaranteed', '') \
+                                .replace('Pre-order FAQ', '') \
+                                    .strip()
+                        volume['release_date'] = str(datetime.strptime(
+                            parsed_preorder_date, '%B %d, %Y').date())
                 # get the description
                 descriptions = soup_volume.find('div', {'class': 'product-description'}) \
                     .find('div', {'class': 'short-description'}) \
