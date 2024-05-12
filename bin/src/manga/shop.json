@@ -357,7 +357,7 @@
                 "store": "Amazon",
                 "condition": "Used",
                 "url": "https://www.amazon.com/dp/1427876649",
-                "store_price": 18.71,
+                "store_price": 17.3,
                 "stock_status": null,
                 "last_stock_update": null,
                 "coupon": "",
@@ -383,7 +383,7 @@
                 "store": "Amazon",
                 "condition": "New",
                 "url": "https://www.amazon.com/dp/1646519817",
-                "store_price": 49.49,
+                "store_price": 54.99,
                 "stock_status": null,
                 "last_stock_update": null,
                 "coupon": "",
@@ -407,7 +407,7 @@
             },
             {
                 "store": "Amazon",
-                "condition": "New",
+                "condition": "Used",
                 "url": "https://www.amazon.com/dp/8891604887",
                 "store_price": 259.98,
                 "stock_status": null,
@@ -417,7 +417,7 @@
             },
             {
                 "store": "Amazon",
-                "condition": "Used",
+                "condition": "New",
                 "url": "https://www.amazon.com/dp/8891604887",
                 "store_price": 259.98,
                 "stock_status": null,
@@ -978,6 +978,16 @@
                 "last_stock_update": "2024-05-05 18:13:45.126255",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646516710",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -1304,6 +1314,16 @@
                 "last_stock_update": "2024-05-05 18:14:28.211169",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/8888435875",
+                "store_price": 35.46,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -1350,6 +1370,16 @@
                 "store_price": 23.99,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:14:35.638656",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1685797776",
+                "store_price": 29.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -1442,6 +1472,16 @@
                 "last_stock_update": "2024-05-05 18:14:48.762502",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646518411",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -1463,7 +1503,7 @@
     },
     "9798888770597": {
         "isbn": "9798888770597",
-        "retail_price": 10.99,
+        "retail_price": 8.79,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -1564,6 +1604,16 @@
                 "last_stock_update": "2024-05-05 18:15:09.509471",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1427877262",
+                "store_price": 13.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -1633,7 +1683,7 @@
     },
     "9781974748914": {
         "isbn": "9781974748914",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -1659,7 +1709,7 @@
     },
     "9781974748884": {
         "isbn": "9781974748884",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -1848,6 +1898,16 @@
                 "last_stock_update": "2024-05-05 18:15:48.870672",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/0593872169",
+                "store_price": 20.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -2033,7 +2093,7 @@
                 "store": "Amazon",
                 "condition": "Used",
                 "url": "https://www.amazon.com/dp/8888435786",
-                "store_price": 18.97,
+                "store_price": 19.04,
                 "stock_status": null,
                 "last_stock_update": null,
                 "coupon": "",
@@ -2053,7 +2113,7 @@
     },
     "9781974748723": {
         "isbn": "9781974748723",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -2111,7 +2171,7 @@
                 "store": "Amazon",
                 "condition": "Used",
                 "url": "https://www.amazon.com/dp/889160299X",
-                "store_price": 26.28,
+                "store_price": 25.03,
                 "stock_status": null,
                 "last_stock_update": null,
                 "coupon": "",
@@ -2166,6 +2226,16 @@
                 "store_price": 10.36,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:16:35.287490",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293057",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -2493,7 +2563,7 @@
     },
     "9798888770542": {
         "isbn": "9798888770542",
-        "retail_price": 10.99,
+        "retail_price": 8.79,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -2793,7 +2863,7 @@
     },
     "9798888772065": {
         "isbn": "9798888772065",
-        "retail_price": 10.99,
+        "retail_price": 8.79,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -2903,7 +2973,7 @@
     },
     "9781974748860": {
         "isbn": "9781974748860",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -2997,7 +3067,7 @@
     },
     "9781646519538": {
         "isbn": "9781646519538",
-        "retail_price": 10.99,
+        "retail_price": 8.79,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -3074,6 +3144,16 @@
                 "store_price": 10.39,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:18:30.458643",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646518527",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -3242,6 +3322,16 @@
                 "store_price": 10.36,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:18:52.057993",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293766",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -3453,7 +3543,7 @@
     },
     "9781974748839": {
         "isbn": "9781974748839",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -3663,7 +3753,7 @@
     },
     "9781974746316": {
         "isbn": "9781974746316",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -3689,7 +3779,7 @@
     },
     "9781974748853": {
         "isbn": "9781974748853",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -3715,7 +3805,7 @@
     },
     "9781974746361": {
         "isbn": "9781974746361",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -3741,7 +3831,7 @@
     },
     "9781974746231": {
         "isbn": "9781974746231",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -3929,7 +4019,7 @@
     },
     "9781974748761": {
         "isbn": "9781974748761",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -3981,7 +4071,7 @@
     },
     "9781974748846": {
         "isbn": "9781974748846",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -4007,7 +4097,7 @@
     },
     "9781974748693": {
         "isbn": "9781974748693",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -4075,7 +4165,7 @@
     },
     "9781974748785": {
         "isbn": "9781974748785",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -4153,7 +4243,7 @@
     },
     "9781974748907": {
         "isbn": "9781974748907",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -4179,7 +4269,7 @@
     },
     "9781974748822": {
         "isbn": "9781974748822",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -4205,7 +4295,7 @@
     },
     "9781974748815": {
         "isbn": "9781974748815",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -4231,7 +4321,7 @@
     },
     "9781974745548": {
         "isbn": "9781974745548",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -4283,7 +4373,7 @@
     },
     "9781974748754": {
         "isbn": "9781974748754",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -4622,6 +4712,16 @@
                 "last_stock_update": "2024-05-05 18:21:39.347664",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/164609316X",
+                "store_price": 14.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -4653,7 +4753,7 @@
     },
     "9781974746941": {
         "isbn": "9781974746941",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -4688,6 +4788,16 @@
                 "store_price": 10.39,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:21:47.039077",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646519140",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -4914,6 +5024,16 @@
                 "last_stock_update": "2024-05-05 18:22:13.089968",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1506739679",
+                "store_price": 24.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -4928,6 +5048,16 @@
                 "store_price": 11.16,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:22:15.962253",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/164729357X",
+                "store_price": 13.95,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -5013,7 +5143,7 @@
     },
     "9781974745630": {
         "isbn": "9781974745630",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -5039,7 +5169,7 @@
     },
     "9781974747030": {
         "isbn": "9781974747030",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -5128,6 +5258,16 @@
                 "last_stock_update": "2024-05-05 18:22:37.232455",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646092155",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -5196,6 +5336,16 @@
                 "last_stock_update": "2024-05-05 18:22:45.381562",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1787742679",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -5262,6 +5412,16 @@
                 "store_price": 11.19,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:22:53.410508",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1952241537",
+                "store_price": 13.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -5416,6 +5576,16 @@
                 "last_stock_update": "2024-05-05 18:23:14.535992",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293758",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -5525,7 +5695,7 @@
     },
     "9781974746255": {
         "isbn": "9781974746255",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -5551,7 +5721,7 @@
     },
     "9781974746354": {
         "isbn": "9781974746354",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -5586,6 +5756,16 @@
                 "store_price": 15.99,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:23:33.069833",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975392884",
+                "store_price": 20.0,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -5734,6 +5914,16 @@
                 "last_stock_update": "2024-05-05 18:23:49.632918",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293871",
+                "store_price": 59.51,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -5765,7 +5955,7 @@
     },
     "9781974746347": {
         "isbn": "9781974746347",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -5791,7 +5981,7 @@
     },
     "9781974746279": {
         "isbn": "9781974746279",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -5896,12 +6086,22 @@
                 "last_stock_update": "2024-05-05 18:24:11.043801",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1787743500",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
     "9781974746309": {
         "isbn": "9781974746309",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6031,7 +6231,7 @@
     },
     "9781974746408": {
         "isbn": "9781974746408",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6052,6 +6252,16 @@
                 "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "Used",
+                "url": "https://www.amazon.com/dp/1974746402",
+                "store_price": 14.47,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -6068,6 +6278,16 @@
                 "last_stock_update": "2024-05-05 18:24:29.872857",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1427877556",
+                "store_price": 13.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -6082,6 +6302,16 @@
                 "store_price": 11.19,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:24:32.373343",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1427877254",
+                "store_price": 13.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -6115,7 +6345,7 @@
     },
     "9781974746248": {
         "isbn": "9781974746248",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6141,7 +6371,7 @@
     },
     "9781974746392": {
         "isbn": "9781974746392",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6256,12 +6486,22 @@
                 "last_stock_update": "2024-05-05 18:24:51.901470",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1427875464",
+                "store_price": 19.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
     "9781646518111": {
         "isbn": "9781646518111",
-        "retail_price": 10.99,
+        "retail_price": 8.79,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6270,6 +6510,16 @@
                 "store_price": 8.79,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:24:54.089144",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/164651811X",
+                "store_price": 10.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -6314,12 +6564,22 @@
                 "last_stock_update": "2024-05-05 18:24:59.635769",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1427877246",
+                "store_price": 13.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
     "9781974746323": {
         "isbn": "9781974746323",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6345,7 +6605,7 @@
     },
     "9781974747061": {
         "isbn": "9781974747061",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6371,7 +6631,7 @@
     },
     "9781974746286": {
         "isbn": "9781974746286",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6444,6 +6704,16 @@
                 "last_stock_update": "2024-05-05 18:25:15.108135",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1427877211",
+                "store_price": 14.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -6460,12 +6730,22 @@
                 "last_stock_update": "2024-05-05 18:25:18.401785",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1962201236",
+                "store_price": 13.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
     "9781642733402": {
         "isbn": "9781642733402",
-        "retail_price": 11.95,
+        "retail_price": 9.56,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6474,6 +6754,16 @@
                 "store_price": 9.56,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:25:21.134923",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1642733407",
+                "store_price": 11.95,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -6490,6 +6780,16 @@
                 "store_price": 10.39,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:25:24.908723",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1962201228",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -6560,12 +6860,22 @@
                 "last_stock_update": "2024-05-05 18:25:32.874040",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/4805318392",
+                "store_price": 15.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
     "9781974746330": {
         "isbn": "9781974746330",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -6600,6 +6910,16 @@
                 "store_price": 11.19,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:25:44.354566",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1962201198",
+                "store_price": 13.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -6910,6 +7230,16 @@
                 "last_stock_update": "2024-05-05 18:26:22.330470",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1718360819",
+                "store_price": 24.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -6957,7 +7287,7 @@
     },
     "9781974746996": {
         "isbn": "9781974746996",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -7140,6 +7470,16 @@
                 "last_stock_update": "2024-05-05 18:26:49.523209",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646519337",
+                "store_price": 13.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -7308,6 +7648,16 @@
                 "last_stock_update": "2024-05-05 18:27:13.164835",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293316",
+                "store_price": 14.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -7324,6 +7674,16 @@
                 "last_stock_update": "2024-05-05 18:27:15.269832",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646518462",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -7338,6 +7698,16 @@
                 "store_price": 11.16,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:27:17.652671",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647291631",
+                "store_price": 13.95,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -7450,6 +7820,16 @@
                 "last_stock_update": "2024-05-05 18:27:32.522182",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646519523",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -7466,12 +7846,22 @@
                 "last_stock_update": "2024-05-05 18:27:35.299721",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293537",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
     "9798888770252": {
         "isbn": "9798888770252",
-        "retail_price": 10.99,
+        "retail_price": 8.79,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -7496,6 +7886,16 @@
                 "store_price": 11.99,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:27:41.104992",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1506738583",
+                "store_price": 14.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -7658,6 +8058,16 @@
                 "store_price": 10.39,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:28:00.048576",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1787743489",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -7844,6 +8254,16 @@
                 "last_stock_update": "2024-05-05 18:28:25.099552",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1787743624",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -7985,7 +8405,7 @@
     },
     "9781974746019": {
         "isbn": "9781974746019",
-        "retail_price": 11.99,
+        "retail_price": 9.59,
         "shops": [
             {
                 "store": "Crunchyroll",
@@ -8022,6 +8442,16 @@
                 "last_stock_update": "2024-05-05 18:28:48.107122",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1787743497",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -8036,6 +8466,16 @@
                 "store_price": 11.99,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:28:50.501722",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1506737978",
+                "store_price": 14.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -8742,6 +9182,16 @@
                 "store_price": 10.39,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 18:30:24.953197",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646092953",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -9493,7 +9943,7 @@
                 "store": "Amazon",
                 "condition": "New",
                 "url": "https://www.amazon.com/dp/1974746100",
-                "store_price": 10.79,
+                "store_price": 11.99,
                 "stock_status": null,
                 "last_stock_update": null,
                 "coupon": "",
@@ -9612,6 +10062,16 @@
                 "store_price": 10.39,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 19:11:26.811721",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646092333",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -9840,6 +10300,16 @@
                 "last_stock_update": "2024-05-05 19:11:57.890156",
                 "coupon": "",
                 "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/8888435883",
+                "store_price": 20.08,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
             }
         ]
     },
@@ -10002,6 +10472,16 @@
                 "store_price": 11.19,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 19:12:24.434822",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/8888435956",
+                "store_price": 25.39,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -10360,6 +10840,16 @@
                 "store_price": 13.59,
                 "stock_status": "Pre-Order",
                 "last_stock_update": "2024-05-05 19:13:19.058522",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646092279",
+                "store_price": 16.99,
+                "stock_status": null,
+                "last_stock_update": null,
                 "coupon": "",
                 "is_on_sale": false
             }
@@ -111208,6 +111698,2690 @@
                 "condition": "New",
                 "url": "https://www.amazon.com/dp/1506703135",
                 "store_price": 10.47,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771754": {
+        "isbn": "9798888771754",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/blue-lock-episode-nagi-manga-volume-1-9798888771754.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:43:37.920689",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/8888771751",
+                "store_price": 20.19,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771006": {
+        "isbn": "9798888771006",
+        "retail_price": 22.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/initial-d-manga-omnibus-volume-3-9798888771006.html",
+                "store_price": 18.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:43:47.841849",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781647294045": {
+        "isbn": "9781647294045",
+        "retail_price": 11.16,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/suzume-manga-volume-1-9781647294045.html",
+                "store_price": 11.16,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:43:51.982601",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647294045",
+                "store_price": 13.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646093052": {
+        "isbn": "9781646093052",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/smoking-behind-the-supermarket-with-you-manga-volume-3-9781646093052.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:43:59.256453",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646093054",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646092987": {
+        "isbn": "9781646092987",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/cherry-magic-thirty-years-of-virginity-can-make-you-a-wizard-manga-volume-12-9781646092987.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:03.195055",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646092988",
+                "store_price": 14.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646090525": {
+        "isbn": "9781646090525",
+        "retail_price": 22.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/soul-eater-the-perfect-edition-manga-volume-16-hardcover-9781646090525.html",
+                "store_price": 18.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:09.880515",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646090527",
+                "store_price": 22.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781647292928": {
+        "isbn": "9781647292928",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/origin-manga-volume-6-9781647292928.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:17.111824",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647292921",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781506737997": {
+        "isbn": "9781506737997",
+        "retail_price": 9.59,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/mob-psycho-100-manga-volume-14-9781506737997.html",
+                "store_price": 9.59,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:20.499187",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1506737994",
+                "store_price": 11.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855401875": {
+        "isbn": "9798855401875",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/rezero-starting-life-in-another-world-chapter-4-the-sanctuary-and-the-witch-of-greed-manga-volume-8-9798855401875.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:24.480914",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855402278": {
+        "isbn": "9798855402278",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/monthly-girls-nozaki-kun-manga-volume-15-9798855402278.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:31.764912",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975371470": {
+        "isbn": "9781975371470",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/kowloon-generic-romance-manga-volume-8-9781975371470.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:39.699259",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/197537147X",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646093069": {
+        "isbn": "9781646093069",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/tokyo-aliens-manga-volume-7-9781646093069.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:43.240446",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646093062",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781647293673": {
+        "isbn": "9781647293673",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/blood-on-the-tracks-manga-volume-17-9781647293673.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:47.336790",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293677",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771129": {
+        "isbn": "9798888771129",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/i-cant-say-no-to-the-lonely-girl-manga-volume-4-9798888771129.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:51.024938",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975398644": {
+        "isbn": "9781975398644",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/murcielago-manga-volume-24-9781975398644.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:55.227255",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975398645",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771112": {
+        "isbn": "9798888771112",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/i-cant-say-no-to-the-lonely-girl-manga-volume-3-9798888771112.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:44:58.891495",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/8888771115",
+                "store_price": 56.25,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781634428361": {
+        "isbn": "9781634428361",
+        "retail_price": 13.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/march-comes-in-like-a-lion-manga-volume-3-9781634428361.html",
+                "store_price": 11.16,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:02.768197",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1634428366",
+                "store_price": 13.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855402230": {
+        "isbn": "9798855402230",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/kakegurui-compulsive-gambler-manga-volume-17-9798855402230.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:11.306481",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646092604": {
+        "isbn": "9781646092604",
+        "retail_price": 16.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/my-clueless-first-friend-manga-volume-7-9781646092604.html",
+                "store_price": 13.59,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:15.530568",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646092600",
+                "store_price": 16.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975392703": {
+        "isbn": "9781975392703",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/86-eighty-six-alter-novel-volume-1-9781975392703.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:19.584498",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975392701",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781642733808": {
+        "isbn": "9781642733808",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/kurokiya-san-wants-to-lead-him-around-by-the-nose-manga-volume-1-9781642733808.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:23.306173",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1642733806",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975390846": {
+        "isbn": "9781975390846",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/hero-syndrome-novel-volume-1-9781975390846.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:27.929080",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975390849",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646092833": {
+        "isbn": "9781646092833",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/mobsters-in-love-manga-volume-2-9781646092833.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:31.927220",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/164609283X",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888770108": {
+        "isbn": "9798888770108",
+        "retail_price": 17.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/i-got-reincarnated-in-a-bl-world-of-big-man-boobs-manga-volume-2-9798888770108.html",
+                "store_price": 14.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:43.613797",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888772188": {
+        "isbn": "9798888772188",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/spoil-me-plzzz-hinamori-san-manga-volume-1-9798888772188.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:47.631437",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888770368": {
+        "isbn": "9798888770368",
+        "retail_price": 8.79,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/fairy-tail-100-years-quest-manga-volume-16-9798888770368.html",
+                "store_price": 8.79,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:51.561862",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9780593871287": {
+        "isbn": "9780593871287",
+        "retail_price": 29.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/under-the-oak-tree-manhwa-volume-1-hardcover-9780593871287.html",
+                "store_price": 23.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:55.904372",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/0593871286",
+                "store_price": 26.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781506744179": {
+        "isbn": "9781506744179",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/cthulhu-cat-manga-color-9781506744179.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:45:59.829985",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1506744176",
+                "store_price": 14.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975394042": {
+        "isbn": "9781975394042",
+        "retail_price": 15.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/wolf-parchment-novel-volume-9-9781975394042.html",
+                "store_price": 12.79,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:04.009270",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975394046",
+                "store_price": 16.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975398729": {
+        "isbn": "9781975398729",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/me-and-my-beast-boss-manga-volume-3-9781975398729.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:11.401772",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975398726",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975388379": {
+        "isbn": "9781975388379",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/a-certain-magical-index-nt-novel-volume-3-9781975388379.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:18.846689",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975388372",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855402155": {
+        "isbn": "9798855402155",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/goblin-slayer-side-story-year-one-manga-volume-11-9798855402155.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:25.850490",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646518654": {
+        "isbn": "9781646518654",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/nina-the-starry-bride-manga-volume-6-9781646518654.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:29.542497",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646518659",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888770412": {
+        "isbn": "9798888770412",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/fire-force-manga-omnibus-volume-12-9798888770412.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:33.939478",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975391584": {
+        "isbn": "9781975391584",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/magical-explorer-novel-volume-8-9781975391584.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:37.801166",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975391586",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9780867199291": {
+        "isbn": "9780867199291",
+        "retail_price": 24.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/ultra-heaven-manga-volume-1-9780867199291.html",
+                "store_price": 19.96,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:42.225357",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/0867199296",
+                "store_price": 24.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888770504": {
+        "isbn": "9798888770504",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/how-i-met-my-soulmate-manga-volume-4-9798888770504.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:45.849907",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781634424820": {
+        "isbn": "9781634424820",
+        "retail_price": 15.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/wolf-pack-manga-9781634424820.html",
+                "store_price": 12.76,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:49.888395",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1634424824",
+                "store_price": 15.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781634424608": {
+        "isbn": "9781634424608",
+        "retail_price": 29.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/nana-kaoru-manga-omnibus-volume-6-9781634424608.html",
+                "store_price": 23.96,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:46:57.275108",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1634424603",
+                "store_price": 29.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771358": {
+        "isbn": "9798888771358",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/tank-chair-manga-volume-1-9798888771358.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:01.188157",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975394547": {
+        "isbn": "9781975394547",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/god-bless-the-mistaken-manga-volume-3-9781975394547.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:05.353664",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975394542",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855402117": {
+        "isbn": "9798855402117",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/final-fantasy-lost-stranger-manga-volume-10-9798855402117.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:09.328529",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855402193": {
+        "isbn": "9798855402193",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/is-it-wrong-to-try-to-pick-up-girls-in-a-dungeon-ii-manga-volume-5-9798855402193.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:13.361254",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888772669": {
+        "isbn": "9798888772669",
+        "retail_price": 8.79,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/cardcaptor-sakura-clear-card-manga-volume-15-9798888772669.html",
+                "store_price": 8.79,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:17.969954",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798400902031": {
+        "isbn": "9798400902031",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/finding-camellia-manhwa-volume-1-9798400902031.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:21.865111",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798400901621": {
+        "isbn": "9798400901621",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/omniscient-readers-viewpoint-manhwa-volume-4-9798400901621.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:25.478205",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646092505": {
+        "isbn": "9781646092505",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/the-strongest-sage-with-the-weakest-crest-manga-volume-20-9781646092505.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:30.073045",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646092503",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771778": {
+        "isbn": "9798888771778",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/the-boy-i-loved-became-the-jaded-emperor-manga-volume-1-9798888771778.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:38.579190",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798891604926": {
+        "isbn": "9798891604926",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/yakuza-fiance-raise-wa-tanin-ga-ii-manga-volume-8-9798891604926.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:42.411413",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888772959": {
+        "isbn": "9798888772959",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/blood-blade-manga-volume-3-9798888772959.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:46.631800",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798891606166": {
+        "isbn": "9798891606166",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/lout-of-counts-family-novel-volume-1-9798891606166.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:51.001806",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798891604902": {
+        "isbn": "9798891604902",
+        "retail_price": 21.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/handsome-girl-and-sheltered-girl-the-complete-collection-manga-9798891604902.html",
+                "store_price": 17.59,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:55.211691",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975367510": {
+        "isbn": "9781975367510",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/spy-classroom-novel-volume-8-9781975367510.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:47:59.138204",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975367510",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888770269": {
+        "isbn": "9798888770269",
+        "retail_price": 8.79,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/as-a-reincarnated-aristocrat-ill-use-my-appraisal-skill-to-rise-in-the-world-manga-volume-12-9798888770269.html",
+                "store_price": 8.79,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:03.396995",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855402216": {
+        "isbn": "9798855402216",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/is-it-wrong-to-try-to-pick-up-girls-in-a-dungeon-memoria-freese-manga-volume-3-9798855402216.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:07.804339",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781787742680": {
+        "isbn": "9781787742680",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/sword-of-the-titans-manga-volume-1-9781787742680.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:11.196921",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1787742687",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975379964": {
+        "isbn": "9781975379964",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/spring-storm-and-monster-manga-volume-1-9781975379964.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:15.019264",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975379969",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855403428": {
+        "isbn": "9798855403428",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/reborn-to-master-the-blade-from-hero-king-to-extraordinary-squire-manga-volume-4-9798855403428.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:18.818507",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975397425": {
+        "isbn": "9781975397425",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/pink-habanero-manga-volume-1-9781975397425.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:22.701354",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975397428",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855401714": {
+        "isbn": "9798855401714",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/gabriel-dropout-manga-volume-14-9798855401714.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:26.328698",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798891604919": {
+        "isbn": "9798891604919",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/i-quit-my-apprenticeship-as-a-royal-court-wizard-to-become-a-magic-item-craftswoman-manga-volume-1-9798891604919.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:30.795479",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798891602595": {
+        "isbn": "9798891602595",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/my-sister-took-my-fiance-and-now-im-being-courted-by-a-beastly-prince-manga-volume-2-9798891602595.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:35.165307",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888437582": {
+        "isbn": "9798888437582",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/true-love-fades-away-when-the-contract-ends-manga-volume-2-9798888437582.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:39.172119",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781647293598": {
+        "isbn": "9781647293598",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/virgin-love-manga-volume-4-9781647293598.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:43.377518",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293596",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646513734": {
+        "isbn": "9781646513734",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/sailor-moon-naoko-takeuchi-collection-manga-volume-10-9781646513734.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:51.402578",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646513738",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975377878": {
+        "isbn": "9781975377878",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/ako-and-bambi-manga-volume-3-9781975377878.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:54.971974",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975377877",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798891600881": {
+        "isbn": "9798891600881",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/grandmaster-of-demonic-cultivation-manhua-volume-7-9798891600881.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:48:58.866430",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798891602144": {
+        "isbn": "9798891602144",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/at-2500-in-akasaka-manga-volume-1-9798891602144.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:03.859257",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975391935": {
+        "isbn": "9781975391935",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/sugar-apple-fairy-tale-manga-volume-3-9781975391935.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:11.992519",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975391934",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781647293772": {
+        "isbn": "9781647293772",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/im-giving-the-disgraced-noble-lady-i-rescued-a-crash-course-in-naughtiness-manga-volume-7-9781647293772.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:16.390469",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293774",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781787741041": {
+        "isbn": "9781787741041",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/atom-the-beginning-manga-volume-9-9781787741041.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:24.473026",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1787741044",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975375119": {
+        "isbn": "9781975375119",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/i-want-to-be-a-receptionist-in-this-magical-world-manga-volume-5-9781975375119.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:28.280197",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975375114",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888433560": {
+        "isbn": "9798888433560",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/hunting-in-another-world-with-my-elf-wife-manga-volume-5-9798888433560.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:32.290335",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781647293970": {
+        "isbn": "9781647293970",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/twilight-out-of-focus-manga-volume-5-9781647293970.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:36.679079",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293979",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798891601987": {
+        "isbn": "9798891601987",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/sword-of-the-demon-hunter-kijin-gentosho-manga-volume-5-9798891601987.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:40.954168",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798891600362": {
+        "isbn": "9798891600362",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/call-to-adventure-defeating-dungeons-with-a-skill-board-manga-volume-8-9798891600362.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:45.178927",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888435892": {
+        "isbn": "9798888435892",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/we-started-a-threesome-manga-volume-3-9798888435892.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:49.189575",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "Used",
+                "url": "https://www.amazon.com/dp/8888435891",
+                "store_price": 49.33,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/8888435891",
+                "store_price": 67.41,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888438053": {
+        "isbn": "9798888438053",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/reincarnated-as-a-dragon-hatchling-manga-volume-6-9798888438053.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:49:53.787495",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975388874": {
+        "isbn": "9781975388874",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/sister-and-giant-a-young-lady-is-reborn-in-another-world-manga-volume-2-9781975388874.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:02.225550",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975388879",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975392741": {
+        "isbn": "9781975392741",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/secrets-of-the-silent-witch-manga-volume-3-9781975392741.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:06.909210",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975392744",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781642733952": {
+        "isbn": "9781642733952",
+        "retail_price": 8.76,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/usotoki-rhetoric-manga-volume-8-9781642733952.html",
+                "store_price": 8.76,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:13.775224",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1642733954",
+                "store_price": 10.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975360290": {
+        "isbn": "9781975360290",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/chitose-is-in-the-ramune-bottle-novel-volume-65-9781975360290.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:17.757104",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855403138": {
+        "isbn": "9798855403138",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/detroit-become-human-tokyo-stories-manga-volume-1-9798855403138.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:21.604345",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781787740105": {
+        "isbn": "9781787740105",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/kamen-rider-kuuga-manga-volume-7-9781787740105.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:25.190237",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1787740102",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781647293420": {
+        "isbn": "9781647293420",
+        "retail_price": 14.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/my-unique-skill-makes-me-op-even-at-level-1-novel-volume-6-9781647293420.html",
+                "store_price": 11.96,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:29.057880",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1647293421",
+                "store_price": 14.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888438602": {
+        "isbn": "9798888438602",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/this-is-screwed-up-but-i-was-reincarnated-as-a-girl-in-another-world-manga-volume-13-9798888438602.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:33.166473",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855400656": {
+        "isbn": "9798855400656",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/shadows-house-manga-volume-7-9798855400656.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:37.329380",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646092789": {
+        "isbn": "9781646092789",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/just-like-mona-lisa-manga-volume-2-9781646092789.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:41.745171",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1646092783",
+                "store_price": 14.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975378349": {
+        "isbn": "9781975378349",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/im-the-villainess-so-im-taming-the-final-boss-novel-volume-9-9781975378349.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:45.311920",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975378342",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781634424899": {
+        "isbn": "9781634424899",
+        "retail_price": 14.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/happy-of-the-end-manga-volume-3-9781634424899.html",
+                "store_price": 11.96,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:52.800409",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1634424891",
+                "store_price": 14.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781642734072": {
+        "isbn": "9781642734072",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/nukozuke-manga-volume-1-9781642734072.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:50:57.229158",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1642734071",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975393441": {
+        "isbn": "9781975393441",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/banished-from-the-heros-party-i-decided-to-live-a-quiet-life-in-the-countryside-novel-volume-12-9781975393441.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:01.378667",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975393449",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9784805317969": {
+        "isbn": "9784805317969",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/the-real-musashi-the-true-story-of-japans-greatest-warrior-manga-9784805317969.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:06.546916",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/4805317965",
+                "store_price": 12.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855401899": {
+        "isbn": "9798855401899",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/from-old-country-bumpkin-to-master-swordsman-manga-volume-1-9798855401899.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:10.453635",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9784805318249": {
+        "isbn": "9784805318249",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/kenji-miyazawas-restaurant-of-many-orders-and-other-stories-manga-9784805318249.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:14.569364",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/4805318244",
+                "store_price": 14.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9784805317822": {
+        "isbn": "9784805317822",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/soseki-natsumes-botchan-manga-9784805317822.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:22.974461",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/4805317825",
+                "store_price": 14.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798855402094": {
+        "isbn": "9798855402094",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/dead-mount-death-play-manga-volume-12-9798855402094.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:31.247502",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975392413": {
+        "isbn": "9781975392413",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/even-a-replica-can-fall-in-love-novel-volume-1-9781975392413.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:35.602432",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975392418",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798400902222": {
+        "isbn": "9798400902222",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/not-sew-wicked-stepmom-manhwa-volume-5-9798400902222.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:39.847596",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781642733976": {
+        "isbn": "9781642733976",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/parallel-world-pharmacy-manga-volume-5-9781642733976.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:43.885549",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1642733970",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781718356269": {
+        "isbn": "9781718356269",
+        "retail_price": 15.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/ascendance-of-a-bookworm-part-5-novel-volume-5-9781718356269.html",
+                "store_price": 12.79,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:48.241888",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1718356269",
+                "store_price": 15.99,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771655": {
+        "isbn": "9798888771655",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/ninja-vs-gokudo-manga-volume-2-9798888771655.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:51:52.974754",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/8888771654",
+                "store_price": 20.19,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781642734003": {
+        "isbn": "9781642734003",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/the-death-mage-manga-volume-6-9781642734003.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:00.752100",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1642734004",
+                "store_price": 12.95,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975369934": {
+        "isbn": "9781975369934",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/cheerful-amnesia-manga-volume-4-9781975369934.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:09.834716",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975369939",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975391225": {
+        "isbn": "9781975391225",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/apparently-disillusioned-adventurers-will-save-the-world-novel-volume-5-9781975391225.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:14.520417",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975391225",
+                "store_price": 15.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771297": {
+        "isbn": "9798888771297",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/kei-x-yaku-bound-by-law-manga-volume-3-9798888771297.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:18.812953",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888770689": {
+        "isbn": "9798888770689",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/the-great-cleric-manga-volume-11-9798888770689.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:22.689541",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781646519347": {
+        "isbn": "9781646519347",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/a-do-manga-volume-4-9781646519347.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:30.566577",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781642733884": {
+        "isbn": "9781642733884",
+        "retail_price": 12.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/it-takes-two-tomorrow-too-manga-volume-5-9781642733884.html",
+                "store_price": 10.36,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:34.767712",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771662": {
+        "isbn": "9798888771662",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/ninja-vs-gokudo-manga-volume-3-9798888771662.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:41.875526",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975387853": {
+        "isbn": "9781975387853",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/combatants-will-be-dispatched-manga-volume-10-9781975387853.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:45.406164",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975387856",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798400900747": {
+        "isbn": "9798400900747",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/dark-moon-the-blood-altar-manhwa-volume-4-9798400900747.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:48.948326",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798400901812": {
+        "isbn": "9798400901812",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/the-remarried-empress-manhwa-volume-8-9798400901812.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:53.201674",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781642733822": {
+        "isbn": "9781642733822",
+        "retail_price": 13.95,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/hero-without-a-class-manga-volume-1-9781642733822.html",
+                "store_price": 11.16,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:52:57.336489",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975394844": {
+        "isbn": "9781975394844",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/brunhild-the-princess-of-dragons-novel-hardcover-9781975394844.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:02.033640",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975394844",
+                "store_price": 20.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975394820": {
+        "isbn": "9781975394820",
+        "retail_price": 15.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/gods-games-we-play-novel-volume-3-9781975394820.html",
+                "store_price": 12.79,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:11.050134",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975394828",
+                "store_price": 16.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771976": {
+        "isbn": "9798888771976",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/medalist-manga-volume-4-9798888771976.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:15.173465",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/8888771972",
+                "store_price": 20.19,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798400900853": {
+        "isbn": "9798400900853",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/jungle-juice-manhwa-volume-5-9798400900853.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:18.490221",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798400902086": {
+        "isbn": "9798400902086",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/tomb-raider-king-manhwa-volume-8-9798400902086.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:27.722420",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798888771181": {
+        "isbn": "9798888771181",
+        "retail_price": 13.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/anyway-im-falling-in-love-with-you-manga-volume-4-9798888771181.html",
+                "store_price": 11.19,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:31.766181",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781642733938": {
+        "isbn": "9781642733938",
+        "retail_price": 9.56,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/tales-of-the-tendo-family-manga-volume-3-9781642733938.html",
+                "store_price": 9.56,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:35.559396",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9798400901348": {
+        "isbn": "9798400901348",
+        "retail_price": 19.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/the-uncanny-counter-manhwa-volume-3-9798400901348.html",
+                "store_price": 15.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:39.606288",
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975391249": {
+        "isbn": "9781975391249",
+        "retail_price": 12.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/a-terrified-teacher-at-ghoul-school-manga-volume-15-9781975391249.html",
+                "store_price": 10.39,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:48.737350",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975391241",
+                "store_price": 13.0,
+                "stock_status": null,
+                "last_stock_update": null,
+                "coupon": "",
+                "is_on_sale": false
+            }
+        ]
+    },
+    "9781975374167": {
+        "isbn": "9781975374167",
+        "retail_price": 14.99,
+        "shops": [
+            {
+                "store": "Crunchyroll",
+                "condition": "New",
+                "url": "https://store.crunchyroll.com/products/amalgam-hound-novel-volume-2-9781975374167.html",
+                "store_price": 11.99,
+                "stock_status": "Pre-Order",
+                "last_stock_update": "2024-05-12 00:53:52.841566",
+                "coupon": "",
+                "is_on_sale": false
+            },
+            {
+                "store": "Amazon",
+                "condition": "New",
+                "url": "https://www.amazon.com/dp/1975374169",
+                "store_price": 15.0,
                 "stock_status": null,
                 "last_stock_update": null,
                 "coupon": "",

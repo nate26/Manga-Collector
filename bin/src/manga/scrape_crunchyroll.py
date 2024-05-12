@@ -28,6 +28,7 @@ from bs4 import BeautifulSoup
 # - volume names (should not be series names)
 
 # TO DO:
+# - re-check release dates for only pre-orders*****
 # - add more error handling
 # - add more shops
 # - get better additional images / better way to get images/descriptions
@@ -191,6 +192,7 @@ def get_series_by_id(series_id: str):
         else:
             series_resp = requests.get('https://api.mangaupdates.com/v1/series/' + series_id,
                                     timeout=30).json()
+            logger.info('Series recieved from api: %s', json.dumps(series_resp))
             top_themes = sorted(
                 [
                     {
@@ -203,6 +205,16 @@ def get_series_by_id(series_id: str):
                 key = lambda x: x['votes'],
                 reverse=True
             )[:15]
+            status = None
+            match series_resp['status']:
+                case 'Ongoing':
+                    status = 'Ongoing'
+                case 'Complete':
+                    status = 'Complete'
+                case 'Hiatus':
+                    status = 'Hiatus'
+                case _:
+                    status = 'Unknown'
             parsed_series_data = {
                 'series_id': str(series_resp['series_id']),
                 'title': series_resp['title'],
@@ -215,9 +227,7 @@ def get_series_by_id(series_id: str):
                 'themes': top_themes,
                 'latest_chapter': series_resp['latest_chapter'],
                 'release_status': series_resp['status'],
-                'status': 'Complete'  if 'Complete' in series_resp['status'] else \
-                    ('Ongoing' if 'Ongoing' in series_resp['status'] else \
-                        ('Hiatus' if 'Hiatus' in series_resp['status'] else 'Unknown')),
+                'status': status,
                 'authors': [
                     { 'name': author['name'], 'type': author['type'] }
                     for author in series_resp['authors']
@@ -758,7 +768,6 @@ if RUN_SCRAPER:
     if SCRAPE_ALL_PAGES:
 
         for i in range(0, total_pages):
-            logger.info('Calling: %s&start=%s&sz=100', PAGE_URL, START)
 
             if START > END:
                 logger.info('Reached end of pages...')
@@ -767,6 +776,7 @@ if RUN_SCRAPER:
             if completed == 0:
                 next_soup = first_soup
             else:
+                logger.info('Calling: %s&start=%s&sz=100', PAGE_URL, START)
                 next_soup = BeautifulSoup(
                     requests.get(PAGE_URL + f'&start={START}&sz=100', timeout=30).text,
                     'html.parser'
