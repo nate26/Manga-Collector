@@ -38,7 +38,8 @@ from bs4 import BeautifulSoup
 RUN_SCRAPER = True
 SCRAPE_ALL_PAGES = True
 
-START = 3300
+START = 0
+END = 3300
 
 QUERY_ISBN_DB = True
 QUERY_CR_FOR_DETAILS = True
@@ -237,21 +238,6 @@ def get_series_by_id(series_id: str):
         logger.error('Could not get series details for %s... ending process', series_id)
         raise
 
-def set_confidence(current_confidence, new_confidence: float):
-    '''
-    Sets the confidence level for the given confidence values.
-    
-    Parameters:
-    - current_confidence: The current confidence level.
-    - new_confidence (float): The new confidence level.
-
-    Returns:
-    - float: The confidence level for the given confidence values.
-    '''
-    if current_confidence is None:
-        return new_confidence
-    return max(current_confidence['series_match_confidence'], new_confidence)
-
 def calculate_confidence(series_name: str, title: str):
     '''
     Calculates the confidence level for the given series name and title.
@@ -263,10 +249,7 @@ def calculate_confidence(series_name: str, title: str):
     Returns:
     - float: The confidence level for the given series name and title.
     '''
-    return 1 - (len([
-        li for li in difflib.ndiff(series_name.lower(), title.lower())
-        if li[0] != ' '
-    ]) / max(len(series_name), len(title)))
+    return difflib.SequenceMatcher(None, series_name.lower(), title.lower()).ratio()
 
 def search_series(series_name: str, category: str, volume_name: str):
     '''
@@ -309,22 +292,20 @@ def search_series(series_name: str, category: str, volume_name: str):
             # series category must match
             if series_details['category'].lower() == series_category.lower():
                 all_titles = [
-                    title.lower() for title
+                    title for title
                     in [ series_details['title'], *series_details['associated_titles'] ]
                 ]
 
                 # check for exact equality in title or associated titles
-                if len([
-                    title for title
-                    in all_titles
-                    if title == series_name.lower()
-                ]) > 0:
-                    series_details['series_match_confidence'] = 1
-                    return series_details
+                for title in all_titles:
+                    if title.lower() == series_name.lower():
+                        series_details['series_match_confidence'] = 1
+                        series_details['title'] = title # update title to closest match
+                        logger.info('Exact series match found: %s', series_details['title'])
+                        return series_details
 
                 # set first found to match category to a low confidence match
-                series_details['series_match_confidence'] = \
-                    set_confidence(closest_series_match, 0.1)
+                series_details['series_match_confidence'] = 0.1
                 closest_series_match = series_details
 
                 # check for partial equality in title or associated titles
@@ -337,10 +318,13 @@ def search_series(series_name: str, category: str, volume_name: str):
                         # case: 'Re:Zero' in 'Re:ZERO Ex (Novel)' = True
                         calculate_confidence(volume_name, title)
                     )
-                    series_details['series_match_confidence'] = \
-                        set_confidence(closest_series_match, confidence)
-                    closest_series_match = series_details
-                    series_details['title'] = title # update title to closest match
+                    if series_details['series_match_confidence'] < confidence:
+                        series_details['series_match_confidence'] = confidence
+                        closest_series_match = series_details
+                        logger.info('Partial series match for [%s, %s] found with confidence %s: %s',
+                                    series_name, volume_name,
+                                    str(series_details['series_match_confidence']), title)
+                        series_details['title'] = title # update title to closest match
 
         if closest_series_match is not None:
             logger.info('Closest series match with confidence %s: %s',
@@ -776,7 +760,11 @@ if RUN_SCRAPER:
         for i in range(0, total_pages):
             logger.info('Calling: %s&start=%s&sz=100', PAGE_URL, START)
 
-            if START == 0:
+            if START > END:
+                logger.info('Reached end of pages...')
+                break
+
+            if completed == 0:
                 next_soup = first_soup
             else:
                 next_soup = BeautifulSoup(
@@ -785,13 +773,14 @@ if RUN_SCRAPER:
                 )
 
             for item in next_soup.find_all('div', {'class': 'product'}):
-                logger.info('Starting item %s from page %s of %s', i, total_pages)
+                logger.info('Starting item %s from page %s of %s',
+                            json.loads(item.attrs['data-gtmdata'])['id'], i, total_pages)
 
-                volumes_new, series_new, shop_new \
-                    = scrape_page(item, volumes_new, series_new, shop_new)
+                volumes_data, series_data, shop_data \
+                    = scrape_page(item, volumes_data, series_data, shop_data)
 
                 # save each volume to file
-                save_all_files(volumes_new, series_new, shop_new)
+                save_all_files(volumes_data, series_data, shop_data)
 
                 # update progress bar
                 completed += 1
@@ -805,6 +794,8 @@ if RUN_SCRAPER:
                         end='\r')
 
             START += 100
+
+logger.info('Finished scraping...')
 
 # print(calculate_confidence(
     # 'Re:ZERO',
