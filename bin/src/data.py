@@ -1,16 +1,16 @@
 '''Module to get and write to local json files or AWS.'''
 
 from typing import Dict, List
-from bin.src.enums.host_enum import HostEnum
-from bin.src.enums.file_path_enum import FilePathEnum
-from bin.src.interfaces.icollection import ICollection
-from bin.src.interfaces.iseries import ISeries
-from bin.src.interfaces.ishop import IShop
-from bin.src.interfaces.ivolume import IVolume
-from bin.src.interfaces.iwishlist import IWishlist
-from bin.src.util.aws_dao import AWSDAO
-from bin.src.util.local_dao import LocalDAO
-from bin.src.util.manga_logger import MangaLogger
+from src.enums.host_enum import HostEnum
+from src.enums.file_path_enum import FilePathEnum
+from src.interfaces.icollection import ICollection
+from src.interfaces.iseries import ISeries
+from src.interfaces.ishop import IShop
+from src.interfaces.ivolume import IVolume
+from src.interfaces.iwishlist import IWishlist
+from src.util.aws_dao import AWSDAO
+from src.util.local_dao import LocalDAO
+from src.util.manga_logger import MangaLogger
 
 class Data:
     '''
@@ -161,3 +161,14 @@ class Data:
         if self.host == HostEnum.MOCK:
             return 'mock data -- no update made'
         return self.aws_dao.post_data(self.wishlist_url + '/delete-records', data)
+
+    def save_all_files(self, volumes_provided, series_provided, shop_provided):
+        '''
+        Saves all the given data structures to their respective files via the local dao.
+
+        Parameters:
+        - volumes_provided: The volumes data structure to save to the file.
+        - series_provided: The series data structure to save to the file.
+        - shop_provided: The shop data structure to save to the file.
+        '''
+        self.local_dao.save_all_files(volumes_provided, series_provided, shop_provided)

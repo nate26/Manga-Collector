@@ -3,9 +3,9 @@
 import logging
 import logging.config
 
-from bin.src.enums.file_path_enum import FilePathEnum
-from bin.src.enums.host_enum import HostEnum
-from bin.src.util.common_helper import CommonHelper
+from src.enums.file_path_enum import FilePathEnum
+from src.enums.host_enum import HostEnum
+from src.util.common_helper import CommonHelper
 
 class MangaLogger:
     '''
@@ -38,8 +38,9 @@ class MangaLogger:
         - host (HostEnum): The host to set up logging for.
         '''
         self.common_helper = CommonHelper()
-        file_name = self.common_helper.get_timezone_now() + '.log'
+        file_name = self.common_helper.get_timezone_now('%Y-%m-%d_%H-%M-%S') + '.log'
         file_path = FilePathEnum.LOGS.value[host.value] + file_name
+        print(file_path)
         logging.basicConfig(
             filename=file_path,
             format='%(asctime)s,%(msecs)03d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',

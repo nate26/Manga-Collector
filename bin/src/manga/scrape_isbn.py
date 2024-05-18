@@ -8,8 +8,8 @@ from xml.dom import NotFoundErr
 from bs4 import BeautifulSoup
 import requests
 
-from bin.src.enums.host_enum import HostEnum
-from bin.src.util.manga_logger import MangaLogger
+from src.enums.host_enum import HostEnum
+from src.util.manga_logger import MangaLogger
 
 class ScrapeISBN:
     '''

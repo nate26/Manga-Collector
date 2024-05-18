@@ -18,12 +18,12 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-from bin.src.enums.host_enum import HostEnum
-from bin.src.manga.scrape_barnes_and_noble import ScrapeBarnesAndNoble
-from bin.src.manga.scrape_isbn import ScrapeISBN
-from bin.src.manga.series_search import SeriesSearch
-from bin.src.util.local_dao import LocalDAO
-from bin.src.util.manga_logger import MangaLogger
+from src.enums.host_enum import HostEnum
+from src.manga.scrape_barnes_and_noble import ScrapeBarnesAndNoble
+from src.manga.scrape_isbn import ScrapeISBN
+from src.manga.series_search import SeriesSearch
+from src.data import Data
+from src.util.manga_logger import MangaLogger
 
 # fix:
 # - some series are not getting caught, ex: "Spice and Wolf"
@@ -55,8 +55,8 @@ class ScrapeCrunchyroll:
         a utility to search for series data
     scrape_barnes_and_noble : ScrapeBarnesAndNoble
         a utility to scrape Barnes & Noble data
-    local_dao : LocalDAO
-        a utility to access local data
+    data : Data
+        a utility to access book data
     
     Methods
     -------
@@ -74,7 +74,7 @@ class ScrapeCrunchyroll:
         self.scrape_isbn = ScrapeISBN(host)
         self.series_search = SeriesSearch(host)
         self.scrape_barnes_and_noble = ScrapeBarnesAndNoble(host)
-        self.local_dao = LocalDAO(host)
+        self.data = Data(host)
 
         self.enable_scrape = True
         self.scrape_all_pages = True
@@ -359,12 +359,12 @@ class ScrapeCrunchyroll:
         '''
 
         start = 0
-        end = 3300
+        end = 1000
 
         if self.enable_scrape:
-            volumes_data = self.local_dao.open_file('./volumes.json')
-            series_data = self.local_dao.open_file('./series.json')
-            shop_data = self.local_dao.open_file('./shop.json')
+            volumes_data = self.data.get_volumes_data()
+            series_data = self.data.get_series_data()
+            shop_data = self.data.get_shop_data()
 
             page_base_url = \
                 'https://store.crunchyroll.com/collections/manga-books/?cgid=manga-books'
@@ -407,7 +407,7 @@ class ScrapeCrunchyroll:
                             = self.scrape_page(item, volumes_data, series_data, shop_data)
 
                         # save each volume to file
-                        self.local_dao.save_all_files(volumes_data, series_data, shop_data)
+                        self.data.save_all_files(volumes_data, series_data, shop_data)
 
                         # update progress bar
                         completed += 1

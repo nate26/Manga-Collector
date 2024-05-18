@@ -10,17 +10,15 @@ import traceback
 from flask import Flask, jsonify, Response, request
 from flask_cors import CORS
 import requests
-from bin.src.enums.host_enum import HostEnum
-from bin.src.util.manga_logger import MangaLogger
+from src.enums.host_enum import HostEnum
+from src.util.manga_logger import MangaLogger
 from src.data import Data
-from src.user_data.collection import Collection
 
 app = Flask(__name__)
 CORS(app)
-host = HostEnum.SERVER
+host = HostEnum.LOCAL
 logger = MangaLogger(host).register_logger(__name__)
 data = Data(host)
-collection = Collection(host)
 
 @app.route('/get-library', methods=['GET'])
 def get_library():

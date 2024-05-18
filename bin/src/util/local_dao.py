@@ -4,8 +4,8 @@ Local DAO to get and write to local json files.
 import json
 import traceback
 
-from bin.src.enums.host_enum import HostEnum
-from bin.src.util.manga_logger import MangaLogger
+from src.enums.host_enum import HostEnum
+from src.util.manga_logger import MangaLogger
 
 class LocalDAO:
     """
