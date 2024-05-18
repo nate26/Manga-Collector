@@ -1,6 +1,7 @@
-from interfaces.ilibrary import ILibraryItem
+'''Interface for Collection details of a book'''
 
 class ICollection(dict):
+    '''Purchase details and collection details of a book'''
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
@@ -15,8 +16,3 @@ class ICollection(dict):
     read: bool
     inserted: str
     updated: str
-
-class ICollectionDisplay(ICollection, ILibraryItem):
-    __getattr__ = dict.get
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__

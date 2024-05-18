@@ -1,17 +1,18 @@
+'''Manage Collection data for a user'''
 import traceback
-from interfaces.icollection import ICollectionDisplay
-from interfaces.ilibrary import ILibraryItem
-from interfaces.iseries import IEdition, ISeries, IEditionEnriched
-from src.data import Data
 from typing import Dict, List
-from util.manga_logger import MangaLogger
+from bin.src.interfaces.icollection import ICollectionDisplay
+from bin.src.interfaces.ilibrary import ILibraryItem
+from bin.src.interfaces.iseries import IEdition, ISeries, IEditionEnriched
+from src.data import Data
+from bin.src.util.manga_logger import MangaLogger
 
 class Collection:
     
 
     def __init__(self, host):
         self.data = Data(host)
-        self.logger = MangaLogger(host, __name__)
+        self.logger = MangaLogger(host).register_logger(__name__)
 
     def enrich_edition(self, edition: IEdition, items_db: List[ILibraryItem]) -> IEditionEnriched:
         return {
@@ -23,7 +24,7 @@ class Collection:
 
     def get_collection(self, user_id: str):
         collection_db = self.data.get_collection_data(user_id)
-        items_db = self.data.get_library_data().get('items')
+        items_db = self.data.get_volumes_data()
         series_db = self.data.get_series_data()
         collection_by_vol: List[str] = []
         collection_by_series: List[str] = []

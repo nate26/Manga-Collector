@@ -4,7 +4,6 @@ from typing import Dict, List
 from bin.src.enums.host_enum import HostEnum
 from bin.src.enums.file_path_enum import FilePathEnum
 from bin.src.interfaces.icollection import ICollection
-from bin.src.interfaces.ilibrary import ILibrary
 from bin.src.interfaces.iseries import ISeries
 from bin.src.interfaces.ishop import IShop
 from bin.src.interfaces.ivolume import IVolume
