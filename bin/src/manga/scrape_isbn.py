@@ -66,7 +66,9 @@ class ScrapeISBN:
                     try:
                         parsed_date = re.sub(r'(\d)(st|nd|rd|th)', r'\1', release_date.strip())
                         date = str(datetime.strptime(parsed_date, '%b %d, %Y').date())
-                        if date != datetime.now().strftime('%b %d, %Y'):
+                        today = datetime.now().strftime('%Y-%m-%d')
+                        self.logger.info('Parsed release date: %s vs %s', date, today)
+                        if date != today:
                             details['release_date'] = date
                         else:
                             self.logger.error(

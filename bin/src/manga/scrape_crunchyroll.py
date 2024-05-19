@@ -360,7 +360,7 @@ class ScrapeCrunchyroll:
         '''
 
         start = 1000
-        end = 10000000
+        end = 2000
 
         if self.enable_scrape:
             volumes_data = self.data.get_volumes_data()
@@ -382,12 +382,13 @@ class ScrapeCrunchyroll:
             total_count = min(cr_total_count, end) - start
             total_pages = math.ceil(total_count / 100)
             start_page = math.floor(start / 100)
+            end_page = math.ceil(min(cr_total_count, end) / 100)
             completed = 0
-            self.logger.info('pages to scrape: %s', str(total_pages - start_page))
+            self.logger.info('pages to scrape: %s', str(total_pages))
 
             if self.scrape_all_pages:
 
-                for i in range(start_page, total_pages):
+                for i in range(start_page, end_page):
 
                     if start > end:
                         self.logger.info('Reached end of pages...')
@@ -404,7 +405,7 @@ class ScrapeCrunchyroll:
 
                     for item in next_soup.find_all('div', {'class': 'product'}):
                         self.logger.info('Starting item %s from page %s of %s',
-                                    json.loads(item.attrs['data-gtmdata'])['id'], i, total_pages)
+                                    json.loads(item.attrs['data-gtmdata'])['id'], i, end_page)
 
                         try:
                             volumes_data, series_data, shop_data \
