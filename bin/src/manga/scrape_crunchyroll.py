@@ -377,15 +377,17 @@ class ScrapeCrunchyroll:
                 requests.get(page_url + f'&start={start}&sz=100', timeout=30).text,
                 'html.parser'
             )
-            total_count = int(first_soup.find('div', {'class': 'pagination-text'})
+            cr_total_count = int(first_soup.find('div', {'class': 'pagination-text'})
                               .attrs['data-totalcount'])
+            total_count = min(cr_total_count, end) - start
             total_pages = math.ceil(total_count / 100)
+            start_page = math.floor(start / 100)
             completed = 0
-            self.logger.info('pages to scrape: %s', str(total_pages))
+            self.logger.info('pages to scrape: %s', str(total_pages - start_page))
 
             if self.scrape_all_pages:
 
-                for i in range(0, total_pages):
+                for i in range(start_page, total_pages):
 
                     if start > end:
                         self.logger.info('Reached end of pages...')
