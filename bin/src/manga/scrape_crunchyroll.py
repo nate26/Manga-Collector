@@ -360,7 +360,7 @@ class ScrapeCrunchyroll:
         '''
 
         start = 1000
-        end = 2000
+        end = 1000000000
 
         if self.enable_scrape:
             volumes_data = self.data.get_volumes_data()

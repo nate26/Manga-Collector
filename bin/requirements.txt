@@ -3,4 +3,5 @@ flask
 flask-cors
 flask-sqlalchemy
 psycopg2
+pytz
 sqlalchemy_json
