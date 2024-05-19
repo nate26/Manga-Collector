@@ -40,7 +40,6 @@ class MangaLogger:
         self.common_helper = CommonHelper()
         file_name = self.common_helper.get_timezone_now('%Y-%m-%d_%H-%M-%S') + '.log'
         file_path = FilePathEnum.LOGS.value[host.value] + file_name
-        print(file_path)
         logging.basicConfig(
             filename=file_path,
             format='%(asctime)s,%(msecs)03d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',

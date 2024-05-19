@@ -4,6 +4,7 @@ Local DAO to get and write to local json files.
 import json
 import traceback
 
+from src.enums.file_path_enum import FilePathEnum
 from src.enums.host_enum import HostEnum
 from src.util.manga_logger import MangaLogger
 
@@ -33,6 +34,7 @@ class LocalDAO:
 
     def __init__(self, host: HostEnum):
         self.logger = MangaLogger(host).register_logger(__name__)
+        self.host = host
 
     def open_file(self, file_path: str):
         '''
@@ -97,21 +99,21 @@ class LocalDAO:
 
         # save volumes data
         try:
-            self.save_file('./volumes.json', volumes_provided)
+            self.save_file(FilePathEnum.VOLUMES.value[self.host.value], volumes_provided)
         except FileNotFoundError:
             self.logger.error(traceback.format_exc())
             self.logger.critical('Could not save volumes.json...')
 
         # save series data
         try:
-            self.save_file('./series.json', series_provided)
+            self.save_file(FilePathEnum.SERIES.value[self.host.value], series_provided)
         except FileNotFoundError:
             self.logger.error(traceback.format_exc())
             self.logger.critical('Could not save series.json...')
 
         # save shop data
         try:
-            self.save_file('./shop.json', shop_provided)
+            self.save_file(FilePathEnum.SHOP.value[self.host.value], shop_provided)
         except FileNotFoundError:
             self.logger.error(traceback.format_exc())
             self.logger.critical('Could not save shop.json...')

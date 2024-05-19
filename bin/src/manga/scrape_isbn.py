@@ -144,15 +144,15 @@ class ScrapeISBN:
                     })
                     self.logger.info('Shop details added: %s', shops[-1])
                 except AttributeError:
-                    self.logger.error(traceback.format_exc())
                     self.logger.warning('Could not find shop details for Amazon... skipping')
+                    self.logger.error(traceback.format_exc())
                     continue
         except AttributeError as err:
-            self.logger.error(traceback.format_exc())
             self.logger.warning(
                 'Could not find shop details from isbn... ending process because %s',
                 err
             )
+            self.logger.error(traceback.format_exc())
         return shops
 
     def isbn_search(self, isbn: str):

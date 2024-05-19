@@ -1,26 +1,40 @@
-"""GraphQL API to query the manga library"""
+'''GraphQL API to query the manga library'''
+
 from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, ObjectType
-from database.database_connection import app
-from database.queries import list_manga_records_resolver, get_manga_record_resolver
-from database.mutations import create_manga_resolver, update_manga_resolver, delete_manga_resolver
-from flask import jsonify, request
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from src.database.queries import Queries
+from src.database.mutations import Mutations
+from src.enums.host_enum import HostEnum
+from src.util.manga_logger import MangaLogger
 
-query = ObjectType("Query")
-query.set_field("list_manga_records", list_manga_records_resolver)
-query.set_field("get_manga_record", get_manga_record_resolver)
+app = Flask(__name__)
+CORS(app)
+host = HostEnum.LOCAL
+logger = MangaLogger(host).register_logger(__name__)
+queries = Queries(host)
+mutations = Mutations(host)
 
-mutation = ObjectType("Mutation")
-mutation.set_field("create_manga", create_manga_resolver)
-mutation.set_field("update_manga", update_manga_resolver)
-mutation.set_field("delete_manga", delete_manga_resolver)
 
-type_defs = load_schema_from_path("schema.graphql")
+# Setup GQL resolvers
+
+query = ObjectType('Query')
+query.set_field('get_record', queries.get_record_resolver)
+query.set_field('all_records', queries.all_records_resolver)
+
+mutation = ObjectType('Mutation')
+mutation.set_field('create_volume', mutations.create_volume_resolver)
+mutation.set_field('update_volume', mutations.update_volume_resolver)
+mutation.set_field('delete_volume', mutations.delete_volume_resolver)
+
+type_defs = load_schema_from_path('schema.graphql')
 schema = make_executable_schema(type_defs, query, mutation)
 
-@app.route("/graphql", methods=["POST"])
+
+@app.route('/graphql', methods=['POST'])
 def graphql_server():
-    """GQL server for performing queries"""
+    '''GQL server for performing queries'''
     data = request.get_json()
     success, result = graphql_sync(
         schema,

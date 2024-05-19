@@ -138,8 +138,8 @@ class SeriesSearch:
                 self.logger.info('Added series to local cache: %s', json.dumps(parsed_series_data))
             return parsed_series_data
         except requests.exceptions.RequestException:
-            self.logger.error(traceback.format_exc())
             self.logger.error('Could not get series details for %s... ending process', series_id)
+            self.logger.error(traceback.format_exc())
             raise
 
     def calculate_confidence(self, series_name: str, title: str):
@@ -242,8 +242,8 @@ class SeriesSearch:
                             json.dumps(closest_series_match))
                 return closest_series_match
         except (requests.exceptions.RequestException, IndexError, AttributeError):
-            self.logger.error(traceback.format_exc())
             self.logger.error('Could not get series ID for "%s"... ending process', series_name)
+            self.logger.error(traceback.format_exc())
 
         self.logger.warning('Could not find any matching series ID for "%s"... ending process',
                             series_name)

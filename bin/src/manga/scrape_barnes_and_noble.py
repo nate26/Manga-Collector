@@ -78,7 +78,7 @@ class ScrapeBarnesAndNoble:
                 'is_on_sale': False
             }
         except (requests.exceptions.RequestException, AttributeError):
-            self.logger.error(traceback.format_exc())
             self.logger.critical('Could not get Barnes & Noble data for %s ... ending process',
                                  isbn)
+            self.logger.error(traceback.format_exc())
             return None

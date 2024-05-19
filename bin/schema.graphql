@@ -3,57 +3,124 @@ schema {
     mutation: Mutation
 }
 
+type SeriesVolume {
+    isbn: String!
+    volume: String!
+    category: String!
+}
+
+type SeriesThemes {
+    theme: String
+    votes: Int
+}
+
+type SeriesDetails {
+    name: String
+    type: String
+}
+
+type Series {
+    series_id: String!
+    title: String
+    associated_titles: [String]
+    url: String!
+    category: String
+    series_match_confidence: Float!
+    volumes: [SeriesVolume]
+    description: String
+    cover_image: String
+    genres: [String]
+    themes: [SeriesThemes]
+    latest_chapter: Int
+    release_status: String
+    status: String
+    authors: [SeriesDetails]
+    publishers: [SeriesDetails]
+    bayesian_rating: Float
+    rank: Int
+    recommendations: [Int]
+}
+
+type ShopDetails {
+    store: String!
+    condition: String
+    url: String!
+    store_price: Float
+    stock_status: String
+    last_stock_update: String!
+    coupon: String
+    is_on_sale: Boolean
+}
+
+type CollectionData {
+    user_id: ID!
+    isbn: ID!
+    state: String
+    cost: Float
+    merchant: String
+    purchaseDate: String
+    giftToMe: Boolean
+    read: Boolean
+    inserted: String
+    updated: String
+}
+
+type WishlistData {
+    user_id: ID!
+    isbn: ID!
+    user_list: String
+    priority: String
+    planned_purchase_date: String
+}
+
 type CoverImage {
     name: String!
     url: String!
 }
 
-type MangaRecord {
+type VolumeRecord {
     isbn: ID!
+    brand: String
+    series: String
+    series_id: String
+    display_name: String
+    name: String
+    category: String
+    volume: String
+    url: String!
     record_added_date: String!
     record_updated_date: String!
-    name: String!
-    format: String!
-    volume: String
+    release_date: String
+    publisher: String
+    format: String
+    pages: Int
+    authors: String
+    isbn_10: String
     primary_cover_image_url: String
     other_images: [CoverImage]
-    series: String
-    artist: String
-    author: String
     description: String
-    genres: [String]
-    themes: [String]
-    publisher: String!
-    age_rating: String
-    age_rating_bucket: String
-    page_count: Int
-    adult: Boolean!
-    weight: Float
-    url_component: String!
-    image_not_final: Boolean!
+    series: Series
     retail_price: Float
-    release_date: String
-    reprint_date: String
-    pre_book_date: String
-    series_id: String
-    edition_id: String
+    purchase_options: [ShopDetails]
+    user_collection_data: [CollectionData]
+    user_wishlist_data: [WishlistData]
 }
 
-type MangaRecordResult {
+type SingleVolumeRecordResult {
     success: Boolean!
     errors: [String]
-    manga_record: MangaRecord
+    record: VolumeRecord
 }
 
-type MangaRecordsResult {
+type MultipleVolumeRecordResult {
     success: Boolean!
     errors: [String]
-    manga_records: [MangaRecord]
+    records: [VolumeRecord]
 }
 
 type Query {
-    list_manga_records: MangaRecordsResult!
-    get_manga_record(m_id: ID!): MangaRecordResult!
+    get_record(isbn: ID!, user_id: ID): SingleVolumeRecordResult!
+    all_records: MultipleVolumeRecordResult!
 }
 
 input CoverImageInput {
@@ -61,44 +128,37 @@ input CoverImageInput {
     url: String!
 }
 
-input MangaRecordInput {
+input VolumeRecordInput {
     isbn: ID!
-    record_added_date: String
-    record_updated_date: String
-    name: String
-    format: String
-    volume: String
-    primary_cover_image_url: String
-    other_images: [CoverImageInput]
+    brand: String
     series: String
-    artist: String
-    author: String
-    description: String
-    genres: [String]
-    themes: [String]
-    publisher: String
-    age_rating: String
-    age_rating_bucket: String
-    page_count: Int
-    adult: Boolean
-    weight: Float
-    url_component: String
-    image_not_final: Boolean
-    retail_price: Float
-    release_date: String
-    reprint_date: String
-    pre_book_date: String
     series_id: String
-    edition_id: String
+    display_name: String
+    name: String
+    category: String
+    volume: String
+    url: String!
+    record_added_date: String!
+    record_updated_date: String!
+    release_date: String
+    publisher: String
+    format: String
+    pages: Int
+    authors: String
+    isbn_10: String
+    primary_cover_image_url: String
+    other_images: [CoverImage]
+    description: String
+    series: Series
 }
 
 type Mutation {
-    create_manga(
-        manga_input: MangaRecordInput!
-    ): MangaRecordResult!
-    update_manga(
-        m_id: ID!
-        manga_update: MangaRecordInput!
-    ): MangaRecordResult!
-    delete_manga(m_id: ID!): MangaRecordResult!
+    create_volume(
+        volume_input: VolumeRecordInput!
+    ): SingleVolumeRecordResult!
+    update_volume(
+        isbn: ID!
+        volume_update: VolumeRecordInput!
+    ): SingleVolumeRecordResult!
+    delete_volume(isbn: ID!): SingleVolumeRecordResult!
 }

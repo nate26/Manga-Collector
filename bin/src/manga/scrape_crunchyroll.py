@@ -15,6 +15,7 @@ import json
 import math
 import re
 from datetime import datetime
+import traceback
 import requests
 from bs4 import BeautifulSoup
 
@@ -203,10 +204,10 @@ class ScrapeCrunchyroll:
                     [] if is_new_volume else all_shop[isbn]['shops'])
                 self.logger.info('Barnes & Noble data: %s', json.dumps(bn_data))
                 product['shops'].append(bn_data)
-            except (requests.exceptions.RequestException, IndexError) as e:
-                self.logger.error(e)
+            except (requests.exceptions.RequestException, IndexError):
                 self.logger.error('Could not get Barnes & Noble data for %s... ending process',
                                   isbn)
+                self.logger.error(traceback.format_exc())
         all_shop[isbn] = product
         self.logger.info('All shop details added: %s', json.dumps(product))
 
@@ -358,8 +359,8 @@ class ScrapeCrunchyroll:
         and series information.
         '''
 
-        start = 0
-        end = 1000
+        start = 1000
+        end = 10000000
 
         if self.enable_scrape:
             volumes_data = self.data.get_volumes_data()
@@ -403,11 +404,16 @@ class ScrapeCrunchyroll:
                         self.logger.info('Starting item %s from page %s of %s',
                                     json.loads(item.attrs['data-gtmdata'])['id'], i, total_pages)
 
-                        volumes_data, series_data, shop_data \
-                            = self.scrape_page(item, volumes_data, series_data, shop_data)
+                        try:
+                            volumes_data, series_data, shop_data \
+                                = self.scrape_page(item, volumes_data, series_data, shop_data)
 
-                        # save each volume to file
-                        self.data.save_all_files(volumes_data, series_data, shop_data)
+                            # save each volume to file
+                            self.data.save_all_files(volumes_data, series_data, shop_data)
+                        except Exception:
+                            self.logger.error('Error scraping item... skipping...')
+                            self.logger.error(traceback.format_exc())
+                            continue
 
                         # update progress bar
                         completed += 1
