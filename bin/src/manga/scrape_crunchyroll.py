@@ -174,7 +174,7 @@ class ScrapeCrunchyroll:
                     'authors': vol_for_isbn['authors'],
                     'isbn_10': vol_for_isbn['isbn_10']
                 },
-                'shops': all_shop[isbn]['shops']
+                'shops': all_shop[isbn]['shops'][1:]
             }
             self.logger.info('Volume exists, ISBN search skipped... %s', isbn_results)
 
@@ -347,9 +347,9 @@ class ScrapeCrunchyroll:
                             -1
                             if x['volume'] is None
                             else (
-                                int(x['volume'].split('-')[0])
+                                float(x['volume'].split('-')[0])
                                 if '-' in x['volume']
-                                else int(x['volume'])
+                                else float(x['volume'])
                             )
                         )
                     )
@@ -374,7 +374,7 @@ class ScrapeCrunchyroll:
         and series information.
         '''
 
-        start = 8100
+        start = 11000
         end = 100000000000
 
         if self.enable_scrape:
