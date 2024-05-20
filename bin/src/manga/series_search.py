@@ -134,8 +134,6 @@ class SeriesSearch:
                     'rank': series_resp['rank']['position']['year'],
                     'recommendations': [rec['series_id'] for rec in series_resp['recommendations']]
                 }
-                self.series_cache[series_id] = parsed_series_data
-                self.logger.info('Added series to local cache: %s', json.dumps(parsed_series_data))
             return parsed_series_data
         except requests.exceptions.RequestException:
             self.logger.error('Could not get series details for %s... ending process', series_id)
@@ -154,6 +152,17 @@ class SeriesSearch:
         - float: The confidence level for the given series name and title.
         '''
         return difflib.SequenceMatcher(None, series_name.lower(), title.lower()).ratio()
+
+    def save_series_cache(self, series_id: str, series_data: dict):
+        '''
+        Saves the series data to the cache.
+
+        Parameters:
+        - series_id (str): The ID of the series to save.
+        - series_data (dict): The data of the series to save.
+        '''
+        self.series_cache[series_id] = series_data
+        self.logger.info('Added series to local cache: %s', json.dumps(series_data))
 
     def search_series(self, series_name: str, category: str, volume_name: str):
         '''
@@ -208,6 +217,7 @@ class SeriesSearch:
                             series_details['title'] = title # update title to closest match
                             self.logger.info('Exact series match found: %s',
                                              series_details['title'])
+                            self.save_series_cache(series['record']['series_id'], series_details)
                             return series_details
 
                     # set first found to match category to a low confidence match
@@ -240,6 +250,7 @@ class SeriesSearch:
                 self.logger.info('Closest series match with confidence %s: %s',
                             closest_series_match['series_match_confidence'],
                             json.dumps(closest_series_match))
+                self.save_series_cache(series['record']['series_id'], series_details)
                 return closest_series_match
         except (requests.exceptions.RequestException, IndexError, AttributeError):
             self.logger.error('Could not get series ID for "%s"... ending process', series_name)

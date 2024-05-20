@@ -19,7 +19,9 @@ import traceback
 import requests
 from bs4 import BeautifulSoup
 
+from src.enums.file_path_enum import FilePathEnum
 from src.enums.host_enum import HostEnum
+from src.util.local_dao import LocalDAO
 from src.manga.scrape_barnes_and_noble import ScrapeBarnesAndNoble
 from src.manga.scrape_isbn import ScrapeISBN
 from src.manga.series_search import SeriesSearch
@@ -72,22 +74,24 @@ class ScrapeCrunchyroll:
 
     def __init__(self, host: HostEnum):
         self.logger = MangaLogger(host).register_logger(__name__)
+        self.host = host
         self.scrape_isbn = ScrapeISBN(host)
         self.series_search = SeriesSearch(host)
         self.scrape_barnes_and_noble = ScrapeBarnesAndNoble(host)
         self.data = Data(host)
+        self.local_dao = LocalDAO(host)
 
         self.enable_scrape = True
         self.scrape_all_pages = True
 
-        self.query_isbn_db = True
-        self.query_cr_for_details = True
+        self.query_isbn_db = False
+        self.query_cr_for_details = False
         self.query_barnes_and_noble = False
 
         # only used if requires a full refresh of all data
-        self.force_cr_for_details = True
-        self.refresh_volume_details = True
-        self.refresh_series_data = True
+        self.force_cr_for_details = False
+        self.refresh_volume_details = False
+        self.refresh_series_data = False
 
     def parse_volume(self, display_name: str, category: str):
         '''
@@ -160,8 +164,19 @@ class ScrapeCrunchyroll:
         if (self.query_isbn_db and not is_new_volume) or is_new_volume:
             isbn_results = self.scrape_isbn.isbn_search(isbn)
         else:
-            isbn_results = { 'details': {}, 'shops': [] }
-            self.logger.info('Volume exists, ISBN search skipped...')
+            vol_for_isbn = all_volumes[isbn]
+            isbn_results = {
+                'details': {
+                    'release_date': vol_for_isbn['release_date'],
+                    'publisher': vol_for_isbn['publisher'],
+                    'format': vol_for_isbn['format'],
+                    'pages': vol_for_isbn['pages'],
+                    'authors': vol_for_isbn['authors'],
+                    'isbn_10': vol_for_isbn['isbn_10']
+                },
+                'shops': all_shop[isbn]['shops']
+            }
+            self.logger.info('Volume exists, ISBN search skipped... %s', isbn_results)
 
         retail_price = max([
             price.attrs['content']
@@ -213,9 +228,11 @@ class ScrapeCrunchyroll:
 
         # get the series data
         brand_name = cr_attr['brand']
-        # query series if volume is new or series is not in data
+        # query series if volume is new ----------- or series is not in data
         if not self.refresh_series_data and isbn in all_volumes \
             and all_volumes[isbn]['series_id'] in all_series:
+            #  \
+            # and all_volumes[isbn]['series_id'] in all_series:
             self.logger.info('Series found in data... using that instead: %s %s',
                         brand_name, all_volumes[isbn]['series_id'])
             series_details = all_series[all_volumes[isbn]['series_id']]
@@ -247,53 +264,50 @@ class ScrapeCrunchyroll:
             **isbn_results['details']
         }
 
-        if is_new_volume \
+        # remove description check later?
+        fetch_cr_data = (is_new_volume or 'description' not in all_volumes[isbn])
+        if fetch_cr_data \
             or (self.refresh_volume_details \
                 and (self.query_cr_for_details or self.force_cr_for_details)):
             volume['cover_images'] = [{ 'name': 'primary', 'url': cover_image }]
             # fetch data for description and more images
-            if (self.query_cr_for_details and not is_new_volume) \
-                or self.force_cr_for_details:
-                self.logger.info('Scraping CR page for description and more cover images: %s', isbn)
-                soup_volume = BeautifulSoup(
-                    requests.get(volume['url'], timeout=30).text,
-                    'html.parser'
-                )
-                # get the release date
-                preorder_soup = soup_volume.find('div', {'class': 'pre-order-street-date'})
-                if preorder_soup is not None:
-                    preorder_text = soup_volume.find('div', {'class': 'pre-order-street-date'}).text
-                    if 'Release date:' in preorder_text:
-                        parsed_preorder_date = preorder_text.replace('Release date:', '').strip()
-                        volume['release_date'] = str(datetime.strptime(
-                            parsed_preorder_date, '%m/%d/%Y').date())
-                    else:
-                        parsed_preorder_date = preorder_text.replace('ESTIMATED TO SHIP', '') \
-                            .replace('Ship date is an estimate and not guaranteed', '') \
-                                .replace('Pre-order FAQ', '') \
-                                    .strip()
-                        volume['release_date'] = str(datetime.strptime(
-                            parsed_preorder_date, '%B %d, %Y').date())
-                # get the description
-                descriptions = soup_volume.find('div', {'class': 'product-description'}) \
-                    .find('div', {'class': 'short-description'}) \
-                        .find_all('p')
-                volume['description'] = '\n'.join([desc.text for desc in descriptions])
-                # get the thumbnail carousel images
-                carousel = soup_volume.find_all('div', {'class': 'slick-paging-image-container'})
-                all_images = [
-                    img.find('img', {'class': 'img-fluid'}).attrs['src'] for img in carousel
+            self.logger.info('Scraping CR page for description and more cover images: %s', isbn)
+            soup_volume = BeautifulSoup(
+                requests.get(volume['url'], timeout=30).text,
+                'html.parser'
+            )
+            # get the release date
+            preorder_soup = soup_volume.find('div', {'class': 'pre-order-street-date'})
+            if preorder_soup is not None:
+                preorder_text = soup_volume.find('div', {'class': 'pre-order-street-date'}).text
+                if 'Release date:' in preorder_text:
+                    parsed_preorder_date = preorder_text.replace('Release date:', '').strip()
+                    volume['release_date'] = str(datetime.strptime(
+                        parsed_preorder_date, '%m/%d/%Y').date())
+                else:
+                    parsed_preorder_date = preorder_text.replace('ESTIMATED TO SHIP', '') \
+                        .replace('Ship date is an estimate and not guaranteed', '') \
+                            .replace('Pre-order FAQ', '') \
+                                .strip()
+                    volume['release_date'] = str(datetime.strptime(
+                        parsed_preorder_date, '%B %d, %Y').date())
+            # get the description
+            descriptions = soup_volume.find('div', {'class': 'product-description'}) \
+                .find('div', {'class': 'short-description'}) \
+                    .find_all('p')
+            volume['description'] = '\n'.join([desc.text for desc in descriptions])
+            # get the thumbnail carousel images
+            carousel = soup_volume.find_all('div', {'class': 'slick-paging-image-container'})
+            all_images = [
+                img.find('img', {'class': 'img-fluid'}).attrs['src'] for img in carousel
+            ]
+            self.logger.info('All images: %s for %s', json.dumps(all_images), cr_attr['name'])
+            volume['cover_images'].extend(
+                [
+                    { 'name': 'thumbnail', 'url': img } for img in all_images
+                    if img is not cover_image # will not catch because they are thumbnails now
                 ]
-                self.logger.info('All images: %s for %s', json.dumps(all_images), cr_attr['name'])
-                volume['cover_images'].extend(
-                    [
-                        { 'name': 'thumbnail', 'url': img } for img in all_images
-                        if img is not cover_image # will not catch because they are thumbnails now
-                    ]
-                )
-            else:
-                self.logger.info('Volume details already exist... skipping CR page scraping: %s',
-                                 isbn)
+            )
             all_volumes[isbn] = volume
         # override existing volume details with new volume details
         elif self.refresh_volume_details:
@@ -359,8 +373,8 @@ class ScrapeCrunchyroll:
         and series information.
         '''
 
-        start = 1000
-        end = 1000000000
+        start = 8100
+        end = 100000000000
 
         if self.enable_scrape:
             volumes_data = self.data.get_volumes_data()
@@ -368,7 +382,7 @@ class ScrapeCrunchyroll:
             shop_data = self.data.get_shop_data()
 
             page_base_url = \
-                'https://store.crunchyroll.com/collections/manga-books/?cgid=manga-books'
+                'https://store.crunchyroll.com/collections/manga-books/?cgid=manga-books&srule=New-to-Old'
             category_query = '&prefn1=subcategory&prefv1=Novels|Manhwa|Manhua|Light%20Novels|Manga'
             page_url = page_base_url + category_query
 
@@ -390,8 +404,12 @@ class ScrapeCrunchyroll:
 
                 for i in range(start_page, end_page):
 
-                    if start > end:
-                        self.logger.info('Reached end of pages...')
+                    cancel_scraping = not self.local_dao \
+                        .open_file(FilePathEnum.EDITING.value[self.host.value]).get('editing')
+                    if start > end or cancel_scraping:
+                        self.logger.info('Reached end of pages... %s', str(start - 100))
+                        self.local_dao.save_file(FilePathEnum.EDITING.value[self.host.value],
+                                                 {"editing": True})
                         break
 
                     if completed == 0:
@@ -432,3 +450,4 @@ class ScrapeCrunchyroll:
                     start += 100
 
         self.logger.info('Finished scraping...')
+        print()
