@@ -141,6 +141,7 @@ class ScrapeISBN:
                             .text.strip().replace('$', '')),
                         'stock_status': None,
                         'last_stock_update': None,
+                        'record_updated_date': str(datetime.now()),
                         'coupon': '',
                         'is_on_sale': False
                     })

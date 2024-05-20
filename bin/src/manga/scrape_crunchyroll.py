@@ -206,6 +206,7 @@ class ScrapeCrunchyroll:
                     'store_price': float(cr_attr['price']),
                     'stock_status': cr_attr['Inventory_Status'],
                     'last_stock_update': last_stock_update,
+                    'record_updated_date': str(datetime.now()),
                     'coupon': cr_attr['coupon'],
                     'is_on_sale': item.find('div', {'class': 'sale'}) is not None
                 },
