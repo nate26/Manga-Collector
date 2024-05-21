@@ -115,8 +115,8 @@ class Queries:
                 'success': True,
                 'record': self.__parse_volume(
                     volume_data[isbn],
-                    series_data[volume_data['series_id']] \
-                        if volume_data['series_id'] is not None else None,
+                    series_data[volume_data[isbn]['series_id']] \
+                        if volume_data[isbn]['series_id'] is not None else None,
                     shop_data[isbn],
                     [entry for entry in collection_data if entry['isbn'] == isbn],
                     [entry for entry in wishlist_data if entry['isbn'] == isbn]
@@ -151,8 +151,8 @@ class Queries:
                 'success': True,
                 'records': [self.__parse_volume(
                     volume_data[isbn],
-                    series_data[volume_data['series_id']] \
-                        if volume_data['series_id'] is not None else None,
+                    series_data[volume_data[isbn]['series_id']] \
+                        if volume_data[isbn]['series_id'] is not None else None,
                     shop_data[isbn],
                     [entry for entry in collection_data if entry['isbn'] == isbn],
                     [entry for entry in wishlist_data if entry['isbn'] == isbn]
@@ -164,3 +164,83 @@ class Queries:
                 'errors': ['could not fetch all manga data... ' + str(traceback.format_exc())]
             }
         return payload
+
+    def get_collection_series(self, _obj, _info, user_id: str):
+        '''
+        Gets a list of all series in the user's collection
+        
+        Parameters:
+        - user_id: str
+            The ID of the user to fetch the collection for
+        
+        Returns:
+        - dict: The fetched series
+        
+        Raises:
+        - RequestException: If there was an error fetching the series
+        '''
+        try:
+            volume_data, series_data, shop_data, \
+                collection_data, wishlist_data = self.__get_data(user_id)
+            series_ids = set([
+                volume_data[entry['isbn']]['series_id']
+                for entry in collection_data
+                if entry['isbn'] in volume_data and
+                volume_data[entry['isbn']]['series_id'] is not None
+            ])
+            solo_volumes = [
+                {
+                    'series_id': None,
+                    'title': volume_data[entry['isbn']]['name'],
+                    'associated_titles': [],
+                    'url': volume_data[entry['isbn']]['url'],
+                    'category': volume_data[entry['isbn']]['category'],
+                    'description': volume_data[entry['isbn']]['description'],
+                    'cover_image': volume_data[entry['isbn']]['cover_images'][0]['url'],
+                    'genres': [],
+                    'themes': [],
+                    'latest_chapter': None,
+                    'release_status': None,
+                    'status': None,
+                    'authors': [],
+                    'publishers': [],
+                    'bayesian_rating': None,
+                    'rank': None,
+                    'recommendations': [],
+                    'series_match_confidence': 0,
+                    'volumes': [volume_data[entry['isbn']]]
+                }
+                for entry in collection_data
+                if entry['isbn'] in volume_data and
+                volume_data[entry['isbn']]['series_id'] is None
+            ]
+            user_series = sorted(
+                [
+                    {
+                        **series_data[series_id],
+                        'volumes': [
+                            self.__parse_volume(
+                                volume_data[entry['isbn']],
+                                series_data[volume_data[entry['isbn']]['series_id']] \
+                                    if volume_data[entry['isbn']]['series_id'] is not None \
+                                        else None,
+                                shop_data[entry['isbn']],
+                                [e for e in collection_data if e['isbn'] == entry['isbn']],
+                                [e for e in wishlist_data if e['isbn'] == entry['isbn']]
+                            )
+                            for entry in series_data[series_id]['volumes']
+                        ]
+                    }
+                    for series_id in series_ids
+                ] + solo_volumes,
+                key = lambda x: (x['title'])
+            )
+            return {
+                'success': True,
+                'series': user_series
+            }
+        except RequestException:
+            return {
+                'success': False,
+                'errors': ['could not fetch series data... ' + str(traceback.format_exc())]
+            }
