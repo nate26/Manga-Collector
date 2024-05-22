@@ -79,10 +79,12 @@ class SeriesSearch:
         if series_resp['status'] is not None:
             if 'Ongoing' in series_resp['status']:
                 return 'Ongoing'
-            elif 'Completed' in series_resp['status']:
+            elif 'Complete' in series_resp['status']:
                 return 'Completed'
             elif 'Hiatus' in series_resp['status']:
                 return 'Hiatus'
+            elif 'Cancelled' in series_resp['status'] or 'Discontinued' in series_resp['status']:
+                return 'Cancelled'
         else:
             return 'Unknown'
 

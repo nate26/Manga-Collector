@@ -5,8 +5,8 @@ schema {
 
 type SeriesVolume {
     isbn: String!
-    volume: String!
-    category: String!
+    volume: String
+    category: String
 }
 
 type SeriesThemes {
@@ -25,7 +25,7 @@ type Series {
     associated_titles: [String]
     url: String!
     category: String
-    series_match_confidence: Float!
+    series_match_confidence: Float
     volumes: [SeriesVolume]
     description: String
     cover_image: String
@@ -38,7 +38,7 @@ type Series {
     publishers: [SeriesDetails]
     bayesian_rating: Float
     rank: Int
-    recommendations: [Int]
+    recommendations: [Float]
 }
 
 type ShopDetails {
@@ -47,7 +47,7 @@ type ShopDetails {
     url: String!
     store_price: Float
     stock_status: String
-    last_stock_update: String!
+    last_stock_update: String
     coupon: String
     is_on_sale: Boolean
 }
@@ -74,8 +74,8 @@ type WishlistData {
 }
 
 type CoverImage {
-    name: String!
-    url: String!
+    name: String
+    url: String
 }
 
 type VolumeRecord {
@@ -99,7 +99,7 @@ type VolumeRecord {
     primary_cover_image_url: String
     other_images: [CoverImage]
     description: String
-    series: Series
+    series_data: Series
     retail_price: Float
     purchase_options: [ShopDetails]
     user_collection_data: [CollectionData]
@@ -123,9 +123,56 @@ type Query {
     all_records: MultipleVolumeRecordResult!
 }
 
-input CoverImageInput {
-    name: String!
+
+
+
+
+
+
+
+
+
+input SeriesVolumeInput {
+    isbn: String!
+    volume: String
+    category: String
+}
+
+input SeriesThemesInput {
+    theme: String
+    votes: Int
+}
+
+input SeriesDetailsInput {
+    name: String
+    type: String
+}
+
+input SeriesInput {
+    series_id: String!
+    title: String
+    associated_titles: [String]
     url: String!
+    category: String
+    series_match_confidence: Float
+    volumes: [SeriesVolumeInput]
+    description: String
+    cover_image: String
+    genres: [String]
+    themes: [SeriesThemesInput]
+    latest_chapter: Int
+    release_status: String
+    status: String
+    authors: [SeriesDetailsInput]
+    publishers: [SeriesDetailsInput]
+    bayesian_rating: Float
+    rank: Int
+    recommendations: [Float]
+}
+
+input CoverImageInput {
+    name: String
+    url: String
 }
 
 input VolumeRecordInput {
@@ -147,9 +194,9 @@ input VolumeRecordInput {
     authors: String
     isbn_10: String
     primary_cover_image_url: String
-    other_images: [CoverImage]
+    other_images: [CoverImageInput]
     description: String
-    series: Series
+    series_data: SeriesInput
 }
 
 type Mutation {

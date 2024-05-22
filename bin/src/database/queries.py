@@ -83,9 +83,9 @@ class Queries:
         ]
         return {
             **volume_data,
-            'primary_cover_image_url': primary_images[0] if len(primary_images) > 0 else None,
+            'primary_cover_image_url': primary_images[0]['url'] if len(primary_images) > 0 else None,
             'other_images': alt_images,
-            'series': series_data,
+            'series_data': series_data,
             'retail_price': shop_data['retail_price'],
             'purchase_options': shop_data['shops'],
             'user_collection_data': collection_data,
