@@ -391,8 +391,8 @@ class ScrapeCrunchyroll:
             series_data = self.data.get_series_data()
             shop_data = self.data.get_shop_data()
 
-            page_base_url = \
-                'https://store.crunchyroll.com/collections/manga-books/?cgid=manga-books&srule=New-to-Old'
+            page_base_url = 'https://store.crunchyroll.com/collections/manga-books/' + \
+                '?cgid=manga-books&srule=New-to-Old'
             category_query = '&prefn1=subcategory&prefv1=Novels|Manhwa|Manhua|Light%20Novels|Manga'
             page_url = page_base_url + category_query
 

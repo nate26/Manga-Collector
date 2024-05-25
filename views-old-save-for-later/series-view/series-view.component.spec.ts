@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditionDetailComponent } from './edition-detail.component';
+import { SeriesViewComponent } from './series-view.component';
 
-describe('EditionDetailComponent', () => {
-  let component: EditionDetailComponent;
-  let fixture: ComponentFixture<EditionDetailComponent>;
+describe('SeriesViewComponent', () => {
+  let component: SeriesViewComponent;
+  let fixture: ComponentFixture<SeriesViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditionDetailComponent]
+      imports: [ SeriesViewComponent ]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(EditionDetailComponent);
+
+    fixture = TestBed.createComponent(SeriesViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

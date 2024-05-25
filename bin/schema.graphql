@@ -150,6 +150,7 @@ type Query {
     get_record(isbn: ID!, user_id: ID): SingleVolumeRecordResult!
     all_records(user_id: ID): MultipleVolumeRecordResult!
     get_collection_series(user_id: ID!): MultipleSeriesRecordResult!
+    get_collection_volumes(user_id: ID): MultipleVolumeRecordResult!
 }
 
 

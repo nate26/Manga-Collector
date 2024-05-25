@@ -23,6 +23,7 @@ query = ObjectType('Query')
 query.set_field('get_record', queries.get_record_resolver)
 query.set_field('all_records', queries.all_records_resolver)
 query.set_field('get_collection_series', queries.get_collection_series_resolver)
+query.set_field('get_collection_volumes', queries.get_collection_volume_resolver)
 
 mutation = ObjectType('Mutation')
 mutation.set_field('create_volume', mutations.create_volume_resolver)

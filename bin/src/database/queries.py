@@ -2,7 +2,7 @@
 
 import time
 import traceback
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 
 from requests import RequestException
 from src.data import Data
@@ -197,7 +197,7 @@ class Queries:
                 if entry['isbn'] in volume_data and
                 volume_data[entry['isbn']]['series_id'] is not None
             ])
-            self.logger.info(f'Found {len(series_ids)} series in user collection')
+            self.logger.info('Found %s series in user collection', len(series_ids))
             solo_volumes = [
                 {
                     'series_id': None,
@@ -224,7 +224,7 @@ class Queries:
                 if entry['isbn'] in volume_data and
                 volume_data[entry['isbn']]['series_id'] is None
             ]
-            self.logger.info(f'Found {len(solo_volumes)} solo volumes in user collection')
+            self.logger.info('Found %s solo volumes in user collection', len(solo_volumes))
             user_series = sorted(
                 [
                     {
@@ -246,11 +246,57 @@ class Queries:
                 ] + solo_volumes,
                 key = lambda x: (x['title'])
             )
-            self.logger.info(f'Found {len(user_series)} series in user collection')
-            self.logger.info(f'User series: {user_series[0]}')
+            self.logger.info('Found %s total series in user collection', len(user_series))
             return {
                 'success': True,
                 'records': user_series
+            }
+        except RequestException:
+            return {
+                'success': False,
+                'errors': ['could not fetch series data... ' + str(traceback.format_exc())]
+            }
+
+    def get_collection_volume_resolver(self, _obj, _info, user_id: str):
+        '''
+        Gets a list of all parsed volumes in the user's collection
+        
+        Parameters:
+        - user_id: str
+            The ID of the user to fetch the collection for
+        
+        Returns:
+        - dict: The fetched volumes
+        '''
+        try:
+            volume_data, series_data, shop_data, \
+                collection_data, wishlist_data = self.__get_data(user_id)
+
+            collection_isbns = set([
+                entry['isbn']
+                for entry in collection_data
+            ])
+            
+            user_volumes = sorted(
+                [
+                    self.__parse_volume(
+                        volume_data[isbn],
+                        series_data[volume_data[isbn]['series_id']] \
+                            if volume_data[isbn]['series_id'] is not None \
+                                else None,
+                        shop_data[isbn],
+                        [e for e in collection_data if e['isbn'] == isbn],
+                        [e for e in wishlist_data if e['isbn'] == isbn]
+                    )
+                    for isbn in collection_isbns
+                ],
+                key = lambda x: (x['display_name'], x['category'], x['volume'])
+            )
+
+            self.logger.info('Found %s total volumes in user collection', len(user_volumes))
+            return {
+                'success': True,
+                'records': user_volumes
             }
         except RequestException:
             return {

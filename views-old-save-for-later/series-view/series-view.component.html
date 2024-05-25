@@ -1,0 +1,148 @@
+<div>
+    <table>
+        <thead>
+            <tr>
+                @for (column of seriesColumns; track column.key) {
+                <th [style.text-align]="column.align"> {{column.header}} </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (series of seriesArr; track series.series_id) {
+            @defer (on viewport) {
+            <tr [class.expanded-row]="expandedElement === series" (click)="setExpanded(series)">
+                @for (column of seriesColumns; track column.key) {
+                <td class="table-row" [ngStyle]="column.style" [style.text-align]="column.align"
+                    [style.width]="column.width">
+                    @switch (column.render) {
+                    @case ('image') {
+                    <img [src]="getCoverImage(series)" alt="Primary cover image for {{series.title}}"
+                        class="volume-cover">
+                    }
+                    @default {
+                    <p>{{getAttr(series, column)}}</p>
+                    }
+                    }
+                </td>
+                }
+            </tr>
+            <tr>
+                <td [attr.colspan]="seriesColumns.length">
+                    <div [@detailExpand]="series === expandedElement ? 'expanded' : 'collapsed'"
+                        style="overflow: hidden;">
+                        <div class="flex-wrap" style="padding: 10px;">
+                            <div style="width: 150px; font-size: 9pt;">
+                                <ng-container *ngIf="selectedVol() as selectedVol">
+                                    <app-cover-image-slideshow [cover]="selectedVol.cover_images"
+                                        [title]="selectedVol.name">
+                                    </app-cover-image-slideshow>
+                                    <p style="text-align: center;">{{selectedVol.isbn}}</p>
+                                    <p><span style="font-weight: bold">Authors:</span> {{selectedVol.authors}}</p>
+                                    <p><span style="font-weight: bold">Retail Price:</span> {{selectedVol.retail_price |
+                                        currency}}</p>
+                                    <!-- <p><span style="font-weight: bold">Rated:</span> {{selectedVol.age_rating}}</p> -->
+                                    <p><span style="font-weight: bold">Page Count: </span>{{selectedVol.pages}}</p>
+                                    <button mat-stroked-button color="primary"
+                                        style="width: 100%; margin-top: 5px;">Search Series</button> <!-- TODO -->
+                                </ng-container>
+                            </div>
+                            <div style="padding: 0 10px; font-size: 11pt; color: #dfdfdf; width: calc(100% - 370px);">
+                                <span style="font-size: 16pt; font-weight: bold">
+                                    {{series.title}}
+                                </span>
+                                <span style="font-size: 14pt;">
+                                    &ndash; {{series.type}}
+                                    <ng-container *ngIf="selectedVol() as selectedVol">
+                                        @if (selectedVol.volume) {
+                                        {{selectedVol.volume}}
+                                        }
+                                    </ng-container>
+                                </span>
+                                <div class="flex-wrap" style="margin-top: 2px;">
+                                    @for (vol of series.volumes; track vol.isbn) {
+                                    <button mat-button class="series-volume" [ngStyle]="getVolumeStyle(vol)"
+                                        (click)="selectVolume(vol)">
+                                        {{vol.volume}}
+                                    </button>
+                                    }
+                                </div>
+                                @if (selectedVol()) {
+                                <p>{{selectedVol()?.description}}</p>
+                                <!-- <p><span style="font-weight: bold">Genres:</span> {{selectedVol.genres.join(', ')}}</p>
+                                            <p><span style="font-weight: bold">Themes:</span> {{selectedVol.themes.join(', ')}}</p> -->
+                                <p><span style="font-weight: bold">Publisher:</span> {{selectedVol()?.publisher}}</p>
+                                <p><span style="font-weight: bold">Released:</span> {{selectedVol()?.release_date |
+                                    date}}</p>
+                                }
+                                @else {
+                                <p>Looks like we don't have any volumes for this one yet...</p>
+                                }
+                            </div>
+                            <ng-container *ngIf="selectedVol() as selectedVol">
+                                <div
+                                    style="width: 200px; text-align: center; background-color: #35343b; border-radius: 8px; height: fit-content; padding: 8px 0;">
+                                    <!-- TODO need a better identifier for this... -->
+                                    <!-- @if (selectedVol.state) {
+                                                <p>Purchase Details:</p>
+                                                <hr>
+                                                <div style="text-align: left; padding: 0 8px; font-size: 11pt;">
+                                                    <p><span style="font-weight: bold">State:</span> {{selectedVol.state}}</p>
+                                                    <p><span style="font-weight: bold">Cost:</span> {{selectedVol.cost | currency}}</p>
+                                                    <p><span style="font-weight: bold">Store:</span> {{selectedVol.merchant}}</p>
+                                                    <p><span style="font-weight: bold">Date:</span> {{selectedVol.purchaseDate | date}}</p>
+                                                    <p>
+                                                        <span style="font-weight: bold">Read:</span>
+                                                        <mat-checkbox color="accent" [(ngModel)]="selectedVol.read"></mat-checkbox>
+                                                    </p>
+                                                </div>
+                                            }
+                                            @else { -->
+                                    <p>Shopping Info:</p>
+                                    <hr>
+                                    <div style="text-align: left; padding: 0 8px; font-size: 11pt;">
+                                        <div style="display: flex; margin: 0 8px;">
+                                            <img [src]="'../../assets/img/store-icons/rightstufanime-icon.png'"
+                                                alt="RightStuf Anime store icon" style="width: 35px; height: 35px;">
+                                            <div>
+                                                @if (selectedVol.retail_price === selectedVol.shops[0].store_price) {
+                                                <p class="store-status">
+                                                    {{selectedVol.retail_price | currency}}
+                                                    <span style="text-decoration:line-through; color:darkgray;">
+                                                        {{selectedVol.retail_price | currency}}
+                                                    </span>
+                                                </p>
+                                                }
+                                                @else {
+                                                <p class="store-status">{{selectedVol.shops[0].store_price | currency}}
+                                                </p>
+                                                }
+                                                <p class="store-status">{{selectedVol.shops[0].stock_status}}</p>
+                                            </div>
+                                            @if (selectedVol.shops[0].is_on_sale) {
+                                            <div class="sale-chip">SALE</div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <button mat-raised-button class="add-button">Add Volume to Wishlist</button>
+                                    <!-- TODO -->
+                                    <button mat-raised-button color="primary" class="add-button">Add Series to
+                                        Wishlist</button> <!-- TODO -->
+                                    <!-- } -->
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            } @placeholder {
+            <tr>
+                @for (column of seriesColumns; track column.key) {
+                <td class="table-row" [style.width]="column.width" style="height: 60px"></td>
+                }
+            </tr>
+            }
+            }
+        </tbody>
+    </table>
+</div>

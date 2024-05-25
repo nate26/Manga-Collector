@@ -31,12 +31,7 @@
                             "src/assets/css/themes/dark-theme.css",
                             "node_modules/@angular/material/prebuilt-themes/purple-green.css"
                         ],
-                        "scripts": [],
-                        "server": "src/main.server.ts",
-                        "prerender": true,
-                        "ssr": {
-                            "entry": "server.ts"
-                        }
+                        "scripts": []
                     },
                     "configurations": {
                         "production": {
