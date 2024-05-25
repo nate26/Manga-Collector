@@ -26,7 +26,6 @@ type Series {
     url: String!
     category: String
     series_match_confidence: Float
-    volumes: [SeriesVolume]
     description: String
     cover_image: String
     genres: [String]
@@ -39,6 +38,29 @@ type Series {
     bayesian_rating: Float
     rank: Int
     recommendations: [Float]
+    volumes: [SeriesVolume]
+}
+
+type SeriesRecord {
+    series_id: String!
+    title: String
+    associated_titles: [String]
+    url: String!
+    category: String
+    series_match_confidence: Float
+    description: String
+    cover_image: String
+    genres: [String]
+    themes: [SeriesThemes]
+    latest_chapter: Int
+    release_status: String
+    status: String
+    authors: [SeriesDetails]
+    publishers: [SeriesDetails]
+    bayesian_rating: Float
+    rank: Int
+    recommendations: [Float]
+    volumes: [VolumeRecord]
 }
 
 type ShopDetails {
@@ -118,9 +140,16 @@ type MultipleVolumeRecordResult {
     records: [VolumeRecord]
 }
 
+type MultipleSeriesRecordResult {
+    success: Boolean!
+    errors: [String]
+    records: [SeriesRecord]
+}
+
 type Query {
     get_record(isbn: ID!, user_id: ID): SingleVolumeRecordResult!
-    all_records: MultipleVolumeRecordResult!
+    all_records(user_id: ID): MultipleVolumeRecordResult!
+    get_collection_series(user_id: ID!): MultipleSeriesRecordResult!
 }
 
 

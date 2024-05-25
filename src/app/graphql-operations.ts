@@ -1,40 +1,19 @@
 import { gql } from 'apollo-angular';
 
-export const GET_ALL_MANGA = gql`
-    query List_manga_records {
-        list_manga_records {
-            manga_records {
+export const GET_MANGA = gql`
+    query get_record($isbn: ID!, $user_id: ID) {
+        get_record(isbn: $isbn, user_id: $user_id) {
+            record {
                 isbn
-                record_added_date
-                record_updated_date
-                name
-                format
-                volume
-                primary_cover_image_url
-                other_images {
-                    name
-                    url
-                }
+                brand
                 series
-                artist
-                author
-                description
-                genres
-                themes
-                publisher
-                age_rating
-                age_rating_bucket
-                page_count
-                adult
-                weight
-                url_component
-                image_not_final
-                retail_price
-                release_date
-                reprint_date
-                pre_book_date
-                series_id
-                edition_id
+                display_name
+                category
+                volume
+                url
+                user_collection_data {
+                    purchaseDate
+                }
             }
             success
             errors

@@ -1,7 +1,9 @@
 ariadne
+asyncio
 flask
 flask-cors
 flask-sqlalchemy
 psycopg2
 pytz
 sqlalchemy_json
+websockets

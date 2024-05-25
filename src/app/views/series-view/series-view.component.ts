@@ -39,16 +39,16 @@ export class SeriesViewComponent {
 
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    seriesMap = require('../../../../bin/src/manga/series.json') as SeriesMap;
+    seriesMap = {} as SeriesMap //require('../../../../bin/src/manga/series.json') as SeriesMap;
     seriesArr = Object.values(this.seriesMap);
     // series$ = this.seriesMap$.pipe(map((seriesMap) => Object.values(seriesMap)));
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    volumesMap = require('../../../../bin/src/manga/volumes.json') as VolumeMap;
+    volumesMap = {} as VolumeMap //require('../../../../bin/src/manga/volumes.json') as VolumeMap;
     // volumes$ = this.volumesMap$.pipe(map((volumeMap) => Object.values(volumeMap)));
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    shopMap = require('../../../../bin/src/manga/shop.json') as ShopMap;
+    shopMap = {} as ShopMap//require('../../../../bin/src/manga/shop.json') as ShopMap;
     // shop$ = this.shopMap$.pipe(map((shopMap) => Object.values(shopMap)));
 
 

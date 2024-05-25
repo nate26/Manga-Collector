@@ -18,7 +18,9 @@ from datetime import datetime
 import traceback
 import requests
 from bs4 import BeautifulSoup
+import websockets
 
+from run_websocket import CONNECTIONS
 from src.enums.file_path_enum import FilePathEnum
 from src.enums.host_enum import HostEnum
 from src.util.local_dao import LocalDAO
@@ -365,6 +367,13 @@ class ScrapeCrunchyroll:
                     all_series[series_id] = { **all_series[series_id], **series_details }
                     self.logger.info('Series details forcefully updated: %s',
                                 json.dumps(all_series[series_id]))
+
+        # broadcast the new data
+        websockets.broadcast(CONNECTIONS, json.dumps({
+            'volume': all_volumes[isbn],
+            'series': all_series[series_id],
+            'shop': all_shop[isbn]
+        }))
 
         return all_volumes, all_series, all_shop
 

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CollectionComponent } from './page-components/collection/collection.component';
 import { RouterOutlet } from '@angular/router';
-import { Observable, forkJoin, map, of } from 'rxjs';
+import { MangaRecordService } from './services/manga-record.service';
 
 export interface SeriesVolume {
     isbn: string;
@@ -72,39 +72,47 @@ export type ShopMap = { [isbn: string]: Shop };
 export class AppComponent {
     title = 'Manga Tracker';
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    seriesMap$ = of(require('../../bin/src/manga/series.json') as SeriesMap)
-    series$ = this.seriesMap$.pipe(map((seriesMap) => Object.values(seriesMap)));
-
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    volumesMap$ = of(require('../../bin/src/manga/volumes.json') as VolumeMap)
-    volumes$ = this.volumesMap$.pipe(map((volumeMap) => Object.values(volumeMap)));
-
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    shopMap$ = of(require('../../bin/src/manga/shop.json') as ShopMap)
-    shop$ = this.shopMap$.pipe(map((shopMap) => Object.values(shopMap)));
-
-    getCoverImage(series: Series): Observable<string> {
-        return this.volumesMap$.pipe(
-            map(volumeMap => volumeMap[series.volumes[0].isbn].cover_images[0].url)
-        );
+    constructor(private mangaRecordService: MangaRecordService) {
+        // mangaRecordService.listMangaRecords$.subscribe(console.log)
     }
 
-    getVolumeStyle(vol: SeriesVolume) {
-        return forkJoin({
-            shopMap: this.shopMap$,
-            volumeMap: this.volumesMap$
-        }).pipe(
-            map(({ shopMap, volumeMap }) => ({
-                shopData: shopMap[vol.isbn],
-                volumeData: volumeMap[vol.isbn]
-            })),
-            map(({ shopData, volumeData }) => ({
-                background: '#ebebeb',
-                color: (new Date(volumeData.release_date)) > (new Date()) ? '#e69138' : 'black',
-                border: shopData.shops.some(shop => shop.is_on_sale) ? '3px solid rgb(219 85 85 / 60%)' : ''
-            }))
-        );
+    call() {
+        this.mangaRecordService.listMangaRecords$.subscribe(console.log)
     }
+
+    // // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // seriesMap$ = of(require('../../bin/src/manga/series.json') as SeriesMap)
+    // series$ = this.seriesMap$.pipe(map((seriesMap) => Object.values(seriesMap)));
+
+    // // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // volumesMap$ = of(require('../../bin/src/manga/volumes.json') as VolumeMap)
+    // volumes$ = this.volumesMap$.pipe(map((volumeMap) => Object.values(volumeMap)));
+
+    // // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // shopMap$ = of(require('../../bin/src/manga/shop.json') as ShopMap)
+    // shop$ = this.shopMap$.pipe(map((shopMap) => Object.values(shopMap)));
+
+    // getCoverImage(series: Series): Observable<string> {
+    //     return this.volumesMap$.pipe(
+    //         map(volumeMap => volumeMap[series.volumes[0].isbn].cover_images[0].url)
+    //     );
+    // }
+
+    // getVolumeStyle(vol: SeriesVolume) {
+    //     return forkJoin({
+    //         shopMap: this.shopMap$,
+    //         volumeMap: this.volumesMap$
+    //     }).pipe(
+    //         map(({ shopMap, volumeMap }) => ({
+    //             shopData: shopMap[vol.isbn],
+    //             volumeData: volumeMap[vol.isbn]
+    //         })),
+    //         map(({ shopData, volumeData }) => ({
+    //             background: '#ebebeb',
+    //             color: (new Date(volumeData.release_date)) > (new Date()) ? '#e69138' : 'black',
+    //             border: shopData.shops.some(shop => shop.is_on_sale) ? '3px solid rgb(219 85 85 / 60%)' : ''
+    //         }))
+    //     );
+    // }
 
 }

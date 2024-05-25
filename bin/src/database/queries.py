@@ -1,6 +1,8 @@
 '''GQL Queries to get data from the DB'''
 
+import time
 import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from requests import RequestException
 from src.data import Data
@@ -29,7 +31,7 @@ class Queries:
         self.data = Data(host)
         self.logger = MangaLogger(host).register_logger(__name__)
 
-    def __get_data(self, user_id: str):
+    def __get_data(self, user_id: str | None):
         '''
         Fetches data from the data layer
         
@@ -44,13 +46,15 @@ class Queries:
         - RequestException: If the request to the data layer fails
         '''
         try:
-            # fetch data (consider parallelizing these calls for performance improvement)
-            volume_data = self.data.get_volumes_data()
-            series_data = self.data.get_series_data()
-            shop_data = self.data.get_shop_data()
-            collection_data = self.data.get_collection_data(user_id)
-            wishlist_data = self.data.get_wishlist_data(user_id)
-            return volume_data, series_data, shop_data, collection_data, wishlist_data
+            with ThreadPoolExecutor(6) as executor:
+                futures = [
+                    executor.submit(self.data.get_volumes_data),
+                    executor.submit(self.data.get_series_data),
+                    executor.submit(self.data.get_shop_data),
+                    executor.submit(self.data.get_collection_data if user_id is not None else lambda x: [], user_id),
+                    executor.submit(self.data.get_wishlist_data if user_id is not None else lambda x: [], user_id)
+                ]
+                return executor.map(lambda x: x.result(), futures)
         except Exception as exc:
             self.logger.error('Failed to get data')
             self.logger.error(traceback.format_exc())
@@ -92,7 +96,7 @@ class Queries:
             'user_wishlist_data': wishlist_data
         }
 
-    def get_record_resolver(self, _obj, _info, isbn: str, user_id: str):
+    def get_record_resolver(self, _obj, _info, isbn: str, user_id: str | None):
         '''
         Gets a single record by its ID from the DB
         
@@ -109,8 +113,13 @@ class Queries:
         - RequestException: If the record does not exist or could not be fetched
         '''
         try:
+            start = time.perf_counter()
+            self.logger.info('get all data start time: %s', start)
             volume_data, series_data, shop_data, \
                 collection_data, wishlist_data = self.__get_data(user_id)
+            end = time.perf_counter()
+            self.logger.info('get all data end time: %s', end)
+            self.logger.info('get all data diff time: %s', end - start)
             payload = {
                 'success': True,
                 'record': self.__parse_volume(
@@ -129,7 +138,7 @@ class Queries:
             }
         return payload
 
-    def all_records_resolver(self, _obj, _info, user_id: str):
+    def all_records_resolver(self, _obj, _info, user_id: str | None):
         '''
         Gets a list of all records from the DB
         
@@ -165,7 +174,7 @@ class Queries:
             }
         return payload
 
-    def get_collection_series(self, _obj, _info, user_id: str):
+    def get_collection_series_resolver(self, _obj, _info, user_id: str):
         '''
         Gets a list of all series in the user's collection
         
@@ -188,6 +197,7 @@ class Queries:
                 if entry['isbn'] in volume_data and
                 volume_data[entry['isbn']]['series_id'] is not None
             ])
+            self.logger.info(f'Found {len(series_ids)} series in user collection')
             solo_volumes = [
                 {
                     'series_id': None,
@@ -214,6 +224,7 @@ class Queries:
                 if entry['isbn'] in volume_data and
                 volume_data[entry['isbn']]['series_id'] is None
             ]
+            self.logger.info(f'Found {len(solo_volumes)} solo volumes in user collection')
             user_series = sorted(
                 [
                     {
@@ -235,9 +246,11 @@ class Queries:
                 ] + solo_volumes,
                 key = lambda x: (x['title'])
             )
+            self.logger.info(f'Found {len(user_series)} series in user collection')
+            self.logger.info(f'User series: {user_series[0]}')
             return {
                 'success': True,
-                'series': user_series
+                'records': user_series
             }
         except RequestException:
             return {
