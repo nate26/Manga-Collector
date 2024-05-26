@@ -60,7 +60,7 @@ class Queries:
             self.logger.error(traceback.format_exc())
             raise RequestException('Failed to get data') from exc
 
-    def __parse_volume(self, volume_data, series_data, shop_data, collection_data, wishlist_data):
+    def __parse_volume(self, isbn, volume_data, series_data, shop_data, collection_data, wishlist_data):
         '''
         Parses volume data to include additional fields
 
@@ -79,21 +79,41 @@ class Queries:
         Returns:
         - dict: The parsed volume data
         '''
+        self.logger.info('Parsing volume data for %s', isbn)
+        parsed_volume_data = volume_data[isbn] if isbn in volume_data \
+            else {
+                'isbn': '',
+                'display_name': 'Unknown',
+                'category': 'Unknown',
+                'volume': '0',
+                'cover_images': [],
+                'series_id': None,
+                'url': '',
+                'record_added_date': '',
+                'record_updated_date': ''
+            }
         primary_images = [
-            image for image in volume_data['cover_images'] if image['name'] == 'primary'
+            image for image in parsed_volume_data['cover_images'] if image['name'] == 'primary'
         ]
         alt_images = [
-            image for image in volume_data['cover_images'] if image['name'] != 'primary'
+            image for image in parsed_volume_data['cover_images'] if image['name'] != 'primary'
         ]
         return {
-            **volume_data,
+            **parsed_volume_data,
             'primary_cover_image_url': primary_images[0]['url'] if len(primary_images) > 0 else None,
             'other_images': alt_images,
-            'series_data': series_data,
-            'retail_price': shop_data['retail_price'],
-            'purchase_options': shop_data['shops'],
-            'user_collection_data': collection_data,
-            'user_wishlist_data': wishlist_data
+            'series_data': series_data[parsed_volume_data['series_id']] \
+                if parsed_volume_data['series_id'] is not None else {
+                    'series_id': '',
+                    'url': ''
+                },
+            'retail_price': shop_data[isbn]['retail_price'] if isbn in shop_data else None,
+            'purchase_options': shop_data[isbn]['shops'] if isbn in shop_data else {
+                'store': '',
+                'url': ''
+            },
+            'user_collection_data': [entry for entry in collection_data if entry['isbn'] == isbn],
+            'user_wishlist_data': [entry for entry in wishlist_data if entry['isbn'] == isbn]
         }
 
     def get_record_resolver(self, _obj, _info, isbn: str, user_id: str | None):
@@ -123,12 +143,12 @@ class Queries:
             payload = {
                 'success': True,
                 'record': self.__parse_volume(
-                    volume_data[isbn],
-                    series_data[volume_data[isbn]['series_id']] \
-                        if volume_data[isbn]['series_id'] is not None else None,
-                    shop_data[isbn],
-                    [entry for entry in collection_data if entry['isbn'] == isbn],
-                    [entry for entry in wishlist_data if entry['isbn'] == isbn]
+                    isbn,
+                    volume_data,
+                    series_data,
+                    shop_data,
+                    collection_data,
+                    wishlist_data
                 )
             }
         except RequestException:
@@ -159,12 +179,12 @@ class Queries:
             payload = {
                 'success': True,
                 'records': [self.__parse_volume(
-                    volume_data[isbn],
-                    series_data[volume_data[isbn]['series_id']] \
-                        if volume_data[isbn]['series_id'] is not None else None,
-                    shop_data[isbn],
-                    [entry for entry in collection_data if entry['isbn'] == isbn],
-                    [entry for entry in wishlist_data if entry['isbn'] == isbn]
+                    isbn,
+                    volume_data,
+                    series_data,
+                    shop_data,
+                    collection_data,
+                    wishlist_data
                 ) for isbn in volume_data]
             }
         except RequestException:
@@ -231,13 +251,12 @@ class Queries:
                         **series_data[series_id],
                         'volumes': [
                             self.__parse_volume(
-                                volume_data[entry['isbn']],
-                                series_data[volume_data[entry['isbn']]['series_id']] \
-                                    if volume_data[entry['isbn']]['series_id'] is not None \
-                                        else None,
-                                shop_data[entry['isbn']],
-                                [e for e in collection_data if e['isbn'] == entry['isbn']],
-                                [e for e in wishlist_data if e['isbn'] == entry['isbn']]
+                                entry['isbn'],
+                                volume_data,
+                                series_data,
+                                shop_data,
+                                collection_data,
+                                wishlist_data
                             )
                             for entry in series_data[series_id]['volumes']
                         ]
@@ -276,17 +295,16 @@ class Queries:
                 entry['isbn']
                 for entry in collection_data
             ])
-            
+            # dont do set, fix order with volume number and lowercase names / special characters
             user_volumes = sorted(
                 [
                     self.__parse_volume(
-                        volume_data[isbn],
-                        series_data[volume_data[isbn]['series_id']] \
-                            if volume_data[isbn]['series_id'] is not None \
-                                else None,
-                        shop_data[isbn],
-                        [e for e in collection_data if e['isbn'] == isbn],
-                        [e for e in wishlist_data if e['isbn'] == isbn]
+                        isbn,
+                        volume_data,
+                        series_data,
+                        shop_data,
+                        collection_data,
+                        wishlist_data
                     )
                     for isbn in collection_isbns
                 ],

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { CollectionService } from '../../services/collection.service';
 import { CommonModule } from '@angular/common';
+import { CollectionDataService } from '../../services/data/collection-data.service';
 
 @Component({
     selector: 'app-collection',
@@ -11,8 +11,12 @@ import { CommonModule } from '@angular/common';
 })
 export class CollectionComponent {
 
-    constructor(private collectionService: CollectionService) {
-        // collectionService.userId.set('1234')
+    volumes$ = this.collectionDataService.collectionVolumes$;
+
+    constructor(private collectionDataService: CollectionDataService) {
+        this.volumes$.subscribe(volumes => {
+            console.log(volumes);
+        });
     }
 
 }

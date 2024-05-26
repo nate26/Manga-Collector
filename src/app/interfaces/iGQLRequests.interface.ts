@@ -8,24 +8,24 @@ export interface IGQLResponse {
 
 export interface IGQLGetRecord extends IGQLResponse {
     get_record: {
-        get_record: IVolume;
+        record: IVolume;
     };
 }
 
 export interface IGQLAllRecord extends IGQLResponse {
     all_records: {
-        all_records: IVolume[];
+        records: IVolume[];
     };
 }
 
 export interface IGQLGetCollectionSeries extends IGQLResponse {
     get_collection_series: {
-        get_collection_series: ISeriesRecord[];
+        records: ISeriesRecord[];
     };
 }
 
 export interface IGQLGetCollectionVolumes extends IGQLResponse {
     get_collection_volumes: {
-        get_collection_volumes: IVolume[];
+        records: IVolume[];
     };
 }
