@@ -1,5 +1,7 @@
 '''Interface for Collection details of a book'''
 
+from typing import List
+
 class ICollection(dict):
     '''Purchase details and collection details of a book'''
     __getattr__ = dict.get
@@ -14,5 +16,6 @@ class ICollection(dict):
     purchaseDate: str
     giftToMe: bool
     read: bool
+    tags: List[str]
     inserted: str
     updated: str

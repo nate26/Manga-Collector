@@ -1,24 +1,42 @@
-<!-- <div style="margin: auto; max-width: calc(100vw - 15px);">
+<div class="display-area">
     @for (volume of volumes$ | async; track $index) {
-    <div style="display: flex; margin: 10px; background-color: rgb(12, 17, 24); border-radius: 5px; height: 30px;">
-        <div style="margin-right: 10px;">
-            <img [src]="volume.primary_cover_image_url" alt="cover image of first volume in series"
-                style="height: 100%;">
+    @defer (on viewport) {
+    <div class="volume-row">
+        <img [src]="volume.primary_cover_image_url" alt="cover image of first volume in series" class="cover-image">
+        <div class="cell w400">
+            <a class="text" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
         </div>
-        <span class="text">{{volume.name}}</span>
-        <span class="text">{{volume.category}}</span>
-        <span class="text">{{volume.volume}}</span>
-
-        <div class="flex-wrap" style="margin-top: 2px;">
-            @for (volume of volume.series_data.volumes; track volume.isbn) {
-            <button mat-button class="series-volume">
-                {{volume.volume}}
-            </button>
-            }
+        <div class="cell w60">
+            <div class="text center">{{volume.category | titlecase}}</div>
+        </div>
+        <div class="cell w50">
+            <div class="text center">{{volume.volume}}</div>
+        </div>
+        <div class="cell w60">
+            <div class="text center">{{volume.user_collection_data[0].cost | currency}}</div>
+        </div>
+        <div class="cell w75">
+            <div class="text center">{{volume.user_collection_data[0].merchant}}</div>
+        </div>
+        <div class="cell w90">
+            <div class="text center">{{volume.user_collection_data[0].purchaseDate | date}}</div>
+        </div>
+        <div class="cell w50">
+            <input type="checkbox" class="center" [checked]="volume.user_collection_data[0].read">
+        </div>
+        <div class="cell w50">
+            <input type="checkbox" class="center" [checked]="volume.user_collection_data[0].giftToMe">
+        </div>
+        <div class="cell w400">
+            <div class="text">
+                {{volume.user_collection_data[0].tags.join(', ')}}
+            </div>
         </div>
     </div>
     }
-</div> -->
-@for (volume of volumes$ | async; track $index) {
-    <p style="color: white">{{volume.display_name}}</p>
-}
+    @placeholder {
+    <div style="display: flex; margin: 10px; background-color: rgb(12, 17, 24); border-radius: 5px; height: 30px;">
+    </div>
+    }
+    }
+</div>

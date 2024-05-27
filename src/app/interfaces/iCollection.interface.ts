@@ -7,6 +7,7 @@ export interface ICollection {
     purchaseDate: string;
     giftToMe: boolean;
     read: boolean;
+    tags: string[];
     inserted: string;
     updated: string;
 }

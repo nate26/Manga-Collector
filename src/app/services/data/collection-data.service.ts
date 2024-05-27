@@ -25,6 +25,8 @@ export class CollectionDataService {
                     primary_cover_image_url
                     series_data {
                         title
+                        url
+                        series_match_confidence
                         volumes {
                             isbn
                             volume
@@ -40,6 +42,7 @@ export class CollectionDataService {
                         purchaseDate
                         giftToMe
                         read
+                        tags
                     }
                 }
                 success

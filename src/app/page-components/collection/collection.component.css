@@ -1,6 +1,6 @@
-@media screen {
-    
-}.collection-viewport {
+@media screen {}
+
+.collection-viewport {
     width: 62vw;
     margin: auto;
     background-color: #252529;
@@ -25,4 +25,75 @@
 
 .img-link:active {
     filter: brightness(1.4);
+}
+
+
+.display-area {
+    margin-top: 10px;
+    max-width: calc(100vw - 15px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.volume-row {
+    display: flex;
+    margin: 5px;
+    background-color: #1e1e1e;
+    border-radius: 5px;
+    height: 60px;
+    width: fit-content;
+}
+
+.cell {
+    display: flex;
+    margin: 5px;
+    min-width: 50px;
+    /* background-color: #252529; */
+    cursor: pointer;
+    border: transparent 2px solid;
+}
+
+.w400 {
+    width: 400px;
+}
+
+.w90 {
+    width: 90px;
+}
+
+.w50 {
+    width: 50px;
+}
+
+.w60 {
+    width: 60px;
+}
+
+.w75 {
+    width: 75px;
+}
+
+.cell:hover {
+    border: #5f5fe6 2px solid;
+}
+
+.text {
+    color: white;
+    align-content: center;
+    margin: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.center {
+    text-align: center;
+    width: 100%;
+}
+
+.cover-image {
+    height: 100%;
+    min-height: 60px;
+    aspect-ratio: 1 / 1.45;
+    object-fit: cover;
 }

@@ -13,10 +13,6 @@ export class CollectionComponent {
 
     volumes$ = this.collectionDataService.collectionVolumes$;
 
-    constructor(private collectionDataService: CollectionDataService) {
-        this.volumes$.subscribe(volumes => {
-            console.log(volumes);
-        });
-    }
+    constructor(private collectionDataService: CollectionDataService) { }
 
 }

@@ -291,22 +291,21 @@ class Queries:
             volume_data, series_data, shop_data, \
                 collection_data, wishlist_data = self.__get_data(user_id)
 
-            collection_isbns = set([
-                entry['isbn']
-                for entry in collection_data
-            ])
             # dont do set, fix order with volume number and lowercase names / special characters
             user_volumes = sorted(
                 [
-                    self.__parse_volume(
-                        isbn,
-                        volume_data,
-                        series_data,
-                        shop_data,
-                        collection_data,
-                        wishlist_data
-                    )
-                    for isbn in collection_isbns
+                    {
+                        **self.__parse_volume(
+                            vol['isbn'],
+                            volume_data,
+                            series_data,
+                            shop_data,
+                            collection_data,
+                            wishlist_data
+                        ),
+                        'user_collection_data': [vol] # overwrite for individual volume
+                    }
+                    for vol in collection_data
                 ],
                 key = lambda x: (x['display_name'], x['category'], x['volume'])
             )
