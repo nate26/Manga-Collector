@@ -58,6 +58,10 @@
     width: 400px;
 }
 
+.w150 {
+    width: 150px;
+}
+
 .w90 {
     width: 90px;
 }
@@ -81,14 +85,13 @@
 .text {
     color: white;
     align-content: center;
-    margin: auto;
+    margin: auto 0;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .center {
     text-align: center;
-    width: 100%;
 }
 
 .cover-image {
