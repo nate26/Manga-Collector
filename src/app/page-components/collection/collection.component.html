@@ -1,42 +1,47 @@
 <div class="display-area">
-    @for (volume of volumes$ | async; track $index) {
-    @defer (on viewport) {
-    <div class="volume-row">
-        <img [src]="volume.primary_cover_image_url" alt="cover image of first volume in series" class="cover-image">
-        <div class="cell w400">
-            <a class="text" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
-        </div>
-        <div class="cell w60">
-            <div class="text center">{{volume.category | titlecase}}</div>
-        </div>
-        <div class="cell w50">
-            <div class="text center">{{volume.volume}}</div>
-        </div>
-        <div class="cell w60">
-            <div class="text center">{{volume.user_collection_data[0].cost | currency}}</div>
-        </div>
-        <div class="cell w75">
-            <div class="text center">{{volume.user_collection_data[0].merchant}}</div>
-        </div>
-        <div class="cell w90">
-            <div class="text center">{{volume.user_collection_data[0].purchaseDate | date}}</div>
-        </div>
-        <div class="cell w50">
-            <input type="checkbox" class="center" [checked]="volume.user_collection_data[0].read">
-        </div>
-        <div class="cell w50">
-            <input type="checkbox" class="center" [checked]="volume.user_collection_data[0].giftToMe">
-        </div>
-        <div class="cell w150">
-            <div class="text">
-                {{volume.user_collection_data[0].tags.join(', ')}}
+    <div class="editor-header">
+        <button class="btn inactive-state-button">Select Vols.</button>
+    </div>
+
+    <div class="volumes" style="min-width: 1012px;">
+        @for (volume of volumes$ | async; track $index) {
+        @defer (on viewport) {
+        <div class="volume-row">
+            <img [src]="volume.primary_cover_image_url" alt="cover image of first volume in series" class="cover-image">
+            <div class="cell w260">
+                <a class="text" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
+            </div>
+            <div class="cell w60">
+                <div class="text center">{{volume.category | titlecase}}</div>
+            </div>
+            <div class="cell w50">
+                <div class="text center">{{volume.volume}}</div>
+            </div>
+            <div class="cell w60">
+                <div class="text center">{{volume.user_collection_data[0].cost | currency}}</div>
+            </div>
+            <div class="cell w75">
+                <div class="text center">{{volume.user_collection_data[0].merchant}}</div>
+            </div>
+            <div class="cell w90">
+                <div class="text center">{{volume.user_collection_data[0].purchaseDate | date}}</div>
+            </div>
+            <div class="cell w50">
+                <input type="checkbox" class="center" [checked]="volume.user_collection_data[0].read">
+            </div>
+            <div class="cell w50">
+                <input type="checkbox" class="center" [checked]="volume.user_collection_data[0].giftToMe">
+            </div>
+            <div class="cell w150">
+                <div class="text">
+                    {{volume.user_collection_data[0].tags.join(', ')}}
+                </div>
             </div>
         </div>
+        }
+        @placeholder {
+        <div style="display: flex; margin: 10px; background-color: rgb(12, 17, 24); border-radius: 5px; height: 30px;"></div>
+        }
+        }
     </div>
-    }
-    @placeholder {
-    <div style="display: flex; margin: 10px; background-color: rgb(12, 17, 24); border-radius: 5px; height: 30px;">
-    </div>
-    }
-    }
 </div>
