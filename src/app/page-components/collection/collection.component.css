@@ -62,13 +62,13 @@
     cursor: pointer;
 }
 
-.inactive-state-button {
+.inactive-button {
     background-color: var(--item-background-color);
     color: var(--item-mute-text-color);
     border-color: var(--item-mute-text-color);
 }
 
-.active-button-state {
+.active-button {
     background-color: var(--item-mute-text-color);
     color: var(--item-background-color);
     border-color: var(--item-mute-text-color);
@@ -133,8 +133,26 @@
     text-overflow: ellipsis;
 }
 
-.center {
+input {
+    background: none;
+    border: none;
+    color: rgb(164, 202, 231);
+    font-family: auto;
+    font-size: initial;
+}
+
+input:disabled {
+    color: white
+}
+
+.al_center {
     text-align: center;
+    margin: auto;
+}
+
+.al_right {
+    text-align: right;
+    width: 100%;
 }
 
 .cover-image {
