@@ -58,7 +58,13 @@ export class CollectionDataService {
         tap(({ error }) => {
             if (error) throw error;
         }),
-        map(response => response.data.get_collection_volumes.records),
+        map(response => response.data.get_collection_volumes.records.map(vol => ({
+            ...vol,
+            user_collection_data: vol.user_collection_data.map(collection => ({
+                ...collection,
+                tags: collection.tags ?? []
+            }))
+        }))),
         catchError((err) => throwError(() => new Error('Could not get data because ' + err)))
     );
 
