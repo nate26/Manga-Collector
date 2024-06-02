@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { Observable, catchError, filter, map, switchMap, tap, throwError } from 'rxjs';
 import { IVolume } from '../../interfaces/iVolume.interface';
 import { IGQLGetCollectionVolumes } from '../../interfaces/iGQLRequests.interface';
+import { HttpClient } from '@angular/common/http';
+import { ICollection } from '../../interfaces/iCollection.interface';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CollectionDataService {
+    private serviceURL = '';
 
     readonly COLLECTION_VOLUMES_QUERY = gql`
         query get_collection_volumes($user_id: ID!) {
@@ -36,6 +39,7 @@ export class CollectionDataService {
                     }
                     retail_price
                     user_collection_data {
+                        id
                         state
                         cost
                         merchant
@@ -43,6 +47,10 @@ export class CollectionDataService {
                         giftToMe
                         read
                         tags
+                        isbn
+                        inserted
+                        updated
+                        user_id
                     }
                 }
                 success
@@ -68,6 +76,11 @@ export class CollectionDataService {
         catchError((err) => throwError(() => new Error('Could not get data because ' + err)))
     );
 
-    constructor(private apollo: Apollo) { }
+    saveToCollection = (source$: Observable<ICollection[]>) => source$.pipe(
+        filter(records => records.length > 0),
+        switchMap(records => this.http.post(`${this.serviceURL}/add-records`, records))
+    );
+
+    constructor(private apollo: Apollo, private http: HttpClient) { }
 
 }

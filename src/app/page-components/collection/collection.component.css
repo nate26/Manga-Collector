@@ -76,12 +76,15 @@
 
 .volumes {
     overflow: auto;
-    height: calc(100vh - 66px);
+    height: calc(100vh - 146px);
+    /*66px*/
+    width: 100vw;
+    /* min-width: 1012px; */
 }
 
 .volume-row {
     display: flex;
-    margin: 10px 0;
+    margin: 10px auto;
     background-color: var(--item-background-color);
     border-radius: 5px;
     height: 60px;
@@ -134,11 +137,17 @@
 }
 
 input {
-    background: none;
-    border: none;
-    color: rgb(164, 202, 231);
-    font-family: auto;
-    font-size: initial;
+    background: #0c1118;
+    border: 2px solid black;
+    border-radius: 4px;
+    color: white;
+    width: -webkit-fill-available;
+    outline: none;
+}
+
+input:focus-visible {
+    transition: ease-in 0.1s;
+    outline: 2px solid white;
 }
 
 input:disabled {

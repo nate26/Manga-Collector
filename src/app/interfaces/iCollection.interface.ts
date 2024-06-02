@@ -1,4 +1,5 @@
 export interface ICollection {
+    id: string;
     user_id: string;
     isbn: string;
     state: string;

@@ -1,5 +1,6 @@
 '''GQL Queries to get data from the DB'''
 
+import json
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
@@ -79,7 +80,6 @@ class Queries:
         Returns:
         - dict: The parsed volume data
         '''
-        self.logger.info('Parsing volume data for %s', isbn)
         parsed_volume_data = volume_data[isbn] if isbn in volume_data \
             else {
                 'isbn': '',
@@ -291,7 +291,7 @@ class Queries:
             volume_data, series_data, shop_data, \
                 collection_data, wishlist_data = self.__get_data(user_id)
 
-            # dont do set, fix order with volume number and lowercase names / special characters
+            self.logger.info(json.dumps(collection_data, indent=4))
             user_volumes = sorted(
                 [
                     {
@@ -307,7 +307,16 @@ class Queries:
                     }
                     for vol in collection_data
                 ],
-                key = lambda x: (x['display_name'], x['category'], x['volume'])
+                key = lambda x: (
+                    x['display_name'],
+                    x['category'],
+                    -1 if x['volume'] is None
+                    else (
+                        float(x['volume'].split('-')[0])
+                        if '-' in x['volume']
+                        else float(x['volume'])
+                    )
+                )
             )
 
             self.logger.info('Found %s total volumes in user collection', len(user_volumes))

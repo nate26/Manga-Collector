@@ -75,6 +75,7 @@ type ShopDetails {
 }
 
 type CollectionData {
+    id: ID!
     user_id: ID!
     isbn: ID!
     state: String
@@ -89,6 +90,7 @@ type CollectionData {
 }
 
 type WishlistData {
+    id: ID!
     user_id: ID!
     isbn: ID!
     user_list: String

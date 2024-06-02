@@ -1,85 +1,133 @@
 <div class="display-area">
     <div class="editor-header">
         @if (editing()) {
-            <button class="btn active-button" (click)="editing.set(false)">Save</button>
+            <button class="btn active-button" (click)="editing.set(false)">
+                @if (saveBatch().length > 0) {
+                    Save
+                }
+                @else {
+                    Cancel
+                }
+            </button>
         }
         @else {
-            <button class="btn inactive-button" (click)="editing.set(true)">Select Vols.</button>
+            <button class="btn inactive-button" (click)="editing.set(true)">Edit</button>
         }
     </div>
 
-    <div class="volumes" style="min-width: 1012px;">
+    <div class="volume-row">
+        <div class="cover-image"></div>
+        <div class="cell w260" style="display: block;">
+            <div class="text al_center">Name</div>
+            <input type="text" class="text" (change)="filterName.set(getEventVal($event))">
+        </div>
+        <div class="cell w60" style="display: block;">
+            <div class="text al_center">Category</div>
+            <input type="text" class="text" (change)="filterCategory.set(getEventVal($event))">
+        </div>
+        <div class="cell w50" style="display: block;">
+            <div class="text al_center">Volume</div>
+            <input type="text" class="text" (change)="filterVolume.set(getEventVal($event))">
+        </div>
+        <div class="cell w60" style="display: block;">
+            <div class="text al_center">Cost</div>
+            <input type="number" min="0" step="0.01" class="text" (change)="filterCost.set(getEventVal($event))">
+        </div>
+        <div class="cell w75" style="display: block;">
+            <div class="text al_center">Merchant</div>
+            <input type="text" class="text" (change)="filterMerchant.set(getEventVal($event))">
+        </div>
+        <div class="cell w90" style="display: block;">
+            <div class="text al_center" style="font-size: 11pt;">Purchase Date</div>
+            <input type="text" class="text" (change)="filterPurchaseDate.set(getEventVal($event))">
+        </div>
+        <div class="cell w50" style="display: block;">
+            <div class="text al_center">Read</div>
+            <input type="text" class="text" (change)="filterRead.set(getEventVal($event))">
+        </div>
+        <div class="cell w50" style="display: block;">
+            <div class="text al_center">Gift</div>
+            <input type="text" class="text" (change)="filterGiftToMe.set(getEventVal($event))">
+        </div>
+        <div class="cell w150" style="display: block;">
+            <div class="text al_center">Tags</div>
+            <input type="text" class="text" (change)="filterTags.set(getEventVal($event))">
+        </div>
+    </div>
+
+    <div class="volumes">
+
         @if (displayVolumes(); as volumes) {
             @for (volume of volumes; track $index) {
-            @defer (on viewport) {
-            <div class="volume-row">
-                <img [src]="volume.primary_cover_image_url" alt="cover image of first volume in series" class="cover-image">
-                <div class="cell w260">
-                    <a class="text" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
-                </div>
-                <div class="cell w60">
-                    <div class="text al_center">{{volume.category | titlecase}}</div>
-                </div>
-                <div class="cell w50">
-                    <div class="text al_center">{{volume.volume}}</div>
-                </div>
-                <div class="cell w60">
-                    @if (editing()) {
-                        <input type="number" min="0" step="0.01" class="text al_right" 
-                            [value]="volume.user_collection_data[0].cost" (change)="save($index, 'cost', $event)">
-                    }
-                    @else {
-                        <div class="text al_right">
-                            {{volume.user_collection_data[0].cost | currency}}
+                @defer (on viewport) {
+                    <div class="volume-row">
+                        <img [src]="volume.primary_cover_image_url" alt="cover image of first volume in series" class="cover-image">
+                        <div class="cell w260">
+                            <a class="text" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
                         </div>
-                    }
-                </div>
-                <div class="cell w75">
-                    <div class="text al_center">
-                        @if (editing()) {
-                            <input type="text" [value]="volume.user_collection_data[0].merchant"
-                                (change)="save($index, 'merchant', $event)">
-                        }
-                        @else {
-                            {{volume.user_collection_data[0].merchant}}
-                        }
+                        <div class="cell w60">
+                            <div class="text al_center">{{volume.category | titlecase}}</div>
+                        </div>
+                        <div class="cell w50">
+                            <div class="text al_center">{{volume.volume}}</div>
+                        </div>
+                        <div class="cell w60">
+                            @if (editing()) {
+                                <input type="number" min="0" step="0.01" class="text" 
+                                    [value]="volume.user_collection_data[0].cost" (change)="edit($index, 'cost', $event)">
+                            }
+                            @else {
+                                <div class="text al_right">
+                                    {{volume.user_collection_data[0].cost | currency}}
+                                </div>
+                            }
+                        </div>
+                        <div class="cell w75">
+                            @if (editing()) {
+                                <input type="text" class="text"  [value]="volume.user_collection_data[0].merchant"
+                                    (change)="edit($index, 'merchant', $event)">
+                            }
+                            @else {
+                                <div class="text al_center">
+                                    {{volume.user_collection_data[0].merchant}}
+                                </div>
+                            }
+                        </div>
+                        <div class="cell w90">
+                            @if (editing()) {
+                                <input type="text" class="text"  [value]="volume.user_collection_data[0].purchaseDate"
+                                    (change)="edit($index, 'purchaseDate', $event)">
+                            }
+                            @else {
+                                <div class="text al_center">
+                                    {{volume.user_collection_data[0].purchaseDate}}
+                                </div>
+                            }
+                        </div>
+                        <div class="cell w50">
+                            <input type="checkbox" class="al_center" [checked]="volume.user_collection_data[0].read"
+                                [disabled]="!editing()" (change)="edit($index, 'read', $event)">
+                        </div>
+                        <div class="cell w50">
+                            <input type="checkbox" class="al_center" [checked]="volume.user_collection_data[0].giftToMe"
+                                [disabled]="!editing()" (change)="edit($index, 'giftToMe', $event)">
+                        </div>
+                        <div class="cell w150">
+                            @if (editing()) {
+                                <input type="text" class="text"  [value]="volume.user_collection_data[0].tags.join(', ')"
+                                    (change)="edit($index, 'tags', $event)">
+                            }
+                            @else {
+                                <div class="text">
+                                    {{volume.user_collection_data[0].tags.join(', ')}}
+                                </div>
+                            }
+                        </div>
                     </div>
-                </div>
-                <div class="cell w90">
-                    <div class="text al_center">
-                        @if (editing()) {
-                            <input type="text" [value]="volume.user_collection_data[0].purchaseDate"
-                                (change)="save($index, 'purchaseDate', $event)">
-                        }
-                        @else {
-                            {{volume.user_collection_data[0].purchaseDate}}
-                        }
-                    </div>
-                </div>
-                <div class="cell w50">
-                    <input type="checkbox" class="al_center" [checked]="volume.user_collection_data[0].read"
-                        [disabled]="!editing()" (change)="save($index, 'read', $event)">
-                </div>
-                <div class="cell w50">
-                    <input type="checkbox" class="al_center" [checked]="volume.user_collection_data[0].giftToMe"
-                        [disabled]="!editing()" (change)="save($index, 'giftToMe', $event)">
-                </div>
-                <div class="cell w150">
-                    <div class="text">
-                        @if (editing()) {
-                            <input type="text" [value]="volume.user_collection_data[0].tags.join(', ')"
-                                (change)="save($index, 'tags', $event)">
-                        }
-                        @else {
-                            {{volume.user_collection_data[0].tags.join(', ')}}
-                        }
-                    </div>
-                </div>
-            </div>
-            }
-            @placeholder {
-            <div style="display: flex; margin: 10px; background-color: rgb(12, 17, 24); border-radius: 5px; height: 30px;"></div>
-            }
+                }
+                @placeholder {
+                    <div style="display: flex; margin: 10px; background-color: rgb(12, 17, 24); border-radius: 5px; height: 30px;"></div>
+                }
             }
         }
     </div>
