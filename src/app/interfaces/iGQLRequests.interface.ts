@@ -29,3 +29,12 @@ export interface IGQLGetCollectionVolumes extends IGQLResponse {
         records: IVolume[];
     };
 }
+
+export interface IGQLModifyCollectionResult {
+    modify_collection: {
+        __typename: string;
+        errors: string[] | null;
+        response: string | null;
+        success: boolean;
+    }
+}

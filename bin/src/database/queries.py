@@ -1,6 +1,5 @@
 '''GQL Queries to get data from the DB'''
 
-import json
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
@@ -292,7 +291,7 @@ class Queries:
             volume_data, series_data, shop_data, \
                 collection_data, wishlist_data = self.__get_data(user_id)
 
-            self.logger.info(json.dumps(collection_data, indent=4))
+            # self.logger.info(json.dumps(collection_data, indent=4))
             user_volumes = sorted(
                 [
                     {

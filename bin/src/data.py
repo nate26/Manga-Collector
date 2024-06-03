@@ -1,5 +1,6 @@
 '''Module to get and write to local json files or AWS.'''
 
+import json
 from typing import Dict, List
 from src.enums.host_enum import HostEnum
 from src.enums.file_path_enum import FilePathEnum
@@ -51,8 +52,8 @@ class Data:
         self.wishlist_url = 'https://d60vento0i.execute-api.us-east-2.amazonaws.com/v2'
         self.logger = MangaLogger(host).register_logger(__name__)
 
-        self.all_collection_data = {}
-        self.all_wishlist_data = {}
+        self.all_collection_data: Dict[str, List[ICollection]] = {}
+        self.all_wishlist_data: Dict[str, List[IWishlist]] = {}
 
     def get_volumes_data(self) -> Dict[str, IVolume]:
         '''
@@ -97,12 +98,13 @@ class Data:
         if self.host == HostEnum.MOCK:
             return self.local_dao.open_file('./db/mocks/mock-collection.json')
 
-        collection_data = self.aws_dao.get_data(self.collection_url + '/user-records?user_id=' + user_id)
+        collection_data = self.aws_dao.get_data(self.collection_url +
+                                                '/user-records?user_id=' + user_id)
 
         self.all_collection_data[user_id] = collection_data
         return collection_data
 
-    def add_to_collection_data(self, data) -> str:
+    def add_to_collection_data(self, user_id: str, new_records: List[ICollection]) -> str:
         '''
         Inserts records into the AWS collection data
         
@@ -112,10 +114,22 @@ class Data:
         Returns:
         - str: The response from the AWS insert operation.
         '''
-        del self.all_collection_data[data[0]['user_id']]
+        # update cache
+        self.logger.info(json.dumps(self.all_collection_data[user_id]))
+        if user_id in self.all_collection_data:
+            for new_record in new_records:
+                old_record = next(
+                    (i for i in self.all_collection_data[user_id] if i.get('id') == new_record.get('id')),
+                    None
+                )
+                if old_record is not None:
+                    self.all_collection_data[user_id].remove(old_record)
+                self.all_collection_data[user_id].append(new_record)
+
+        self.logger.info(json.dumps(new_records))
         if self.host == HostEnum.MOCK:
             return 'mock data -- no update made'
-        return self.aws_dao.post_data(self.collection_url + '/add-records', data)
+        return self.aws_dao.post_data(self.collection_url + '/add-records', new_records)
 
     def delete_from_collection_data(self, data) -> str:
         '''
@@ -127,11 +141,11 @@ class Data:
         Returns:
         - str: The text response from the AWS delete operation.
         '''
-        del self.all_collection_data[data[0]['user_id']]
+        # del self.all_collection_data[data[0]['user_id']]
         if self.host == HostEnum.MOCK:
             return 'mock data -- no update made'
         return self.aws_dao.post_data(self.collection_url + '/delete-records', data)
-    
+
     def get_wishlist_data(self, user_id: str) -> List[IWishlist]:
         '''
         Gets the wishlist data from AWS
@@ -148,7 +162,8 @@ class Data:
         if self.host == HostEnum.MOCK:
             return self.local_dao.open_file('./db/mocks/mock-wishlist.json')
 
-        wishlist_data = self.aws_dao.get_data(self.wishlist_url + '/user-records?user_id=' + user_id)
+        wishlist_data = self.aws_dao.get_data(self.wishlist_url +
+                                              '/user-records?user_id=' + user_id)
 
         self.all_wishlist_data[user_id] = wishlist_data
         return wishlist_data

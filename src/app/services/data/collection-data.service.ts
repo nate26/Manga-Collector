@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable, catchError, filter, map, switchMap, tap, throwError } from 'rxjs';
+import { EMPTY, Observable, catchError, map, tap, throwError } from 'rxjs';
 import { IVolume } from '../../interfaces/iVolume.interface';
-import { IGQLGetCollectionVolumes } from '../../interfaces/iGQLRequests.interface';
-import { HttpClient } from '@angular/common/http';
+import { IGQLGetCollectionVolumes, IGQLModifyCollectionResult } from '../../interfaces/iGQLRequests.interface';
 import { ICollection } from '../../interfaces/iCollection.interface';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CollectionDataService {
-    private serviceURL = '';
+    private USER_ID = 'f69c759a-00dd-4dbe-8e58-96cd7a05969e';
 
     readonly COLLECTION_VOLUMES_QUERY = gql`
         query get_collection_volumes($user_id: ID!) {
@@ -61,7 +60,7 @@ export class CollectionDataService {
 
     collectionVolumes$: Observable<IVolume[]> = this.apollo.watchQuery<IGQLGetCollectionVolumes>({
         query: this.COLLECTION_VOLUMES_QUERY,
-        variables: { user_id: 'f69c759a-00dd-4dbe-8e58-96cd7a05969e' }
+        variables: { user_id: this.USER_ID }
     }).valueChanges.pipe(
         tap(({ error }) => {
             if (error) throw error;
@@ -73,14 +72,27 @@ export class CollectionDataService {
                 tags: collection.tags ?? []
             }))
         }))),
-        catchError((err) => throwError(() => new Error('Could not get data because ' + err)))
+        catchError((err) => throwError(() => new Error('Could not get data because ', err)))
     );
 
-    saveToCollection = (source$: Observable<ICollection[]>) => source$.pipe(
-        filter(records => records.length > 0),
-        switchMap(records => this.http.post(`${this.serviceURL}/add-records`, records))
-    );
+    readonly MODIFY_COLLECTION = gql`
+        mutation modify_collection($user_id: ID!, $volume_update: [CollectionDataInput]!) {
+            modify_collection(user_id: $user_id, volume_update: $volume_update) {
+                response
+                success
+                errors
+            }
+        }
+    `;
 
-    constructor(private apollo: Apollo, private http: HttpClient) { }
+    constructor(private apollo: Apollo) { }
+
+    saveToCollection(records: ICollection[]) {
+        if (records.length === 0) return EMPTY;
+        return this.apollo.mutate<IGQLModifyCollectionResult>({
+            mutation: this.MODIFY_COLLECTION,
+            variables: { user_id: this.USER_ID, volume_update: records }
+        }).pipe(catchError((err) => throwError(() => new Error('Could not save data because ', err))));
+    }
 
 }

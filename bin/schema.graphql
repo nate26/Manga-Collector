@@ -165,6 +165,21 @@ type Query {
 
 
 
+input CollectionDataInput {
+    id: ID # not required if new
+    user_id: ID!
+    isbn: ID!
+    state: String
+    cost: Float
+    merchant: String
+    purchaseDate: String
+    giftToMe: Boolean
+    read: Boolean
+    tags: [String]
+    inserted: String
+    updated: String
+}
+
 input SeriesVolumeInput {
     isbn: String!
     volume: String
@@ -232,13 +247,16 @@ input VolumeRecordInput {
     series_data: SeriesInput
 }
 
+type ModifyAWSResult {
+    success: Boolean!
+    errors: [String]
+    response: String
+}
+
 type Mutation {
-    create_volume(
-        volume_input: VolumeRecordInput!
-    ): SingleVolumeRecordResult!
-    update_volume(
-        isbn: ID!
-        volume_update: VolumeRecordInput!
-    ): SingleVolumeRecordResult!
-    delete_volume(isbn: ID!): SingleVolumeRecordResult!
+    # modify_volumes(
+    #     volumes_input: [VolumeRecordInput]!
+    # ): SingleVolumeRecordResult!
+    modify_collection(user_id: ID!, volume_update: [CollectionDataInput]!): ModifyAWSResult!
+    # delete_collection_records(isbn: ID!): SingleVolumeRecordResult!
 }

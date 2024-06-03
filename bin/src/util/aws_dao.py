@@ -78,7 +78,7 @@ class AWSDAO:
         """
         try:
             start = datetime.now()
-            response = requests.post(url, contents, timeout=30).json()
+            response = requests.post(url, json=contents, timeout=30).json()
             end = (datetime.now() - start).total_seconds()
             self.logger.info('Time to post data to AWS: %s', str(timedelta(seconds=end)))
             return response

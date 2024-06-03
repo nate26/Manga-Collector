@@ -14,7 +14,7 @@ CORS(app)
 host = HostEnum.LOCAL
 logger = MangaLogger(host).register_logger(__name__)
 queries = Queries(host)
-mutations = Mutations(host)
+mutations = Mutations(host, queries.data) #ugh, fix context gross-ness with better caching strategy
 
 
 # Setup GQL resolvers
@@ -26,9 +26,8 @@ query.set_field('get_collection_series', queries.get_collection_series_resolver)
 query.set_field('get_collection_volumes', queries.get_collection_volume_resolver)
 
 mutation = ObjectType('Mutation')
-mutation.set_field('create_volume', mutations.create_volume_resolver)
-mutation.set_field('update_volume', mutations.update_volume_resolver)
-mutation.set_field('delete_volume', mutations.delete_volume_resolver)
+mutation.set_field('modify_collection', mutations.update_volume_resolver)
+# mutation.set_field('delete_collection_records', mutations.delete_collection_records_resolver)
 
 type_defs = load_schema_from_path('schema.graphql')
 schema = make_executable_schema(type_defs, query, mutation)

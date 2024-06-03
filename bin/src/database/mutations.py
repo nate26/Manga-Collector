@@ -1,9 +1,11 @@
 '''GQL Mutations to modify data in the DB'''
 
 import json
-from typing import Dict
-from flask import jsonify
+from typing import List
+import requests
+from src.enums.host_enum import HostEnum
 from src.data import Data
+from src.interfaces.icollection import ICollection
 from src.util.manga_logger import MangaLogger
 
 class Mutations:
@@ -27,57 +29,34 @@ class Mutations:
         Delete an existing volume record in the DB
     '''
 
-    def __init__(self, host) -> None:
-        self.data = Data(host)
+    def __init__(self, host: HostEnum, data: Data) -> None:
+        self.data = data
         self.logger = MangaLogger(host).register_logger(__name__)
 
-    def create_volume_resolver(self, _obj, _info, volume_input: Dict):
-        '''
-        Create a new volume record in the DB
-        '''
-        try:
-            # db.session.add(volume)
-            # db.session.commit()
-            payload = {
-                'success': True,
-                'record': jsonify(volume_input)
-            }
-        except ValueError:  # date format errors
-            payload = {
-                'success': False,
-                'errors': ['Incorrect volume record format provided ' + json.dumps(volume_input)]
-            }
-        return payload
-
-    def update_volume_resolver(self, _obj, _info, isbn: str, volume_update: Dict):
+    def update_volume_resolver(self, _obj, _info, user_id: str, volume_update: List[ICollection]):
         '''
         Update an existing volume record in the DB
         '''
         try:
-            volume_data = self.data.get_volumes_data()
-            if isbn in volume_data:
-                existing = volume_data[isbn]
-                for key, val in volume_update.items():
-                    setattr(existing, key, val)
-                # db.session.add(existing)
-                # db.session.commit()
-                payload = {
-                    'success': True,
-                    'record': jsonify(existing)
-                }
-            else:
-                payload = {
-                    'success': False,
-                    'errors': ['Record by ID ' + isbn + ' does not exist...']
-                }
-        except ValueError:  # date format errors
+            response = self.data.add_to_collection_data(user_id, volume_update)
+            payload = {
+                'success': True,
+                'record': response
+            }
+        except requests.exceptions.RequestException as e:
             payload = {
                 'success': False,
-                'errors': ['Incorrect volume record format provided ' + json.dumps(volume_update)]
+                'errors': ['Could not complete AWS request' + e]
+            }
+        except ValueError as e:
+            payload = {
+                'success': False,
+                'errors': ['Incorrect volume record format provided... ' + e
+                           + ' --- ' + json.dumps(volume_update)]
             }
         return payload
 
-    def delete_volume_resolver(self, _obj, _info, isbn: str):
+    def delete_collection_records_resolver(self, _obj, _info, isbn: str):
         '''
         Delete an existing volume record in the DB
         '''

@@ -1,13 +1,11 @@
 <div class="display-area">
     <div class="editor-header">
         @if (editing()) {
-            <button class="btn active-button" (click)="editing.set(false)">
-                @if (saveBatch().length > 0) {
-                    Save
-                }
-                @else {
-                    Cancel
-                }
+            <button class="btn active-button" (click)="save()" [disabled]="saveBatch().length === 0">
+                Save
+            </button>
+            <button class="btn active-button" (click)="stopEditing()">
+                Cancel
             </button>
         }
         @else {
@@ -57,7 +55,7 @@
 
     <div class="volumes">
 
-        @if (displayVolumes(); as volumes) {
+        @if (filteredVolumes(); as volumes) {
             @for (volume of volumes; track $index) {
                 @defer (on viewport) {
                     <div class="volume-row" [ngClass]="volume.edited ? 'edited-row' : ''">

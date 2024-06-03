@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ApolloClientOptions, ApolloLink, InMemoryCache } from '@apollo/client/core';
+import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
 import { APOLLO_OPTIONS, Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
             provide: APOLLO_OPTIONS,
             useFactory: (httpLink: HttpLink): ApolloClientOptions<unknown> => ({
                 link: ApolloLink.from([
+                    removeTypenameFromVariables(),
                     httpLink.create({ uri: 'http://localhost:4000/graphql' }),
                 ]),
                 cache: new InMemoryCache(),
