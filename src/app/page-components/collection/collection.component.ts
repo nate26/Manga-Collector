@@ -38,7 +38,6 @@ export class CollectionComponent {
     displayVolumes = computed(() => {
         const vols = this.volumes();
         if (!vols) return [];
-        const saveBatchState = [...this.saveBatch(), ...this.saved()];
         return vols
             .filter(volume => {
                 const record = volume.user_collection_data[0];
@@ -62,11 +61,13 @@ export class CollectionComponent {
                     && (!this.filterTags() || record.tags.join(',').toLowerCase().includes(this.filterTags().toLowerCase()));
             })
             .map(volume => {
-                const saveState = saveBatchState.find(record => record.id === volume.user_collection_data[0].id);
-                if (saveState) {
-                    return { ...volume, user_collection_data: [saveState] };
+                const editedState = this.saveBatch().find(record => record.id === volume.user_collection_data[0].id);
+                const savedState = this.saved().find(record => record.id === volume.user_collection_data[0].id);
+                const changed = editedState || savedState;
+                if (changed) {
+                    return { ...volume, user_collection_data: [changed], edited: Boolean(editedState) };
                 }
-                return volume;
+                return { ...volume, edited: false };
             });
     });
 
@@ -100,7 +101,7 @@ export class CollectionComponent {
             // parse new value
             const eventVal = (<TextEvent>value).target.value;
             let parsedValue;
-            if (field === 'tags') parsedValue = eventVal.split(',').map(t => t.trim());
+            if (field === 'tags') parsedValue = eventVal ? eventVal.split(',').map(t => t.trim()) : [];
             else if (field === 'cost') parsedValue = parseFloat(eventVal);
             else if (field === 'read' || field === 'giftToMe') parsedValue = eventVal === 'on';
             else parsedValue = eventVal;

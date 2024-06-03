@@ -18,39 +18,39 @@
     <div class="volume-row">
         <div class="cover-image"></div>
         <div class="cell w260" style="display: block;">
-            <div class="text al_center">Name</div>
+            <div class="text al_center header">Name</div>
             <input type="text" class="text" (change)="filterName.set(getEventVal($event))">
         </div>
         <div class="cell w60" style="display: block;">
-            <div class="text al_center">Category</div>
+            <div class="text al_center header">Category</div>
             <input type="text" class="text" (change)="filterCategory.set(getEventVal($event))">
         </div>
         <div class="cell w50" style="display: block;">
-            <div class="text al_center">Volume</div>
+            <div class="text al_center header">Volume</div>
             <input type="text" class="text" (change)="filterVolume.set(getEventVal($event))">
         </div>
         <div class="cell w60" style="display: block;">
-            <div class="text al_center">Cost</div>
+            <div class="text al_center header">Cost</div>
             <input type="number" min="0" step="0.01" class="text" (change)="filterCost.set(getEventVal($event))">
         </div>
         <div class="cell w75" style="display: block;">
-            <div class="text al_center">Merchant</div>
+            <div class="text al_center header">Merchant</div>
             <input type="text" class="text" (change)="filterMerchant.set(getEventVal($event))">
         </div>
         <div class="cell w90" style="display: block;">
-            <div class="text al_center" style="font-size: 11pt;">Purchase Date</div>
+            <div class="text al_center header" style="font-size: 10pt;">Purchase Date</div>
             <input type="text" class="text" (change)="filterPurchaseDate.set(getEventVal($event))">
         </div>
         <div class="cell w50" style="display: block;">
-            <div class="text al_center">Read</div>
+            <div class="text al_center header">Read</div>
             <input type="text" class="text" (change)="filterRead.set(getEventVal($event))">
         </div>
         <div class="cell w50" style="display: block;">
-            <div class="text al_center">Gift</div>
+            <div class="text al_center header">Gift</div>
             <input type="text" class="text" (change)="filterGiftToMe.set(getEventVal($event))">
         </div>
         <div class="cell w150" style="display: block;">
-            <div class="text al_center">Tags</div>
+            <div class="text al_center header">Tags</div>
             <input type="text" class="text" (change)="filterTags.set(getEventVal($event))">
         </div>
     </div>
@@ -60,7 +60,7 @@
         @if (displayVolumes(); as volumes) {
             @for (volume of volumes; track $index) {
                 @defer (on viewport) {
-                    <div class="volume-row">
+                    <div class="volume-row" [ngClass]="volume.edited ? 'edited-row' : ''">
                         <img [src]="volume.primary_cover_image_url" alt="cover image of first volume in series" class="cover-image">
                         <div class="cell w260">
                             <a class="text" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
@@ -105,11 +105,11 @@
                             }
                         </div>
                         <div class="cell w50">
-                            <input type="checkbox" class="al_center" [checked]="volume.user_collection_data[0].read"
+                            <input type="checkbox" class="green-checkbox al_center" [checked]="volume.user_collection_data[0].read"
                                 [disabled]="!editing()" (change)="edit($index, 'read', $event)">
                         </div>
                         <div class="cell w50">
-                            <input type="checkbox" class="al_center" [checked]="volume.user_collection_data[0].giftToMe"
+                            <input type="checkbox" class="blue-checkbox al_center" [checked]="volume.user_collection_data[0].giftToMe"
                                 [disabled]="!editing()" (change)="edit($index, 'giftToMe', $event)">
                         </div>
                         <div class="cell w150">

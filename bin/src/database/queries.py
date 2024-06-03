@@ -84,6 +84,7 @@ class Queries:
             else {
                 'isbn': '',
                 'display_name': 'Unknown',
+                'name': 'Unknown',
                 'category': 'Unknown',
                 'volume': '0',
                 'cover_images': [],
@@ -308,7 +309,7 @@ class Queries:
                     for vol in collection_data
                 ],
                 key = lambda x: (
-                    x['display_name'],
+                    x['name'],
                     x['category'],
                     -1 if x['volume'] is None
                     else (
