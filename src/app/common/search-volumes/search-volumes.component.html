@@ -1,4 +1,4 @@
-<div class="flex">
+<!-- <div class="flex">
     <div class="search-box">
         <input type="text" class="search-input" placeholder="search volume..." [(ngModel)]="searchText">
         @if (searchResults$ | async; as results) {
@@ -19,4 +19,21 @@
     <button class="btn active-button" (click)="search.set(searchText)" [disabled]="searchText === search()">
         Search
     </button>
-</div>
+</div> -->
+
+<input type="text" placeholder="search volume..." [formControl]="searchControl" [matAutocomplete]="auto">
+<mat-autocomplete #auto="matAutocomplete">
+    @for (option of searchResults$ | async; track $index) {
+        <mat-option [value]="option.isbn">{{option.display_name}}</mat-option>
+    }
+    <!-- @for (option of searchResults$ | async; track $index) {
+        <div class="option flex">
+            <img [src]="option.primary_cover_image_url" alt="{{'cover image for' + option.name}}"
+                class="cover-image">
+            <div class="option-text">
+                <div class="text">{{option.display_name}}</div>
+                <div class="text option-series-text">{{option.series}}</div>
+            </div>
+        </div>
+    } -->
+</mat-autocomplete>
