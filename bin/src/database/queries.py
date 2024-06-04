@@ -1,5 +1,7 @@
 '''GQL Queries to get data from the DB'''
 
+import difflib
+import json
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
@@ -31,7 +33,7 @@ class Queries:
         self.data = Data(host)
         self.logger = MangaLogger(host).register_logger(__name__)
 
-    def __get_data(self, user_id: str | None):
+    def __get_data(self, user_id: str = None):
         '''
         Fetches data from the data layer
         
@@ -51,8 +53,10 @@ class Queries:
                     executor.submit(self.data.get_volumes_data),
                     executor.submit(self.data.get_series_data),
                     executor.submit(self.data.get_shop_data),
-                    executor.submit(self.data.get_collection_data if user_id is not None else lambda x: [], user_id),
-                    executor.submit(self.data.get_wishlist_data if user_id is not None else lambda x: [], user_id)
+                    executor.submit(self.data.get_collection_data \
+                        if user_id is not None else lambda _: [], user_id),
+                    executor.submit(self.data.get_wishlist_data \
+                        if user_id is not None else lambda _: [], user_id)
                 ]
                 return executor.map(lambda x: x.result(), futures)
         except Exception as exc:
@@ -60,7 +64,8 @@ class Queries:
             self.logger.error(traceback.format_exc())
             raise RequestException('Failed to get data') from exc
 
-    def __parse_volume(self, isbn, volume_data, series_data, shop_data, collection_data, wishlist_data):
+    def __parse_volume(self, isbn, volume_data, series_data, shop_data,
+                       collection_data, wishlist_data):
         '''
         Parses volume data to include additional fields
 
@@ -100,7 +105,8 @@ class Queries:
         ]
         return {
             **parsed_volume_data,
-            'primary_cover_image_url': primary_images[0]['url'] if len(primary_images) > 0 else None,
+            'primary_cover_image_url': primary_images[0]['url'] \
+                if len(primary_images) > 0 else None,
             'other_images': alt_images,
             'series_data': series_data[parsed_volume_data['series_id']] \
                 if parsed_volume_data['series_id'] is not None else {
@@ -115,6 +121,13 @@ class Queries:
             'user_collection_data': [entry for entry in collection_data if entry['isbn'] == isbn],
             'user_wishlist_data': [entry for entry in wishlist_data if entry['isbn'] == isbn]
         }
+
+    def __calc_confidence(self, search: str, check: str):
+        if search is not None and check is not None:
+            return difflib.SequenceMatcher(None, search.lower(), check.lower()).ratio() \
+                * len(check)
+        else:
+            return 0
 
     def get_record_resolver(self, _obj, _info, isbn: str, user_id: str | None):
         '''
@@ -323,6 +336,56 @@ class Queries:
             return {
                 'success': True,
                 'records': user_volumes
+            }
+        except RequestException:
+            return {
+                'success': False,
+                'errors': ['could not fetch series data... ' + str(traceback.format_exc())]
+            }
+
+    def volume_search_resolver(self, _obj, _info, search: str):
+        try:
+            volume_data, series_data, shop_data, \
+                collection_data, wishlist_data = self.__get_data()
+
+            confidence = [{
+                'isbn': volume['isbn'],
+                'confidence': max(
+                    self.__calc_confidence(search, volume['name'] \
+                        if 'name' in volume else None),
+                    self.__calc_confidence(search, volume['display_name'] \
+                        if 'display_name' in volume else None),
+                    # self.__calc_confidence(search, volume['brand'] \
+                    #     if 'brand' in volume else None),
+                    # self.__calc_confidence(search, volume['series'] \
+                    #     if 'series' in volume else None),
+                    # self.__calc_confidence(search, volume['authors'] \
+                    #     if 'authors' in volume else None),
+                    # *[self.__calc_confidence(search, title) for title \
+                    #     in series_data[volume['series_id']]['associated_titles']] \
+                    #         if volume['series_id'] is not None else [],
+                    # *[self.__calc_confidence(search, author['name']) for author \
+                    #     in series_data[volume['series_id']]['authors']] \
+                    #         if volume['series_id'] is not None else []
+                )
+            } for volume in volume_data.values()]
+
+            top_found = sorted(confidence, key = lambda x: float(x['confidence']), reverse=True)[:20]
+            self.logger.info('Found top volumes for search %s: %s', search,
+                             json.dumps(top_found))
+            return {
+                'success': True,
+                'records': [
+                    self.__parse_volume(
+                        vol['isbn'],
+                        volume_data,
+                        series_data,
+                        shop_data,
+                        collection_data,
+                        wishlist_data
+                    )
+                    for vol in top_found
+                ]
             }
         except RequestException:
             return {

@@ -10,7 +10,7 @@
         }
         @else {
             <button class="btn inactive-button" (click)="editing.set(true)">Edit</button>
-        }
+        }          
     </div>
 
     <div class="volume-row">
@@ -59,7 +59,7 @@
             @for (volume of volumes; track $index) {
                 @defer (on viewport) {
                     <div class="volume-row" [ngClass]="volume.edited ? 'edited-row' : ''">
-                        <img [src]="volume.primary_cover_image_url" alt="cover image of first volume in series" class="cover-image">
+                        <img [src]="volume.primary_cover_image_url" alt="{{'cover image for' + volume.name}}" class="cover-image">
                         <div class="cell w260">
                             <a class="text" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
                         </div>

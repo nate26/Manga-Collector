@@ -154,6 +154,7 @@ type Query {
     all_records(user_id: ID): MultipleVolumeRecordResult!
     get_collection_series(user_id: ID!): MultipleSeriesRecordResult!
     get_collection_volumes(user_id: ID): MultipleVolumeRecordResult!
+    volume_search(search: String!): MultipleVolumeRecordResult!
 }
 
 

@@ -30,6 +30,12 @@ export interface IGQLGetCollectionVolumes extends IGQLResponse {
     };
 }
 
+export interface IGQLSearchVolumes extends IGQLResponse {
+    volume_search: {
+        records: IVolume[];
+    };
+}
+
 export interface IGQLModifyCollectionResult {
     modify_collection: {
         __typename: string;

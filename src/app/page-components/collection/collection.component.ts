@@ -1,9 +1,9 @@
 import { Component, DestroyRef, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollectionDataService } from '../../services/data/collection-data.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { IVolume } from '../../interfaces/iVolume.interface';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
 import { ICollection } from '../../interfaces/iCollection.interface';
+import { SearchService } from '../../services/data/search.service';
 
 interface TextEvent extends Event {
     target: EventTarget & { value: string };
@@ -18,7 +18,7 @@ interface TextEvent extends Event {
 })
 export class CollectionComponent {
 
-    volumes = signal<IVolume[]>([]);
+    volumes = toSignal(this.collectionDataService.collectionVolumes$, { initialValue: [] });
 
     editing = signal(false);
 
@@ -75,12 +75,20 @@ export class CollectionComponent {
         });
     });
 
-    constructor(private collectionDataService: CollectionDataService, private destroy: DestroyRef) {
-        this.collectionDataService.collectionVolumes$.pipe(
-            takeUntilDestroyed()
-        ).subscribe(volumes => {
-            this.volumes.set(volumes);
-        });
+    constructor(
+        private collectionDataService: CollectionDataService,
+        private searchService: SearchService,
+        private destroy: DestroyRef) { }
+
+    private _batchEdit(batch: ICollection[], record: ICollection) {
+        // update batch if record is already in batch
+        if (batch.some(b => b.id === record.id)) {
+            // update existing if was previously saved
+            return batch.map(existingRecord => existingRecord.id === record.id ? record : existingRecord);
+        }
+
+        // add to batch if not already there
+        return [...batch, record]
     }
 
     edit(index: number, field: string, value: Event) {
@@ -97,19 +105,8 @@ export class CollectionComponent {
             else if (field === 'read' || field === 'giftToMe') parsedValue = (<HTMLInputElement>value.target).checked;
             else parsedValue = eventVal;
 
-            return this.batchEdit(batch, { ...record, [field]: parsedValue });
+            return this._batchEdit(batch, { ...record, [field]: parsedValue });
         })
-    }
-
-    batchEdit(batch: ICollection[], record: ICollection) {
-        // update batch if record is already in batch
-        if (batch.some(b => b.id === record.id)) {
-            // update existing if was previously saved
-            return batch.map(existingRecord => existingRecord.id === record.id ? record : existingRecord);
-        }
-
-        // add to batch if not already there
-        return [...batch, record]
     }
 
     save() {
@@ -119,7 +116,7 @@ export class CollectionComponent {
             next: (result) => {
                 if (result.data?.modify_collection.success) {
                     console.log('The following records were saved: ', this.saveBatch());
-                    this.saved.update(batch => this.saveBatch().reduce((acc, record) => this.batchEdit(acc, record), batch));
+                    this.saved.update(batch => this.saveBatch().reduce((acc, record) => this._batchEdit(acc, record), batch));
                     this.stopEditing();
                 }
                 else {
