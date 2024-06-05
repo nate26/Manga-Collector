@@ -93,9 +93,10 @@ export class CollectionComponent {
 
     private _batchEdit(batch: ICollection[], record: ICollection) {
         // update batch if record is already in batch
-        if (batch.some(b => b.id === record.id)) {
+        if (batch.some(b => (b.id ?? b.temp_id) === (record.id ?? record.temp_id))) {
             // update existing if was previously saved
-            return batch.map(existingRecord => existingRecord.id === record.id ? record : existingRecord);
+            return batch.map(existingRecord =>
+                (existingRecord.id ?? existingRecord.temp_id) === (record.id ?? record.temp_id) ? record : existingRecord);
         }
 
         // add to batch if not already there

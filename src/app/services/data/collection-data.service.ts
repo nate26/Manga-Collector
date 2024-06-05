@@ -105,7 +105,8 @@ export class CollectionDataService {
             giftToMe: false,
             read: false,
             tags: [],
-            user_id: this.USER_ID
+            user_id: this.USER_ID,
+            temp_id: Date.now().toString()
         }
     }
 
