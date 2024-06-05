@@ -7,10 +7,11 @@
             <button class="btn active-button" (click)="stopEditing()">
                 Cancel
             </button>
+            <app-search-volumes (selectVolume)="addVolume($event)" />
         }
         @else {
             <button class="btn inactive-button" (click)="editing.set(true)">Edit</button>
-        }          
+        }
     </div>
 
     <div class="volume-row">

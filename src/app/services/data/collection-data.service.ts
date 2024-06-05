@@ -9,7 +9,7 @@ import { ICollection } from '../../interfaces/iCollection.interface';
     providedIn: 'root'
 })
 export class CollectionDataService {
-    private USER_ID = 'f69c759a-00dd-4dbe-8e58-96cd7a05969e';
+    public USER_ID = 'f69c759a-00dd-4dbe-8e58-96cd7a05969e';
 
     readonly COLLECTION_VOLUMES_QUERY = gql`
         query get_collection_volumes($user_id: ID!) {
@@ -93,6 +93,20 @@ export class CollectionDataService {
             mutation: this.MODIFY_COLLECTION,
             variables: { user_id: this.USER_ID, volume_update: records }
         }).pipe(catchError((err) => throwError(() => new Error('Could not save data because ', err))));
+    }
+
+    buildNewRecord(vol: IVolume): ICollection {
+        return {
+            isbn: vol.isbn,
+            state: '',
+            cost: 0,
+            merchant: '',
+            purchaseDate: '',
+            giftToMe: false,
+            read: false,
+            tags: [],
+            user_id: this.USER_ID
+        }
     }
 
 }

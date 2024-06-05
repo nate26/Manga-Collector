@@ -1,4 +1,4 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, HostListener, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { combineLatest, debounceTime, filter, map, startWith } from 'rxjs';
 import { VolumeService } from '../../services/data/volume.service';
 import { IVolume } from '../../interfaces/iVolume.interface';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-search-volumes',
@@ -26,7 +27,7 @@ export class SearchVolumesComponent {
 
     selectVolume = output<IVolume>();
 
-    searchActive = signal(false);
+    searchActive = signal(true);
 
     searchControl = new FormControl<string>('');
     searchResults$ = combineLatest({
@@ -93,10 +94,15 @@ export class SearchVolumesComponent {
         return costs[s2.length];
     }
 
-    constructor(private volumesService: VolumeService) { }
+    constructor(private volumesService: VolumeService) {
+        outputToObservable(this.selectVolume).pipe(
+            takeUntilDestroyed()
+        ).subscribe(() => this.searchActive.set(false));
+    }
 
-    outOfFocus($event: Event) {
-        console.log('out of focus', $event);
+    @HostListener('document:keydown', ['$event'])
+    hideOnEscape(event: KeyboardEvent) {
+        if (event.key === 'Escape') this.searchActive.set(false);
     }
 
 }

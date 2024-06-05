@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { CollectionDataService } from '../../services/data/collection-data.service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
 import { ICollection } from '../../interfaces/iCollection.interface';
-import { SearchService } from '../../services/data/search.service';
+import { SearchVolumesComponent } from '../../common/search-volumes/search-volumes.component';
+import { IVolume } from '../../interfaces/iVolume.interface';
+import { VolumeService } from '../../services/data/volume.service';
 
 interface TextEvent extends Event {
     target: EventTarget & { value: string };
@@ -12,13 +14,14 @@ interface TextEvent extends Event {
 @Component({
     selector: 'app-collection',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, SearchVolumesComponent],
     templateUrl: './collection.component.html',
     styleUrl: './collection.component.css'
 })
 export class CollectionComponent {
 
     volumes = toSignal(this.collectionDataService.collectionVolumes$, { initialValue: [] });
+    newVolumes = signal<IVolume[]>([]);
 
     editing = signal(false);
 
@@ -40,15 +43,23 @@ export class CollectionComponent {
     editedVolumes = computed(() => {
         const vols = this.volumes();
         if (!vols) return [];
-        return vols.map(volume => {
-            const editedState = this.saveBatch().find(record => record.id === volume.user_collection_data[0].id);
-            const savedState = this.saved().find(record => record.id === volume.user_collection_data[0].id);
-            const changed = editedState || savedState;
-            if (changed) {
-                return { ...volume, user_collection_data: [changed], edited: Boolean(editedState) };
-            }
-            return { ...volume, edited: false };
-        });
+        return [
+            // add in all new volumes
+            ...this.saveBatch().filter(record => !record.id).map(record => ({
+                ...this.newVolumes().find(vol => vol.isbn === record.isbn)!,
+                user_collection_data: [record],
+                edited: true
+            })),
+            ...vols.map(volume => {
+                const editedState = this.saveBatch().find(record => record.id === volume.user_collection_data[0].id);
+                const savedState = this.saved().find(record => record.id === volume.user_collection_data[0].id);
+                const changed = editedState || savedState;
+                if (changed) {
+                    return { ...volume, user_collection_data: [changed], edited: Boolean(editedState) };
+                }
+                return { ...volume, edited: false };
+            })
+        ];
     });
 
     filteredVolumes = computed(() => {
@@ -77,7 +88,7 @@ export class CollectionComponent {
 
     constructor(
         private collectionDataService: CollectionDataService,
-        private searchService: SearchService,
+        private volumeService: VolumeService,
         private destroy: DestroyRef) { }
 
     private _batchEdit(batch: ICollection[], record: ICollection) {
@@ -133,6 +144,17 @@ export class CollectionComponent {
 
     getEventVal(value: Event) {
         return (<TextEvent>value).target.value;
+    }
+
+    addVolume(vol: IVolume) {
+        this.volumeService.queryVolume(vol.isbn).pipe(
+            takeUntilDestroyed(this.destroy)
+        ).subscribe({
+            next: (volume) => {
+                this.newVolumes.update(volumes => [...volumes, volume]);
+                this.saveBatch.update(batch => [...batch, this.collectionDataService.buildNewRecord(vol)]);
+            }
+        });
     }
 
 }

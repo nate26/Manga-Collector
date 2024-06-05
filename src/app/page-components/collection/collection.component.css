@@ -48,7 +48,7 @@
 
 .volumes {
     overflow: auto;
-    height: calc(100vh - 146px);
+    height: calc(100vh - 148px);
     /*66px*/
     width: 100vw;
     /* min-width: 1012px; */

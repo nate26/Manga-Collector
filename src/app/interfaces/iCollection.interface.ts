@@ -1,5 +1,5 @@
 export interface ICollection {
-    id: string;
+    id?: string;
     user_id: string;
     isbn: string;
     state: string;
@@ -9,6 +9,6 @@ export interface ICollection {
     giftToMe: boolean;
     read: boolean;
     tags: string[];
-    inserted: string;
-    updated: string;
+    inserted?: string;
+    updated?: string;
 }
