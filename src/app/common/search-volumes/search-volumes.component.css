@@ -10,7 +10,7 @@
 
 .select-area {
     position: absolute;
-    top: 36px;
+    top: 38px;
     max-width: 600px;
     width: max-content;
     max-height: 500px;
@@ -25,6 +25,7 @@
 .option {
     padding: 4px;
     height: 60px;
+    user-select: none;
 }
 
 .option:hover {

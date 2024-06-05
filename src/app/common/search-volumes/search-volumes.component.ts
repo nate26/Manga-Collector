@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { combineLatest, debounceTime, filter, map, startWith } from 'rxjs';
 import { VolumeService } from '../../services/data/volume.service';
+import { IVolume } from '../../interfaces/iVolume.interface';
 
 @Component({
     selector: 'app-search-volumes',
@@ -23,6 +24,10 @@ import { VolumeService } from '../../services/data/volume.service';
 })
 export class SearchVolumesComponent {
 
+    selectVolume = output<IVolume>();
+
+    searchActive = signal(false);
+
     searchControl = new FormControl<string>('');
     searchResults$ = combineLatest({
         volumes: this.volumesService.volumesBasic$,
@@ -35,7 +40,7 @@ export class SearchVolumesComponent {
             const filter = volumes
                 .filter(vol => vol.display_name.toLowerCase().includes(filterValue))
                 .map(vol => ({ volume: vol, confidence: this.similarity(search ?? '', vol.display_name) }))
-                .slice(0, 20);
+                .slice(0, 50);
 
             return filter.sort((a, b) => {
                 const confidence = b.confidence - a.confidence;
@@ -89,6 +94,10 @@ export class SearchVolumesComponent {
     }
 
     constructor(private volumesService: VolumeService) { }
+
+    outOfFocus($event: Event) {
+        console.log('out of focus', $event);
+    }
 
 }
 
