@@ -2,6 +2,7 @@
 
 import json
 from typing import Dict, List
+
 from src.enums.host_enum import HostEnum
 from src.enums.file_path_enum import FilePathEnum
 from src.interfaces.icollection import ICollection
@@ -104,7 +105,8 @@ class Data:
         self.all_collection_data[user_id] = collection_data
         return collection_data
 
-    def add_to_collection_data(self, user_id: str, new_records: List[ICollection]) -> str:
+    def add_to_collection_data(self, user_id: str,
+                               volumes_update: List[ICollection]) -> List[ICollection]:
         '''
         Inserts records into the AWS collection data
         
@@ -114,24 +116,26 @@ class Data:
         Returns:
         - str: The response from the AWS insert operation.
         '''
+        self.logger.info(json.dumps(volumes_update))
+        if self.host == HostEnum.MOCK:
+            return 'mock data -- no update made'
+        saved = self.aws_dao.post_data(self.collection_url + '/add-records', volumes_update)
+
         # update cache
-        self.logger.info(json.dumps(self.all_collection_data[user_id]))
         if user_id in self.all_collection_data:
-            for new_record in new_records:
+            for new_record in saved:
                 old_record = next(
-                    (i for i in self.all_collection_data[user_id] if i.get('id') == new_record.get('id')),
+                    (i for i in self.all_collection_data[user_id] \
+                        if i.get('id') == new_record.get('id')),
                     None
                 )
                 if old_record is not None:
                     self.all_collection_data[user_id].remove(old_record)
                 self.all_collection_data[user_id].append(new_record)
+        self.logger.info(saved)
+        return saved
 
-        self.logger.info(json.dumps(new_records))
-        if self.host == HostEnum.MOCK:
-            return 'mock data -- no update made'
-        return self.aws_dao.post_data(self.collection_url + '/add-records', new_records)
-
-    def delete_from_collection_data(self, data) -> str:
+    def delete_from_collection_data(self, user_id: str, ids_delete: List[str]) -> str:
         '''
         Deletes records from AWS collection data
         
@@ -141,10 +145,24 @@ class Data:
         Returns:
         - str: The text response from the AWS delete operation.
         '''
-        # del self.all_collection_data[data[0]['user_id']]
+        self.logger.info(json.dumps(ids_delete))
         if self.host == HostEnum.MOCK:
             return 'mock data -- no update made'
-        return self.aws_dao.post_data(self.collection_url + '/delete-records', data)
+        body = [{ 'id': id, 'user_id': user_id } for id in ids_delete]
+        deleted = self.aws_dao.post_data(self.collection_url + '/delete-records', body)
+
+        # update cache
+        if user_id in self.all_collection_data:
+            for id_delete in ids_delete:
+                old_record = next(
+                    (i for i in self.all_collection_data[user_id] \
+                        if i.get('id') == id_delete),
+                    None
+                )
+                if old_record is not None:
+                    self.all_collection_data[user_id].remove(old_record)
+        self.logger.info(deleted)
+        return deleted
 
     def get_wishlist_data(self, user_id: str) -> List[IWishlist]:
         '''

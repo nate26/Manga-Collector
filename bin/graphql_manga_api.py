@@ -24,11 +24,10 @@ query.set_field('get_record', queries.get_record_resolver)
 query.set_field('all_records', queries.all_records_resolver)
 query.set_field('get_collection_series', queries.get_collection_series_resolver)
 query.set_field('get_collection_volumes', queries.get_collection_volume_resolver)
-query.set_field('volume_search', queries.volume_search_resolver)
 
 mutation = ObjectType('Mutation')
 mutation.set_field('modify_collection', mutations.update_volume_resolver)
-# mutation.set_field('delete_collection_records', mutations.delete_collection_records_resolver)
+mutation.set_field('delete_collection_records', mutations.delete_collection_records_resolver)
 
 type_defs = load_schema_from_path('schema.graphql')
 schema = make_executable_schema(type_defs, query, mutation)

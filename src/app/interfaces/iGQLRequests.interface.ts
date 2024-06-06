@@ -1,3 +1,4 @@
+import { ICollection } from './iCollection.interface';
 import { ISeriesRecord } from './iSeries.interface';
 import { IVolume } from './iVolume.interface';
 
@@ -40,7 +41,16 @@ export interface IGQLModifyCollectionResult {
     modify_collection: {
         __typename: string;
         errors: string[] | null;
-        response: string | null;
+        response: ICollection[] | null;
+        success: boolean;
+    }
+}
+
+export interface IGQLDeleteCollectionResult {
+    delete_collection_records: {
+        __typename: string;
+        errors: string[] | null;
+        response: string[] | null;
         success: boolean;
     }
 }

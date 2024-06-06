@@ -68,6 +68,11 @@ body {
     filter: saturate(0);
 }
 
+.collection-icon {
+    color: #06090c !important;
+    margin: 0;
+}
+
 input {
     background: #0c1118;
     border: 2px solid black;

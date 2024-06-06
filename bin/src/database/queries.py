@@ -1,15 +1,11 @@
 '''GQL Queries to get data from the DB'''
 
-import difflib
-import json
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-from typing import List
 
 from requests import RequestException
 from src.data import Data
-from src.interfaces.ivolume import IVolume
 from src.util.manga_logger import MangaLogger
 
 class Queries:
@@ -333,67 +329,6 @@ class Queries:
             return {
                 'success': True,
                 'records': user_volumes
-            }
-        except RequestException:
-            return {
-                'success': False,
-                'errors': ['could not fetch series data... ' + str(traceback.format_exc())]
-            }
-
-    def volume_search_resolver(self, _obj, _info, search: str):
-        try:
-            volume_data, series_data, shop_data, \
-                collection_data, wishlist_data = self.__get_data()
-
-            # confidence = [{
-            #     'isbn': volume['isbn'],
-            #     'confidence': max(
-            #         self.__calc_confidence(search, volume['name'] \
-            #             if 'name' in volume else None),
-            #         self.__calc_confidence(search, volume['display_name'] \
-            #             if 'display_name' in volume else None),
-            #         # self.__calc_confidence(search, volume['brand'] \
-            #         #     if 'brand' in volume else None),
-            #         # self.__calc_confidence(search, volume['series'] \
-            #         #     if 'series' in volume else None),
-            #         # self.__calc_confidence(search, volume['authors'] \
-            #         #     if 'authors' in volume else None),
-            #         # *[self.__calc_confidence(search, title) for title \
-            #         #     in series_data[volume['series_id']]['associated_titles']] \
-            #         #         if volume['series_id'] is not None else [],
-            #         # *[self.__calc_confidence(search, author['name']) for author \
-            #         #     in series_data[volume['series_id']]['authors']] \
-            #         #         if volume['series_id'] is not None else []
-            #     )
-            # } for volume in volume_data.values()]
-            # top_found = sorted(confidence, key = lambda x: float(x['confidence']), reverse=True)[:20]
-
-            volumes: List[IVolume] = list(volume_data.values())
-            volume_names = [volume['display_name'].lower() for volume in volumes]
-            matches = difflib.get_close_matches(search.lower(), volume_names, n=20, cutoff=0.0)
-            matched_volumes = [volumes[volume_names.index(match)] for match in matches]
-
-            match_scores = [
-                (volume, difflib.SequenceMatcher(None, search.lower(), volume['display_name'].lower()).ratio())
-                for volume in matched_volumes
-            ]
-            match_scores.sort(key=lambda x: (1 - x[1], self.__volume_sort_parse(x[0]['volume'])))
-
-            self.logger.info('Found top volumes for search %s: %s', search,
-                             json.dumps([(top[0]['display_name'], top[1]) for top in match_scores]))
-            return {
-                'success': True,
-                'records': [
-                    self.__parse_volume(
-                        isbn,
-                        volume_data,
-                        series_data,
-                        shop_data,
-                        collection_data,
-                        wishlist_data
-                    )
-                    for isbn in [top[0]['isbn'] for top in match_scores]
-                ]
             }
         except RequestException:
             return {

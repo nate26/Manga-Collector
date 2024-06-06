@@ -75,7 +75,8 @@ type ShopDetails {
 }
 
 type CollectionData {
-    id: ID!
+    id: ID
+    temp_id: ID
     user_id: ID!
     isbn: ID!
     state: String
@@ -154,7 +155,6 @@ type Query {
     all_records(user_id: ID): MultipleVolumeRecordResult!
     get_collection_series(user_id: ID!): MultipleSeriesRecordResult!
     get_collection_volumes(user_id: ID): MultipleVolumeRecordResult!
-    volume_search(search: String!): MultipleVolumeRecordResult!
 }
 
 
@@ -168,6 +168,7 @@ type Query {
 
 input CollectionDataInput {
     id: ID # not required if new
+    temp_id: ID # temp used if new
     user_id: ID!
     isbn: ID!
     state: String
@@ -251,13 +252,19 @@ input VolumeRecordInput {
 type ModifyAWSResult {
     success: Boolean!
     errors: [String]
-    response: String
+    response: [CollectionData]
+}
+
+type DeleteAWSResult {
+    success: Boolean!
+    errors: [String]
+    response: [String]
 }
 
 type Mutation {
     # modify_volumes(
     #     volumes_input: [VolumeRecordInput]!
     # ): SingleVolumeRecordResult!
-    modify_collection(user_id: ID!, volume_update: [CollectionDataInput]!): ModifyAWSResult!
-    # delete_collection_records(isbn: ID!): SingleVolumeRecordResult!
+    modify_collection(user_id: ID!, volumes_update: [CollectionDataInput]!): ModifyAWSResult!
+    delete_collection_records(user_id: ID!, ids_delete: [String]!): DeleteAWSResult!
 }

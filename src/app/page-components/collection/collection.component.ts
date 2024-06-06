@@ -6,6 +6,9 @@ import { ICollection } from '../../interfaces/iCollection.interface';
 import { SearchVolumesComponent } from '../../common/search-volumes/search-volumes.component';
 import { IVolume } from '../../interfaces/iVolume.interface';
 import { VolumeService } from '../../services/data/volume.service';
+import { forkJoin, tap } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 interface TextEvent extends Event {
     target: EventTarget & { value: string };
@@ -14,19 +17,23 @@ interface TextEvent extends Event {
 @Component({
     selector: 'app-collection',
     standalone: true,
-    imports: [CommonModule, SearchVolumesComponent],
+    imports: [CommonModule, SearchVolumesComponent, MatButtonModule, MatIconModule],
     templateUrl: './collection.component.html',
     styleUrl: './collection.component.css'
 })
 export class CollectionComponent {
 
     volumes = toSignal(this.collectionDataService.collectionVolumes$, { initialValue: [] });
+    volumeIDs = computed(() => this.volumes().map(vol => vol.user_collection_data[0].id));
     newVolumes = signal<IVolume[]>([]);
 
     editing = signal(false);
 
-    saveBatch = signal<ICollection[]>([]); // temp cache of changes
+    saveBatch = signal<ICollection[]>([]); // temp cache of save changes
     saved = signal<ICollection[]>([]); // cache of all prior saved records
+
+    deleteBatch = signal<string[]>([]); // temp cache of delete changes
+    deleted = signal<string[]>([]); // cache of all prior deleted records
 
     // consider reactive forms instead of template forms
     filterName = signal<string>('');
@@ -44,12 +51,23 @@ export class CollectionComponent {
         const vols = this.volumes();
         if (!vols) return [];
         return [
-            // add in all new volumes
-            ...this.saveBatch().filter(record => !record.id).map(record => ({
-                ...this.newVolumes().find(vol => vol.isbn === record.isbn)!,
-                user_collection_data: [record],
-                edited: true
-            })),
+            // add in all new volumes in current batch
+            ...this.saveBatch().filter(record => !record.id).map(volume => {
+                return {
+                    ...this.newVolumes().find(vol => vol.isbn === volume.isbn)!,
+                    user_collection_data: [volume],
+                    edited: true
+                }
+            }),
+            // add in all new volumes that were previously saved
+            ...this.saved().filter(record => this.volumeIDs().indexOf(record.id) === -1).map(volume => {
+                return {
+                    ...this.newVolumes().find(vol => vol.isbn === volume.isbn)!,
+                    user_collection_data: [volume],
+                    edited: Boolean(this.saveBatch().find(record => record.id === volume.id))
+                }
+            }),
+            // modify all existing volumes that were edited
             ...vols.map(volume => {
                 const editedState = this.saveBatch().find(record => record.id === volume.user_collection_data[0].id);
                 const savedState = this.saved().find(record => record.id === volume.user_collection_data[0].id);
@@ -59,7 +77,10 @@ export class CollectionComponent {
                 }
                 return { ...volume, edited: false };
             })
-        ];
+        ].filter(vol => [
+            ...this.deleteBatch(),
+            ...this.deleted()
+        ].indexOf(vol.user_collection_data[0].id ?? '') === -1); // remove deleted records
     });
 
     filteredVolumes = computed(() => {
@@ -99,6 +120,11 @@ export class CollectionComponent {
                 (existingRecord.id ?? existingRecord.temp_id) === (record.id ?? record.temp_id) ? record : existingRecord);
         }
 
+        if (!record.id && this.saved().some(savedRecord => savedRecord.temp_id === record.temp_id)) {
+            // remove from saved if we are re-editing it
+            this.saved.update(saved => saved.filter(savedRecord => savedRecord.temp_id !== record.temp_id))
+        }
+
         // add to batch if not already there
         return [...batch, record]
     }
@@ -121,19 +147,43 @@ export class CollectionComponent {
         })
     }
 
+    markForDelete(record: ICollection) {
+        if (record.id) {
+            this.deleteBatch.update(batch => [...batch, record.id!]);
+        }
+        else {
+            this.saveBatch.update(batch => batch.filter(r => r.temp_id !== record.temp_id));
+        }
+    }
+
     save() {
-        this.collectionDataService.saveToCollection(this.saveBatch()).pipe(
+        forkJoin({
+            saveResult: this.collectionDataService.saveToCollection(this.saveBatch()).pipe(
+                tap({
+                    next: (saveResult) => {
+                        console.log('The following records were saved: ', this.saveBatch());
+                        // merge with existing cache
+                        this.saved.update(currSaved => saveResult.reduce((acc, record) => this._batchEdit(acc, record), currSaved));
+                        this.saveBatch.set([]);
+                    }
+                })
+            ),
+            deleteResult: this.collectionDataService.deleteFromCollection(this.deleteBatch()).pipe(
+                tap({
+                    next: (deleteResult) => {
+                        console.log('The following records were deleted: ', this.deleteBatch());
+                        // merge with existing cache
+                        this.deleted.update(currDeleted => [...new Set([...currDeleted, ...deleteResult])]);
+                        this.deleteBatch.set([]);
+                    }
+                })
+            )
+        }).pipe(
             takeUntilDestroyed(this.destroy)
         ).subscribe({
-            next: (result) => {
-                if (result.data?.modify_collection.success) {
-                    console.log('The following records were saved: ', this.saveBatch());
-                    this.saved.update(batch => this.saveBatch().reduce((acc, record) => this._batchEdit(acc, record), batch));
-                    this.stopEditing();
-                }
-                else {
-                    console.error('could not save data... ', result)
-                }
+            next: () => {
+                this.stopEditing();
+                this.editing.set(false);
             }
         });
     }
@@ -148,14 +198,26 @@ export class CollectionComponent {
     }
 
     addVolume(vol: IVolume) {
-        this.volumeService.queryVolume(vol.isbn).pipe(
-            takeUntilDestroyed(this.destroy)
-        ).subscribe({
-            next: (volume) => {
-                this.newVolumes.update(volumes => [...volumes, volume]);
-                this.saveBatch.update(batch => [...batch, this.collectionDataService.buildNewRecord(vol)]);
-            }
-        });
+        const addToBatch = () =>
+            this.saveBatch.update(batch => [...batch, this.collectionDataService.buildNewRecord(vol)]);
+        if (this.newVolumes().find(v => v.isbn === vol.isbn)) {
+            addToBatch();
+        }
+        else {
+            // fetch if not in existing cache
+            this.volumeService.queryVolume(vol.isbn).pipe(
+                takeUntilDestroyed(this.destroy)
+            ).subscribe({
+                next: (volume) => {
+                    this.newVolumes.update(volumes => [...volumes, volume]);
+                    addToBatch();
+                },
+                error: (err) => {
+                    console.error(err);
+                    alert('could not get volume data for ' + vol.display_name + 'to add to collection')
+                }
+            });
+        }
     }
 
 }
