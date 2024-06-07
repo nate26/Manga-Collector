@@ -6,6 +6,7 @@
     --item-background-color: #252529;
     --item-mute-text-color: #4d64df;
     --item-background-color-brightened: #484856;
+    --item-background-color-selected: #37373d;
 }
 
 body {
@@ -21,6 +22,10 @@ body {
 
 .flex-wrap {
     flex-wrap: wrap;
+}
+
+.block {
+    display: block;
 }
 
 .cell {
@@ -128,6 +133,49 @@ input[type='checkbox'] {
     min-height: 60px;
     aspect-ratio: 1 / 1.45;
     object-fit: cover;
+    cursor: pointer;
+}
+
+.text-g {
+    color: #868686;
+}
+
+.retail-price {
+    text-decoration: line-through;
+    font-style: italic;
+    font-size: 80%;
+    display: inline;
+}
+
+.grow-container {
+    overflow-y: hidden;
+    animation: grow 0.3s ease-in;
+}
+
+@keyframes grow {
+    0% {
+        height: 0px;
+    }
+
+    100% {
+        height: 410px;
+    }
+}
+
+.shrink-container {
+    height: 0px;
+    visibility: hidden;
+    animation: shrink 0.3s ease-in;
+}
+
+@keyframes shrink {
+    0% {
+        height: 410px;
+    }
+
+    100% {
+        height: 0px;
+    }
 }
 
 /* .header-button {

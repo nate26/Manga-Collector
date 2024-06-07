@@ -23,11 +23,15 @@ export class CollectionDataService {
                     category
                     volume
                     release_date
+                    format
+                    pages
                     publisher
+                    description
                     primary_cover_image_url
                     series_data {
                         title
                         url
+                        description
                         series_match_confidence
                         volumes {
                             isbn
@@ -35,6 +39,10 @@ export class CollectionDataService {
                             category
                         }
                         status
+                        genres
+                        themes {
+                            theme
+                        }
                     }
                     retail_price
                     user_collection_data {

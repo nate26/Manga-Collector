@@ -9,6 +9,7 @@ import { VolumeService } from '../../services/data/volume.service';
 import { forkJoin, tap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ITheme } from '../../interfaces/iSeries.interface';
 
 interface TextEvent extends Event {
     target: EventTarget & { value: string };
@@ -106,6 +107,20 @@ export class CollectionComponent {
                 && (!this.filterTags() || record.tags.join(',').toLowerCase().includes(this.filterTags().toLowerCase()));
         });
     });
+
+    selectedVol = signal<IVolume | null>(null);
+
+    volumeRowClass = (volume: IVolume & { edited: boolean }) => {
+        const classes = [];
+        if (this.volumeIsSelected(volume)) classes.push('volume-row-selected');
+        else classes.push('volume-row');
+        if (volume.edited) classes.push('edited');
+        return classes.join(' ');
+    }
+
+    volumeIsSelected = (volume: IVolume) => this.selectedVol()?.user_collection_data?.[0]?.id === volume.user_collection_data[0].id;
+
+    parseThemes = (themes: ITheme[]) => themes.map(t => t.theme).join(', ');
 
     constructor(
         private collectionDataService: CollectionDataService,
@@ -217,6 +232,15 @@ export class CollectionComponent {
                     alert('could not get volume data for ' + vol.display_name + 'to add to collection')
                 }
             });
+        }
+    }
+
+    showVolumeDetails(volume: IVolume) {
+        if (this.volumeIsSelected(volume)) {
+            this.selectedVol.set(null);
+        }
+        else {
+            this.selectedVol.set(volume);
         }
     }
 
