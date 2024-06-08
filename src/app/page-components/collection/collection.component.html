@@ -63,7 +63,7 @@
                         <img [src]="volume.primary_cover_image_url" alt="{{'cover image for' + volume.name}}" class="cover-image"
                             (click)="showVolumeDetails(volume)" (keypress)="selectedVol.set(volume)" tabindex={$index}>
                         <div class="cell w260">
-                            <a class="text" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
+                            <a class="text t-wrap" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
                         </div>
                         <div class="cell w60">
                             <div class="text al_center">{{volume.category | titlecase}}</div>
@@ -114,11 +114,11 @@
                         </div>
                         <div class="cell w150">
                             @if (editing()) {
-                                <input type="text" class="text"  [value]="volume.user_collection_data[0].tags.join(', ')"
+                                <input type="text" class="text t-wrap"  [value]="volume.user_collection_data[0].tags.join(', ')"
                                     (change)="edit($index, 'tags', $event)">
                             }
                             @else {
-                                <div class="text">
+                                <div class="text t-wrap">
                                     {{volume.user_collection_data[0].tags.join(', ')}}
                                 </div>
                             }
@@ -136,56 +136,87 @@
                         <div [ngClass]="volumeIsSelected(volume) ? 'grow-container' : 'shrink-container'">
                             @if (volumeIsSelected(volume)) {
                                 <div class="volume-details" style="overflow: hidden">
-                                    <div style="height: inherit;">
+                                    <div style="height: inherit; font-size: 88%;">
                                         <img [src]="volume.primary_cover_image_url" alt="{{'cover image for' + volume.name}}" class="cover-image">
                                         <div class="text">
-                                            <span class="subject">Release Date: </span>
-                                            @if (volume.release_date) { {{volume.release_date | date}} }
-                                            @else { <span class="text-g">Unknown</span> }
+                                            <span class="subject">Added to Your Collection:</span>
+                                            {{volume.user_collection_data[0].inserted | date}}
                                         </div>
                                         <div class="text">
-                                            <span class="subject">Cost: </span>
-                                            {{volume.user_collection_data[0].cost | currency}}
-                                            <span class="text retail-price text-g">{{volume.retail_price | currency}}</span>
+                                            <span class="subject">Updated in Your Collection:</span>
+                                            {{volume.user_collection_data[0].updated | date}}
                                         </div>
                                         <div class="text">
-                                            <span class="subject">Format: </span>
-                                            @if (volume.format) { {{volume.format}} }
-                                            @else { <span class="text-g">Unknown</span> }
+                                            <span class="subject">Added to Library:</span>
+                                            {{volume.record_added_date | date}}
                                         </div>
                                         <div class="text">
-                                            <span class="subject">Pages: </span>
-                                            @if (volume.pages) { {{volume.pages}} }
-                                            @else { <span class="text-g">Unknown</span> }
-                                        </div>
-                                        <div class="text">
-                                            <span class="subject">Publisher: </span>
-                                            @if (volume.publisher) { {{volume.publisher}} }
-                                            @else { <span class="text-g">Unknown</span> }
+                                            <span class="subject">Updated in Library:</span>
+                                            {{volume.record_updated_date | date}}
                                         </div>
                                     </div>
                                     <div class="volume-details-area">
-                                        <a class="text title" [href]="volume.url" target="_blank">{{volume.display_name}}</a>
-                                        <div class="text">
+                                        <a class="text title t-wrap" [href]="volume.url" target="_blank">{{volume.display_name}}</a>
+                                        <div class="text t-wrap">
                                             <span class="subject">Series: </span>
                                             @if (volume.series) { {{volume.series}} }
                                             @else { <span class="text-g">Unknown</span> }
                                         </div>
-                                        <div class="text" style="display: block">
+                                        <hr>
+                                        <div class="text t-wrap" style="display: block">
                                             <span class="subject">Description: </span>
-                                            {{volume.description}}
+                                            @if (volume.description) { {{volume.description}} }
+                                            @else { <span class="text-g">None</span> }
                                         </div>
-                                        @if (volume.series_data.genres) {
-                                            <div class="text" style="display: block">
-                                                <span class="subject">Genres: </span>
-                                                {{volume.series_data.genres.join(', ')}}
+                                        <hr>
+                                        <div class="flex">
+                                            <div class="detail-section">
+                                                <div class="text">
+                                                    <span class="subject">Author(s): </span>
+                                                    @if (volume.authors) { {{volume.authors}} }
+                                                    @else { <span class="text-g">Unknown</span> }
+                                                </div>
+                                                <div class="text">
+                                                    <span class="subject">Release Date: </span>
+                                                    @if (volume.release_date) { {{volume.release_date | date}} }
+                                                    @else { <span class="text-g">Unknown</span> }
+                                                </div>
+                                                <div class="text">
+                                                    <span class="subject">Cost: </span>
+                                                    {{volume.user_collection_data[0].cost | currency}}
+                                                    <span class="text retail-price text-g">{{volume.retail_price | currency}}</span>
+                                                </div>
+                                                <div class="text">
+                                                    <span class="subject">Publisher: </span>
+                                                    @if (volume.publisher) { {{volume.publisher}} }
+                                                    @else { <span class="text-g">Unknown</span> }
+                                                </div>
                                             </div>
-                                        }
-                                        @if (volume.series_data.themes) {
-                                            <div class="text" style="display: block">
-                                                <span class="subject">Themes: </span>
-                                                {{parseThemes(volume.series_data.themes)}}
+                                            <div class="detail-section">
+                                                <div class="text">
+                                                    <span class="subject">Format: </span>
+                                                    @if (volume.format) { {{volume.format}} }
+                                                    @else { <span class="text-g">Unknown</span> }
+                                                </div>
+                                                <div class="text">
+                                                    <span class="subject">Pages: </span>
+                                                    @if (volume.pages) { {{volume.pages}} }
+                                                    @else { <span class="text-g">Unknown</span> }
+                                                </div>
+                                                <div class="text">
+                                                    <span class="subject">ISBN (13): </span>
+                                                    {{volume.isbn}}
+                                                </div>
+                                                <div class="text">
+                                                    <span class="subject">ISBN (10): </span>
+                                                    @if (volume.isbn_10) { {{volume.isbn_10}} }
+                                                    @else { <span class="text-g">Unknown</span> }
+                                                </div>
                                             </div>
+                                        </div>
+                                        <hr>
+                                        @if (volume.brand) { 
+                                            <div class="text t-wrap">Checkout more from <span style="text-decoration: underline;">{{volume.brand}}</span></div>
                                         }
                                     </div>
                                 </div>

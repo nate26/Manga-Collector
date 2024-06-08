@@ -45,16 +45,26 @@ export class VolumeService {
                     isbn
                     brand
                     series
+                    series_id
                     display_name
                     name
                     category
                     volume
+                    url
+                    record_added_date
+                    record_updated_date
                     release_date
+                    publisher
                     format
                     pages
-                    publisher
-                    description
+                    authors
+                    isbn_10
                     primary_cover_image_url
+                    other_images {
+                        name
+                        url
+                    }
+                    description
                     series_data {
                         title
                         url

@@ -35,16 +35,18 @@ body {
 }
 
 .text {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-
     color: white;
     align-content: center;
     margin: auto 0;
+    font-family: var(--manga-font);
+}
+
+.t-wrap {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
     /* text-overflow: ellipsis; */
-    font-family: var(--manga-font);
 }
 
 .btn {
