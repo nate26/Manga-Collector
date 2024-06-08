@@ -165,7 +165,7 @@ input[type='checkbox'] {
 .shrink-container {
     height: 0px;
     visibility: hidden;
-    animation: shrink 0.3s ease-in;
+    /* animation: shrink 0.3s ease-in; */
 }
 
 @keyframes shrink {

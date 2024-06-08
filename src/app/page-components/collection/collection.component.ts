@@ -7,8 +7,6 @@ import { SearchVolumesComponent } from '../../common/search-volumes/search-volum
 import { IVolume } from '../../interfaces/iVolume.interface';
 import { VolumeService } from '../../services/data/volume.service';
 import { forkJoin, tap } from 'rxjs';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { ITheme } from '../../interfaces/iSeries.interface';
 
 interface TextEvent extends Event {
@@ -18,7 +16,7 @@ interface TextEvent extends Event {
 @Component({
     selector: 'app-collection',
     standalone: true,
-    imports: [CommonModule, SearchVolumesComponent, MatButtonModule, MatIconModule],
+    imports: [CommonModule, SearchVolumesComponent],
     templateUrl: './collection.component.html',
     styleUrl: './collection.component.css'
 })
@@ -114,11 +112,15 @@ export class CollectionComponent {
         const classes = [];
         if (this.volumeIsSelected(volume)) classes.push('volume-row-selected');
         else classes.push('volume-row');
-        if (volume.edited) classes.push('edited');
+        if (volume.edited) classes.push('edited-row');
         return classes.join(' ');
     }
 
-    volumeIsSelected = (volume: IVolume) => this.selectedVol()?.user_collection_data?.[0]?.id === volume.user_collection_data[0].id;
+    volumeIsSelected = (volume: IVolume) => {
+        const selectedId = this.selectedVol()?.user_collection_data?.[0]?.id ?? this.selectedVol()?.user_collection_data?.[0]?.temp_id;
+        const volId = volume.user_collection_data[0].id ?? volume.user_collection_data[0].temp_id;
+        return selectedId === volId && selectedId !== undefined;
+    }
 
     parseThemes = (themes: ITheme[]) => themes.map(t => t.theme).join(', ');
 
