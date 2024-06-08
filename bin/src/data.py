@@ -1,62 +1,228 @@
-from enums.host_enum import HostEnum
-from enums.file_path_enum import FilePathEnum
-from interfaces.icollection import ICollection
-from interfaces.ilibrary import ILibrary
-from interfaces.iseries import ISeries
-from interfaces.iwishlist import IWishlist
+'''Module to get and write to local json files or AWS.'''
+
+import json
 from typing import Dict, List
-from util.aws_dao import AWSDAO
-from util.local_dao import LocalDAO
-from util.manga_logger import MangaLogger
+
+from src.enums.host_enum import HostEnum
+from src.enums.file_path_enum import FilePathEnum
+from src.interfaces.icollection import ICollection
+from src.interfaces.iseries import ISeries
+from src.interfaces.ishop import IShop
+from src.interfaces.ivolume import IVolume
+from src.interfaces.iwishlist import IWishlist
+from src.util.aws_dao import AWSDAO
+from src.util.local_dao import LocalDAO
+from src.util.manga_logger import MangaLogger
 
 class Data:
+    '''
+    A class used to get and write to local json files.
     
-    def __init__(self, host):
+    ...
+    
+    Attributes
+    ----------
+    host : HostEnum
+        The the host machine to know where to access data for logging
+    
+    Methods
+    -------
+    get_library_data()
+        Gets the data from a json file
+    get_series_data()
+        Gets the data from a json file
+    get_collection_data(user_id=str)
+        Gets the data from a json file
+    add_to_collection_data(data=Any)
+        Writes data to a json file
+    delete_from_collection_data(data=Any)
+        Writes data to a json file
+    get_wishlist_data(user_id=str)
+        Gets the data from a json file
+    add_to_wishlist_data(data=Any)
+        Writes data to a json file
+    delete_from_wishlist_data(data=Any)
+        Writes data to a json file
+    '''
+
+    def __init__(self, host: HostEnum):
         self.host = host
         self.aws_dao = AWSDAO(host)
         self.local_dao = LocalDAO(host)
         self.collection_url = 'https://syrrzyi0qf.execute-api.us-east-2.amazonaws.com/v1'
         self.wishlist_url = 'https://d60vento0i.execute-api.us-east-2.amazonaws.com/v2'
-        self.logger = MangaLogger(host, __name__)
+        self.logger = MangaLogger(host).register_logger(__name__)
 
-    def get_library_data(self) -> Dict[str, ILibrary]:
-        return self.local_dao.get_json_file(FilePathEnum.ALL_ITEMS.value[self.host.value])
+        self.all_collection_data: Dict[str, List[ICollection]] = {}
+        self.all_wishlist_data: Dict[str, List[IWishlist]] = {}
+
+    def get_volumes_data(self) -> Dict[str, IVolume]:
+        '''
+        Gets the volumes data from a json file
+        
+        Returns:
+        - dict: The volumes data from the given file path.
+        '''
+        return self.local_dao.open_file(FilePathEnum.VOLUMES.value[self.host.value])
 
     def get_series_data(self) -> Dict[str, ISeries]:
-        return self.local_dao.get_json_file(FilePathEnum.SERIES.value[self.host.value])
+        '''
+        Gets the series data from a json file
+        
+        Returns:
+        - dict: The series data from the given file path.
+        '''
+        return self.local_dao.open_file(FilePathEnum.SERIES.value[self.host.value])
+
+    def get_shop_data(self) -> Dict[str, IShop]:
+        '''
+        Gets the shop data from a json file
+        
+        Returns:
+        - dict: The shop data from the given file path.
+        '''
+        return self.local_dao.open_file(FilePathEnum.SHOP.value[self.host.value])
 
     def get_collection_data(self, user_id: str) -> List[ICollection]:
-        if self.host == HostEnum.MOCK:
-            return self.local_dao.get_json_file('./db/mocks/mock-collection.json')
-        else:
-            return self.aws_dao.get_data(self.collection_url + '/user-records?user_id=' + user_id)
+        '''
+        Gets the collection data from AWS
+        
+        Parameters:
+        - user_id (str): The user id to get the data for.
+        
+        Returns:
+        - dict: The collection data from the given file path.
+        '''
+        if user_id in self.all_collection_data:
+            return self.all_collection_data[user_id]
 
-    def add_to_collection_data(self, data) -> str:
+        if self.host == HostEnum.MOCK:
+            return self.local_dao.open_file('./db/mocks/mock-collection.json')
+
+        collection_data = self.aws_dao.get_data(self.collection_url +
+                                                '/user-records?user_id=' + user_id)
+
+        self.all_collection_data[user_id] = collection_data
+        return collection_data
+
+    def add_to_collection_data(self, user_id: str,
+                               volumes_update: List[ICollection]) -> List[ICollection]:
+        '''
+        Inserts records into the AWS collection data
+        
+        Parameters:
+        - data (Any): The records to insert.
+        
+        Returns:
+        - str: The response from the AWS insert operation.
+        '''
+        self.logger.info(json.dumps(volumes_update))
         if self.host == HostEnum.MOCK:
             return 'mock data -- no update made'
-        else:
-            return self.aws_dao.post_data(self.collection_url + '/add-records', data)
+        saved = self.aws_dao.post_data(self.collection_url + '/add-records', volumes_update)
 
-    def delete_from_collection_data(self, data) -> str:
+        # update cache
+        if user_id in self.all_collection_data:
+            for new_record in saved:
+                old_record = next(
+                    (i for i in self.all_collection_data[user_id] \
+                        if i.get('id') == new_record.get('id')),
+                    None
+                )
+                if old_record is not None:
+                    self.all_collection_data[user_id].remove(old_record)
+                self.all_collection_data[user_id].append(new_record)
+        self.logger.info(saved)
+        return saved
+
+    def delete_from_collection_data(self, user_id: str, ids_delete: List[str]) -> str:
+        '''
+        Deletes records from AWS collection data
+        
+        Parameters:
+        - data (Any): The records to delete.
+        
+        Returns:
+        - str: The text response from the AWS delete operation.
+        '''
+        self.logger.info(json.dumps(ids_delete))
         if self.host == HostEnum.MOCK:
             return 'mock data -- no update made'
-        else:
-            return self.aws_dao.post_data(self.collection_url + '/delete-records', data)
-    
+        body = [{ 'id': id, 'user_id': user_id } for id in ids_delete]
+        deleted = self.aws_dao.post_data(self.collection_url + '/delete-records', body)
+
+        # update cache
+        if user_id in self.all_collection_data:
+            for id_delete in ids_delete:
+                old_record = next(
+                    (i for i in self.all_collection_data[user_id] \
+                        if i.get('id') == id_delete),
+                    None
+                )
+                if old_record is not None:
+                    self.all_collection_data[user_id].remove(old_record)
+        self.logger.info(deleted)
+        return deleted
+
     def get_wishlist_data(self, user_id: str) -> List[IWishlist]:
+        '''
+        Gets the wishlist data from AWS
+        
+        Parameters:
+        - user_id (str): The user id to get the data for.
+        
+        Returns:
+        - dict: The wishlist data from the given file path.
+        '''
+        if user_id in self.all_wishlist_data:
+            return self.all_wishlist_data[user_id]
+
         if self.host == HostEnum.MOCK:
-            return self.local_dao.get_json_file('./db/mocks/mock-wishlist.json')
-        else:
-            return self.aws_dao.get_data(self.wishlist_url + '/user-records?user_id=' + user_id)
+            return self.local_dao.open_file('./db/mocks/mock-wishlist.json')
+
+        wishlist_data = self.aws_dao.get_data(self.wishlist_url +
+                                              '/user-records?user_id=' + user_id)
+
+        self.all_wishlist_data[user_id] = wishlist_data
+        return wishlist_data
 
     def add_to_wishlist_data(self, data) -> str:
+        '''
+        Inserts records into the AWS wishlist data
+        
+        Parameters:
+        - data (Any): The records to insert.
+        
+        Returns:
+        - str: The response from the AWS insert operation.
+        '''
+        del self.all_wishlist_data[data[0]['user_id']]
         if self.host == HostEnum.MOCK:
             return 'mock data -- no update made'
-        else:
-            return self.aws_dao.post_data(self.wishlist_url + '/add-records', data)
+        return self.aws_dao.post_data(self.wishlist_url + '/add-records', data)
 
     def delete_from_wishlist_data(self, data) -> str:
+        '''
+        Deletes records from AWS wishlist data
+        
+        Parameters:
+        - data (Any): The records to delete.
+        
+        Returns:
+        - str: The text response from the AWS delete operation.
+        '''
+        del self.all_wishlist_data[data[0]['user_id']]
         if self.host == HostEnum.MOCK:
             return 'mock data -- no update made'
-        else:
-            return self.aws_dao.post_data(self.wishlist_url + '/delete-records', data)
+        return self.aws_dao.post_data(self.wishlist_url + '/delete-records', data)
+
+    def save_all_files(self, volumes_provided, series_provided, shop_provided):
+        '''
+        Saves all the given data structures to their respective files via the local dao.
+
+        Parameters:
+        - volumes_provided: The volumes data structure to save to the file.
+        - series_provided: The series data structure to save to the file.
+        - shop_provided: The shop data structure to save to the file.
+        '''
+        self.local_dao.save_all_files(volumes_provided, series_provided, shop_provided)

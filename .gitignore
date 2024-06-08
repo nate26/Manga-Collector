@@ -40,3 +40,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+*.pyc
+*.log
+bin/database/database_conf.json
+bin/db/mocks
+bin/db/old
+/.nx
