@@ -1,0 +1,33 @@
+<div class="display-area">
+
+    <div class="series">
+
+        @if (series(); as allSeries) {
+            @for (series of allSeries; track $index) {
+                @defer (on viewport) {
+                    <div class="series-row">
+                        <img [src]="series.cover_image" alt="{{'cover image for' + series.title}}" class="cover-image">
+                        <div style="margin: 5px">
+                            <a class="text t-wrap" [href]="series.url" target="_blank">{{series.title}}</a>
+                        </div>
+                        <div class="text" style="margin: 5px">{{series.category}}</div>
+                        <div class="text" style="margin: 5px">{{series.status}}</div>
+                        <input type="checkbox" class="blue-checkbox al_center" style="margin: 5px" [checked]="series.series_id">
+                        <div class="flex flex-wrap" style="margin: 5px">
+                            @for (volume of series.volumes; track $index) {
+                                <div class="volume-mini-box" [ngStyle]="getVolumeStatusColor(volume)"
+                                    (click)="navTo(volume.url)" (keypress)="navTo(volume.url)" tabindex={$index}>
+                                    <span>{{volume.volume}}</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                @placeholder {
+                    <div style="display: flex; margin: 10px; background-color: rgb(12, 17, 24); border-radius: 5px; height: 30px;"></div>
+                }
+            }
+        }
+
+    </div>
+</div>

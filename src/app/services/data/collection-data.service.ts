@@ -90,7 +90,7 @@ export class CollectionDataService {
                 tags: collection.tags ?? []
             }))
         }))),
-        catchError((err) => throwError(() => new Error('Could not get data because ', err)))
+        catchError((err: Error) => throwError(() => 'Could not get data because ' + err.message))
     );
 
     readonly MODIFY_COLLECTION = gql`
@@ -143,7 +143,7 @@ export class CollectionDataService {
                     throw new Error(result.errors?.join(', '));
                 }
             }),
-            catchError((err) => throwError(() => new Error('Could not save data because ', err)))
+            catchError((err: Error) => throwError(() => 'Could not save data because ' + err.message))
         );
     }
 
@@ -162,7 +162,7 @@ export class CollectionDataService {
                     throw new Error(result.errors?.join(', '));
                 }
             }),
-            catchError((err) => throwError(() => new Error('Could not delete data because ', err)))
+            catchError((err: Error) => throwError(() => 'Could not delete data because ' + err.message))
         );
     }
 

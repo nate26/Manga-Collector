@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { CollectionComponent } from './page-components/collection/collection.component';
+import { SeriesComponent } from './page-components/series/series.component';
 // import { SeriesViewComponent } from './views/series-view/series-view.component';
 // import { ListViewComponent } from './views/list-view/list-view.component';
 // import { GridViewComponent } from './views/grid-view/grid-view.component';
@@ -22,6 +23,10 @@ export const routes: Routes = [
         //         component: SeriesViewComponent
         //     }
         // ]
+    },
+    {
+        path: 'series',
+        component: SeriesComponent
     },
     {
         path: '',

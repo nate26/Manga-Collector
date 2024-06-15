@@ -24,6 +24,14 @@ body {
     flex-wrap: wrap;
 }
 
+.display-area {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+}
+
 .block {
     display: block;
 }

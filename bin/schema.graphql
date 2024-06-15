@@ -42,7 +42,7 @@ type Series {
 }
 
 type SeriesRecord {
-    series_id: String!
+    series_id: String
     title: String
     associated_titles: [String]
     url: String!

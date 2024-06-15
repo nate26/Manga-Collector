@@ -1,5 +1,6 @@
 '''GQL Queries to get data from the DB'''
 
+import json
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor

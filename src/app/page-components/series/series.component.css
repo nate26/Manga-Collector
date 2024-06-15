@@ -1,0 +1,29 @@
+.series {
+    overflow: auto;
+    height: calc(100vh);
+    /*66px*/
+    width: 100vw;
+    /* min-width: 1012px; */
+}
+
+.series-row {
+    display: flex;
+    margin: 10px auto;
+    background-color: var(--item-background-color);
+    border-radius: 5px;
+    height: 60px;
+    width: fit-content;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8), 0px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.volume-mini-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    height: 30px;
+    width: 30px;
+    font-size: 85%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8), 0px 1px 3px rgba(0, 0, 0, 0.5);
+    margin: 4px;
+}
