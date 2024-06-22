@@ -2,6 +2,7 @@
 
 import secrets
 import jwt
+from datetime import datetime, timedelta, UTC
 
 from src.enums.host_enum import HostEnum
 from src.util.manga_logger import MangaLogger
@@ -35,7 +36,7 @@ class Auth:
     def __init__(self, host: HostEnum):
         self.logger = MangaLogger(host).register_logger(__name__)
 
-    def generate_token(self):
+    def generate_secret(self):
         '''
         Generates a JWT token for the given user
         
@@ -45,7 +46,7 @@ class Auth:
         '''
         return secrets.token_urlsafe(32)
 
-    def encode(self, body: dict, secret: str):
+    def encode(self, body: dict, secret: str) -> str:
         '''
         Encodes a JWT token with the given body and secret
         
@@ -56,7 +57,14 @@ class Auth:
         Returns:
         - str: The encoded JWT token
         '''
-        return jwt.encode(body, secret, algorithm="HS256")
+        return jwt.encode(
+            {
+                'username': body['username'],
+                'expiration': (datetime.now(UTC) + timedelta(minutes=30)).timestamp()
+            },
+            secret,
+            algorithm="HS256"
+        )
 
     def decode(self, encoded_jwt: str, secret: str):
         '''
