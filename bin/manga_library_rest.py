@@ -17,7 +17,7 @@ from src.util.auth import Auth
 app = Flask(__name__)
 CORS(app)
 
-app.config['SECRET_KEY'] ='WizvzMPeFhp7HO4P9QtXKmbFHQ5H6PAJcTLUBsggW-Y'
+app.config['SECRET_KEY'] =''
 
 host = HostEnum.LOCAL
 logger = MangaLogger(host).register_logger(__name__)
