@@ -17,4 +17,8 @@ export class HomeComponent {
     routeTo(path: string) {
         this.router.navigateByUrl(path);
     }
+
+    routeToUserPage(path: string) {
+        this.router.navigate([path], { queryParams: { user_id: localStorage.getItem('user_id') } });
+    }
 }

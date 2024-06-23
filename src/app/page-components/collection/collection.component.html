@@ -1,18 +1,20 @@
 <div class="display-area">
-    <div class="editor-header">
-        @if (editing()) {
-            <button class="btn active-button" (click)="save()" [disabled]="saveBatch().length === 0 && deleteBatch().length === 0">
-                Save
-            </button>
-            <button class="btn active-button" (click)="stopEditing()">
-                Cancel
-            </button>
-            <app-search-volumes (selectVolume)="addVolume($event)" />
-        }
-        @else {
-            <button class="btn inactive-button" (click)="editing.set(true)">Edit</button>
-        }
-    </div>
+    @if (userService.isLoggedIn()) {
+        <div class="editor-header">
+            @if (editing()) {
+                <button class="btn active-button" (click)="save()" [disabled]="saveBatch().length === 0 && deleteBatch().length === 0">
+                    Save
+                </button>
+                <button class="btn active-button" (click)="stopEditing()">
+                    Cancel
+                </button>
+                <app-search-volumes (selectVolume)="addVolume($event)" />
+            }
+            @else {
+                <button class="btn inactive-button" (click)="editing.set(true)">Edit</button>
+            }
+        </div>
+    }
 
     <div class="volume-row">
         <div class="cover-image"></div>

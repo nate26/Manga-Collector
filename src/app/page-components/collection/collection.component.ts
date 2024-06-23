@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollectionDataService } from '../../services/data/collection-data.service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
@@ -8,6 +8,7 @@ import { IVolume } from '../../interfaces/iVolume.interface';
 import { VolumeService } from '../../services/data/volume.service';
 import { forkJoin, tap } from 'rxjs';
 import { ITheme } from '../../interfaces/iSeries.interface';
+import { UserService } from '../../services/data/user.service';
 
 interface TextEvent extends Event {
     target: EventTarget & { value: string };
@@ -21,6 +22,11 @@ interface TextEvent extends Event {
     styleUrl: './collection.component.css'
 })
 export class CollectionComponent {
+
+    private readonly collectionDataService = inject(CollectionDataService);
+    private readonly volumeService = inject(VolumeService);
+    private readonly destroy = inject(DestroyRef);
+    protected readonly userService = inject(UserService);
 
     volumes = toSignal(this.collectionDataService.collectionVolumes$, { initialValue: [] });
     volumeIDs = computed(() => this.volumes().map(vol => vol.user_collection_data[0].id));
@@ -123,11 +129,6 @@ export class CollectionComponent {
     }
 
     parseThemes = (themes: ITheme[]) => themes.map(t => t.theme).join(', ');
-
-    constructor(
-        private collectionDataService: CollectionDataService,
-        private volumeService: VolumeService,
-        private destroy: DestroyRef) { }
 
     private _batchEdit(batch: ICollection[], record: ICollection) {
         // update batch if record is already in batch

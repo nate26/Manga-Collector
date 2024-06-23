@@ -8,20 +8,26 @@ import { inject } from '@angular/core';
  */
 export const loggedInGuard: CanActivateFn = (_route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const router = inject(Router);
-    console.log('test')
     const isLoggedIn = inject(UserService).isLoggedIn();
-    console.log('okok guard', isLoggedIn)
+    const user_id = localStorage.getItem('user_id');
+    const viewOtherUser = (state.url.includes('/collection') || state.url.includes('/series')) && state.url.includes('?user_id=');
 
-    if (state.url === '/login' && !isLoggedIn) {
+    if (!isLoggedIn && state.url === '/login') {
         return true;
     }
 
-    if (!isLoggedIn) {
+    if (!isLoggedIn && !viewOtherUser) {
         router.navigate(['login']);
     }
-    else if (state.url === '/login') {
-        router.navigate(['collection']);
+
+    if (isLoggedIn) {
+        if (state.url === '/login' || state.url === '/collection' && user_id) {
+            router.navigate(['collection'], { queryParams: { user_id } });
+        }
+        else if (state.url === '/series' && user_id) {
+            router.navigate(['series'], { queryParams: { user_id } });
+        }
     }
 
-    return isLoggedIn;
+    return isLoggedIn || viewOtherUser;
 };

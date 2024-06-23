@@ -5,6 +5,7 @@ import { UserService } from '../../services/data/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'app-login',
@@ -34,11 +35,12 @@ export class LoginComponent {
      */
     protected login() {
         this.userService.login(this.username, this.password, '/' + this._path()).pipe(
-            takeUntilDestroyed(this.destroyRef)
+            takeUntilDestroyed(this.destroyRef),
+            take(1)
         ).subscribe({
-            next: () => {
+            next: (userData) => {
                 this.loginError.set('');
-                this.router.navigate(['collection']);
+                this.router.navigate(['collection'], { queryParams: { user_id: userData.user_id } });
             },
             error: (err: HttpErrorResponse) => {
                 this.loginError.set(err.error.message);

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
 import { Observable, filter, iif, map, of, shareReplay, switchMap, tap } from 'rxjs';
 
 export type UserData = {
@@ -27,7 +26,6 @@ export type UserData = {
 export class UserService {
 
     private readonly http = inject(HttpClient);
-    private readonly router = inject(Router);
     private readonly SERVER_URL = 'http://localhost:8050/';
 
     private readonly _loginData = signal({ username: '', password: '', loginOrSignInPath: '' });
@@ -71,13 +69,13 @@ export class UserService {
                             localStorage.setItem('color', data.profile.color ?? '');
                             localStorage.setItem('theme', data.profile.theme ?? '');
                             localStorage.setItem('personal_stores', JSON.stringify(data.personal_stores));
-                        })
+                        }),
+                        shareReplay()
                     ),
                     of(null)
                 )
             );
-        }),
-        shareReplay()
+        })
     );
 
     /**
@@ -128,7 +126,6 @@ export class UserService {
         localStorage.removeItem('theme');
         localStorage.removeItem('personal_stores');
         this._loginData.set({ username: '', password: '', loginOrSignInPath: '' });
-        this.router.navigateByUrl('/login');
     }
 
 }

@@ -2,8 +2,8 @@
     <div class="flex">
         <h1 class="text">Manga Collector</h1>
         @if (userService.isLoggedIn()) {
-            <button class="nav-button text" (click)="routeTo('/series')">My Series</button>
-            <button class="nav-button text" (click)="routeTo('/collection')">My Volumes</button>
+            <button class="nav-button text" (click)="routeToUserPage('series')">My Series</button>
+            <button class="nav-button text" (click)="routeToUserPage('collection')">My Volumes</button>
         }
     </div>
     <div>

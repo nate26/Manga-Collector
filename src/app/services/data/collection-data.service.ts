@@ -5,15 +5,15 @@ import { IVolume } from '../../interfaces/iVolume.interface';
 import { IGQLDeleteCollectionResult, IGQLGetCollectionVolumes, IGQLModifyCollectionResult } from '../../interfaces/iGQLRequests.interface';
 import { ICollection } from '../../interfaces/iCollection.interface';
 import { UserService } from './user.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CollectionDataService {
-    // TODO remove soon
-    private readonly USER_ID = 'f69c759a-00dd-4dbe-8e58-96cd7a05969e';
 
     private readonly apollo = inject(Apollo);
+    private readonly router = inject(ActivatedRoute);
     private readonly userService = inject(UserService);
 
     readonly COLLECTION_VOLUMES_QUERY = gql`
@@ -81,11 +81,13 @@ export class CollectionDataService {
         }
     `;
 
-    // TODO get user_id via route queryParams
-    collectionVolumes$: Observable<IVolume[]> = this.apollo.watchQuery<IGQLGetCollectionVolumes>({
-        query: this.COLLECTION_VOLUMES_QUERY,
-        variables: { user_id: this.USER_ID }
-    }).valueChanges.pipe(
+    collectionVolumes$: Observable<IVolume[]> = this.router.queryParams.pipe(
+        switchMap(({ user_id }) =>
+            this.apollo.watchQuery<IGQLGetCollectionVolumes>({
+                query: this.COLLECTION_VOLUMES_QUERY,
+                variables: { user_id }
+            }).valueChanges
+        ),
         tap(({ error }) => {
             if (error) throw error;
         }),
@@ -173,6 +175,8 @@ export class CollectionDataService {
     }
 
     buildNewRecord(vol: IVolume): ICollection {
+        const user_id = localStorage.getItem('user_id');
+        if (!user_id) throw new Error('User ID not found');
         return {
             isbn: vol.isbn,
             state: '',
@@ -182,7 +186,7 @@ export class CollectionDataService {
             giftToMe: false,
             read: false,
             tags: [],
-            user_id: this.USER_ID,
+            user_id,
             temp_id: Date.now().toString()
         }
     }
