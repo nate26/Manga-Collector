@@ -1,9 +1,12 @@
 ariadne
 asyncio
+bs4
 flask
 flask-cors
-flask-sqlalchemy
-psycopg2
+# flask-sqlalchemy
+# psycopg2
+pyjwt
 pytz
-sqlalchemy_json
+requests
+# sqlalchemy_json
 websockets

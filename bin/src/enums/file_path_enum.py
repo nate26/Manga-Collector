@@ -7,17 +7,27 @@ class FilePathEnum(Enum):
     VOLUMES = {
         'local': './db/volumes.json',
         'server': 'MangaTracker/Manga-Tracker-UI/bin/db/volumes.json',
-        'mock': './db/volumes.json'
+        'mock': './db/mocks/volumes.json'
     }
     SERIES = {
         'local': './db/series.json',
         'server': 'MangaTracker/Manga-Tracker-UI/bin/db/series.json',
-        'mock': './db/series.json'
+        'mock': './db/mocks/series.json'
     }
     SHOP = {
         'local': './db/shop.json',
         'server': 'MangaTracker/Manga-Tracker-UI/bin/db/shop.json',
-        'mock': './db/shop.json'
+        'mock': './db/mocks/shop.json'
+    }
+    USERS = {
+        'local': './db/users.json',
+        'server': 'MangaTracker/Manga-Tracker-UI/bin/db/users.json',
+        'mock': './db/mocks/users.json'
+    }
+    VAULT = {
+        'local': './db/vault.json',
+        'server': 'MangaTracker/Manga-Tracker-UI/bin/db/vault.json',
+        'mock': './db/mocks/vault.json'
     }
     EDITING = {
         'local': './db/editing.json',

@@ -1,0 +1,18 @@
+<div style="height: 100vh; width: fit-content; display: flex; align-items: center; margin: auto;">
+    <form (submit)="login()" class="text" style="background-color: var(--item-background-color); padding: 20px; border-radius: 5px; border: 2px solid rgb(16, 12, 29)">
+        <h1 class="text" style="color: var(--text-color); font-size: 2rem; margin-bottom: 20px;">{{_path() | titlecase}}</h1>
+        <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required [(ngModel)]="username">
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required [(ngModel)]="password">
+        </div>
+        @if (loginError()) {
+            <p style="color: red;">{{loginError()}}</p>
+        }
+        <button type="submit" class="btn active-button">Login</button>
+    </form>
+    <button class="btn active-button" (click)="switchRoute()">{{nextRoute()}}</button>
+</div>

@@ -118,8 +118,8 @@ class Data:
         '''
         self.logger.info(json.dumps(volumes_update))
         if self.host == HostEnum.MOCK:
-            return 'mock data -- no update made'
-        saved = self.aws_dao.post_data(self.collection_url + '/add-records', volumes_update)
+            return []
+        saved: List[ICollection] = self.aws_dao.post_data(self.collection_url + '/add-records', volumes_update)
 
         # update cache
         if user_id in self.all_collection_data:

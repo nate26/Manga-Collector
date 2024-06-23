@@ -42,7 +42,7 @@ type Series {
 }
 
 type SeriesRecord {
-    series_id: String!
+    series_id: String
     title: String
     associated_titles: [String]
     url: String!
@@ -265,6 +265,14 @@ type Mutation {
     # modify_volumes(
     #     volumes_input: [VolumeRecordInput]!
     # ): SingleVolumeRecordResult!
-    modify_collection(user_id: ID!, volumes_update: [CollectionDataInput]!): ModifyAWSResult!
-    delete_collection_records(user_id: ID!, ids_delete: [String]!): DeleteAWSResult!
+    modify_collection(
+        token: String!,
+        user_id: ID!,
+        volumes_update: [CollectionDataInput]!
+    ): ModifyAWSResult!
+    delete_collection_records(
+        token: String!,
+        user_id: ID!,
+        ids_delete: [String]!
+    ): DeleteAWSResult!
 }

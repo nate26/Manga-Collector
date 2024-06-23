@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable, tap, map, catchError, throwError, shareReplay } from 'rxjs';
+import { Observable, tap, map, catchError, throwError, shareReplay, switchMap } from 'rxjs';
 import { IGQLAllRecord, IGQLGetRecord } from '../../interfaces/iGQLRequests.interface';
 import { IVolume } from '../../interfaces/iVolume.interface';
-import { CollectionDataService } from './collection-data.service';
+import { UserService } from './user.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class VolumeService {
+
+    private readonly apollo = inject(Apollo);
+    private readonly userService = inject(UserService);
 
     readonly VOLUMES_BASIC_QUERY = gql`
         query all_records($user_id: ID) {
@@ -103,13 +106,13 @@ export class VolumeService {
         }
     `;
 
-    constructor(private apollo: Apollo, private collectionService: CollectionDataService) { }
-
     queryVolume(isbn: string): Observable<IVolume> {
-        return this.apollo.watchQuery<IGQLGetRecord>({
-            query: this.SINGLE_VOLUME_QUERY,
-            variables: { isbn, user_id: this.collectionService.USER_ID }
-        }).valueChanges.pipe(
+        return this.userService.userData$.pipe(
+            switchMap(({ user_id }) =>
+                this.apollo.watchQuery<IGQLGetRecord>(
+                    { query: this.SINGLE_VOLUME_QUERY, variables: { isbn, user_id } }
+                ).valueChanges
+            ),
             tap(({ error }) => {
                 if (error) throw error;
             }),
