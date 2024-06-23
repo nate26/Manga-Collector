@@ -8,6 +8,11 @@
     </div>
     <div>
         <!-- user icon -->
-        <button class="nav-button text" (click)="routeTo('/login')">Login</button>
+        @if (userService.isLoggedIn()) {
+            <button class="nav-button text" (click)="userService.logout()">Sign Out</button>
+        }
+        @else {
+            <button class="nav-button text" (click)="routeTo('/login')">Login</button>
+        }
     </div>
 </div>

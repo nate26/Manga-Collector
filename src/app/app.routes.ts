@@ -12,7 +12,8 @@ export const routes: Routes = [
     },
     {
         path: 'login',
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [loggedInGuard]
     },
     {
         path: 'collection',

@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { Observable, filter, shareReplay, switchMap, tap } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
+import { Observable, filter, iif, map, of, shareReplay, switchMap, tap } from 'rxjs';
 
 export type UserData = {
     username: string;
@@ -26,31 +27,70 @@ export type UserData = {
 export class UserService {
 
     private readonly http = inject(HttpClient);
+    private readonly router = inject(Router);
     private readonly SERVER_URL = 'http://localhost:8050/';
 
-    private _isLoggedIn = signal(false);
-    /**
-     * An observable of whether the user is logged in.
-     */
-    isLoggedIn = computed(() => this._isLoggedIn());
+    private readonly _loginData = signal({ username: '', password: '', loginOrSignInPath: '' });
 
-    private readonly _loginData = signal({ username: '', password: '', path: '' });
-
-    /**
-     * An observable of the user's auth token. This observable is cached and shared among subscribers.
-     */
-    userData$ = toObservable(this._loginData).pipe(
-        filter(({ username, password }) => Boolean(username && password)),
-        switchMap(({ username, password, path }) =>
-            this.http.post<UserData>(this.SERVER_URL + path, { username, password })),
-        tap(data => {
-            window.localStorage.setItem('token', data.authentication.token);
-            window.localStorage.setItem('expiration', data.authentication.expiration);
-            window.localStorage.setItem('refresh_token', data.authentication.refresh_token);
-            this._isLoggedIn.set(true)
+    private readonly _userData$ = toObservable(this._loginData).pipe(
+        switchMap(({ username, password, loginOrSignInPath }) => {
+            const cachedToken = localStorage.getItem('token');
+            const cachedExpiration = localStorage.getItem('expiration');
+            const cachedRefreshToken = localStorage.getItem('refresh_token');
+            const cachedUsername = localStorage.getItem('username');
+            const cachedUserId = localStorage.getItem('user_id');
+            return iif(
+                () => Boolean(cachedToken && cachedExpiration && cachedRefreshToken && cachedUsername && cachedUserId),
+                of(<UserData>{
+                    username: cachedUsername,
+                    user_id: cachedUserId,
+                    profile: {
+                        picture: localStorage.getItem('picture'),
+                        banner: localStorage.getItem('banner'),
+                        color: localStorage.getItem('color'),
+                        theme: localStorage.getItem('theme')
+                    },
+                    personal_stores: JSON.parse(localStorage.getItem('personal_stores') ?? '[]'),
+                    authentication: {
+                        token: cachedToken,
+                        expiration: cachedExpiration,
+                        refresh_token: cachedRefreshToken
+                    }
+                }),
+                iif(
+                    () => Boolean(username && password && loginOrSignInPath),
+                    this.http.post<UserData>(this.SERVER_URL + loginOrSignInPath, { username, password }).pipe(
+                        tap(data => {
+                            localStorage.setItem('token', data.authentication.token);
+                            localStorage.setItem('expiration', data.authentication.expiration);
+                            localStorage.setItem('refresh_token', data.authentication.refresh_token);
+                            localStorage.setItem('username', data.username);
+                            localStorage.setItem('user_id', data.user_id);
+                            localStorage.setItem('picture', data.profile.picture ?? '');
+                            localStorage.setItem('banner', data.profile.banner ?? '');
+                            localStorage.setItem('color', data.profile.color ?? '');
+                            localStorage.setItem('theme', data.profile.theme ?? '');
+                            localStorage.setItem('personal_stores', JSON.stringify(data.personal_stores));
+                        })
+                    ),
+                    of(null)
+                )
+            );
         }),
         shareReplay()
     );
+
+    /**
+     * An observable of the user's auth token. This observable is cached and shared among subscribers.
+     * If the user is not logged in, this observable will emit null.
+     */
+    // ugh typescript stuff... this is a hack to get the type to be correct
+    userData$ = <Observable<UserData>>this._userData$.pipe(filter(data => Boolean(data)));
+
+    /**
+     * An signal of whether the user is logged in.
+     */
+    isLoggedIn = toSignal(this._userData$.pipe(map(data => Boolean(data))), { initialValue: false });
 
     /**
      * Login or Sign Up for a user to get a token.
@@ -59,8 +99,8 @@ export class UserService {
      * @param path the path to login or sign up
      * @returns a cached observable of the user's token
      */
-    login(username: string, password: string, path: string): Observable<UserData> {
-        this._loginData.set({ username, password, path });
+    login(username: string, password: string, loginOrSignInPath: string): Observable<UserData> {
+        this._loginData.set({ username, password, loginOrSignInPath });
         return this.userData$;
     }
 
@@ -74,14 +114,21 @@ export class UserService {
     }
 
     /**
-     * Log out the user.
+     * Log out the user. This clears the user's data from local storage.
      */
-    signOut() {
-        window.localStorage.removeItem('token');
-        window.localStorage.removeItem('expiration');
-        window.localStorage.removeItem('refresh_token');
-        this._isLoggedIn.set(false);
-        this._loginData.set({ username: '', password: '', path: '' });
+    logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expiration');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('picture');
+        localStorage.removeItem('banner');
+        localStorage.removeItem('color');
+        localStorage.removeItem('theme');
+        localStorage.removeItem('personal_stores');
+        this._loginData.set({ username: '', password: '', loginOrSignInPath: '' });
+        this.router.navigateByUrl('/login');
     }
 
 }
