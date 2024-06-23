@@ -137,7 +137,7 @@ class Auth:
 
             username = body['username']
             if username not in all_users:
-                raise ValueError('User does not exist, please choose a unique username')
+                raise ValueError('User does not exist, please sign in.')
 
             password_hash = str(bcrypt.hashpw(body['password'].encode('utf-8'), self.password_salt))
             if all_users[username]['password'] != password_hash:
@@ -187,7 +187,7 @@ class Auth:
 
             username = body['username']
             if username in all_users:
-                raise ValueError('User already exists with this username')
+                raise ValueError('User already exists with this username. Please choose a unique username.')
 
             password_hash = str(bcrypt.hashpw(body['password'].encode('utf-8'), self.password_salt))
             all_users[username] = User({
