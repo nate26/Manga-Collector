@@ -32,7 +32,7 @@ class Queries:
         self.data = Data(host)
         self.logger = MangaLogger(host).register_logger(__name__)
 
-    def __get_data(self, user_id: str = None):
+    def __get_data(self, user_id: str | None = None):
         '''
         Fetches data from the data layer
         

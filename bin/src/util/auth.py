@@ -59,9 +59,18 @@ class Auth:
         Returns:
         - dict: The decoded JWT token
         '''
-        return jwt.decode(encoded_jwt, self.secret, algorithms=["HS256"])
+        try:
+            decoded = jwt.decode(encoded_jwt, self.secret, algorithms=["HS256"])
+            self.logger.info('User has been authenticated')
+            return decoded
+        except jwt.ExpiredSignatureError:
+            self.logger.error('Token has expired')
+            return None
+        except (jwt.InvalidTokenError, jwt.InvalidSignatureError, ValueError):
+            self.logger.error('Token is invalid')
+            return None
 
-    def __encode(self, body: dict, secret: str) -> str:
+    def __encode(self, body: dict, secret: str) -> dict[str, str | float]:
         '''
         Encodes a JWT token with the given body and secret
         
@@ -72,14 +81,21 @@ class Auth:
         Returns:
         - str: The encoded JWT token
         '''
-        return jwt.encode(
-            {
-                'username': body['username'],
-                'exp': datetime.now(tz = timezone.utc) + timedelta(minutes=30)
-            },
-            secret,
-            algorithm="HS256"
-        )
+        expiration = datetime.now(tz = timezone.utc) + timedelta(minutes=30)
+        return {
+            "token": jwt.encode(
+                {
+                    'username': body['username'],
+                    'exp': expiration
+                },
+                secret
+            ),
+            "expiration": expiration.timestamp(),
+            "refresh_token": jwt.encode(
+                { 'username': body['username'] },
+                self.refresh_secret
+            )
+        }
 
     def __validate_input(self, input_text: str, password=False):
         '''
@@ -127,7 +143,18 @@ class Auth:
             if all_users[username]['password'] != password_hash:
                 raise ValueError('Password is incorrect')
 
-            return self.__encode(body, self.secret)
+            authentication = self.__encode(body, self.secret)
+            return {
+                "username": all_users[username]['username'],
+                "user_id": all_users[username]['user_id'],
+                "profile": {
+                    **all_users[username]['profile']
+                },
+                "personal_stores": all_users[username]['personal_stores'],
+                "authentication": {
+                    **authentication
+                }
+            }
 
         except (FileNotFoundError, json.JSONDecodeError, ValueError) as e:
             self.logger.error('Failed to login user %s', e)
@@ -176,7 +203,19 @@ class Auth:
                 'personal_stores': []
             })
             self.local_dao.save_file(FilePathEnum.USERS.value[self.host.value], all_users)
-            return self.__encode(body, self.secret)
+            
+            authentication = self.__encode(body, self.secret)
+            return {
+                "username": all_users[username]['username'],
+                "user_id": all_users[username]['user_id'],
+                "profile": {
+                    **all_users[username]['profile']
+                },
+                "personal_stores": all_users[username]['personal_stores'],
+                "authentication": {
+                    **authentication
+                }
+            }
 
         except (FileNotFoundError, json.JSONDecodeError, ValueError) as e:
             self.logger.error('Failed to sign up user %s', e)
