@@ -63,7 +63,7 @@ class AWSDAO:
             self.logger.error('Could not get data from %s ... ending process', url)
             raise
 
-    def post_data(self, url: str, contents) -> str:
+    def post_data(self, url: str, contents):
         """Writes data to an AWS directory and returns a string response from the service
 
         Parameters

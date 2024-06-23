@@ -46,3 +46,5 @@ bin/database/database_conf.json
 bin/db/mocks
 bin/db/old
 /.nx
+bin/db/vault.json
+bin/db/users.json
