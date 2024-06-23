@@ -1,7 +1,7 @@
 <div class="display-area">
     @if (userService.isLoggedIn()) {
         <div class="editor-header">
-            @if (editing()) {
+            @if (isEditing()) {
                 <button class="btn active-button" (click)="save()" [disabled]="saveBatch().length === 0 && deleteBatch().length === 0">
                     Save
                 </button>
@@ -11,7 +11,7 @@
                 <app-search-volumes (selectVolume)="addVolume($event)" />
             }
             @else {
-                <button class="btn inactive-button" (click)="editing.set(true)">Edit</button>
+                <button class="btn inactive-button" (click)="editSwitch.set(true)">Edit</button>
             }
         </div>
     }
@@ -74,9 +74,9 @@
                             <div class="text al_center">{{volume.volume}}</div>
                         </div>
                         <div class="cell w60">
-                            @if (editing()) {
+                            @if (isEditing()) {
                                 <input type="number" min="0" step="0.01" class="text" 
-                                    [value]="volume.user_collection_data[0].cost" (change)="edit($index, 'cost', $event)">
+                                    [value]="volume.user_collection_data[0].cost" (change)="doEdit($index, 'cost', $event)">
                             }
                             @else {
                                 <div class="text al_right">
@@ -85,9 +85,9 @@
                             }
                         </div>
                         <div class="cell w75">
-                            @if (editing()) {
+                            @if (isEditing()) {
                                 <input type="text" class="text"  [value]="volume.user_collection_data[0].merchant"
-                                    (change)="edit($index, 'merchant', $event)">
+                                    (change)="doEdit($index, 'merchant', $event)">
                             }
                             @else {
                                 <div class="text al_center">
@@ -96,9 +96,9 @@
                             }
                         </div>
                         <div class="cell w90">
-                            @if (editing()) {
+                            @if (isEditing()) {
                                 <input type="text" class="text"  [value]="volume.user_collection_data[0].purchaseDate"
-                                    (change)="edit($index, 'purchaseDate', $event)">
+                                    (change)="doEdit($index, 'purchaseDate', $event)">
                             }
                             @else {
                                 <div class="text al_center">
@@ -108,16 +108,16 @@
                         </div>
                         <div class="cell w50">
                             <input type="checkbox" class="green-checkbox al_center" [checked]="volume.user_collection_data[0].read"
-                                [disabled]="!editing()" (change)="edit($index, 'read', $event)">
+                                [disabled]="!isEditing()" (change)="doEdit($index, 'read', $event)">
                         </div>
                         <div class="cell w50">
                             <input type="checkbox" class="blue-checkbox al_center" [checked]="volume.user_collection_data[0].giftToMe"
-                                [disabled]="!editing()" (change)="edit($index, 'giftToMe', $event)">
+                                [disabled]="!isEditing()" (change)="doEdit($index, 'giftToMe', $event)">
                         </div>
                         <div class="cell w150">
-                            @if (editing()) {
+                            @if (isEditing()) {
                                 <input type="text" class="text t-wrap"  [value]="volume.user_collection_data[0].tags.join(', ')"
-                                    (change)="edit($index, 'tags', $event)">
+                                    (change)="doEdit($index, 'tags', $event)">
                             }
                             @else {
                                 <div class="text t-wrap">
@@ -125,7 +125,7 @@
                                 </div>
                             }
                         </div>
-                        @if (editing()) {
+                        @if (isEditing()) {
                             <div class="cell w50">
                                 <button class="btn active-button" (click)="markForDelete(volume.user_collection_data[0])">
                                     X

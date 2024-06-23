@@ -3,7 +3,7 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../services/data/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { take } from 'rxjs';
 
@@ -18,6 +18,7 @@ export class LoginComponent {
 
     private readonly userService = inject(UserService);
     private readonly router = inject(Router);
+    private readonly activatedRoute = inject(ActivatedRoute);
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly _path = signal('login');

@@ -32,7 +32,8 @@ export class CollectionComponent {
     volumeIDs = computed(() => this.volumes().map(vol => vol.user_collection_data[0].id));
     newVolumes = signal<IVolume[]>([]);
 
-    editing = signal(false);
+    protected editSwitch = signal(false);
+    protected isEditing = computed(() => this.editSwitch() && this.userService.isLoggedIn());
 
     saveBatch = signal<ICollection[]>([]); // temp cache of save changes
     saved = signal<ICollection[]>([]); // cache of all prior saved records
@@ -147,7 +148,7 @@ export class CollectionComponent {
         return [...batch, record]
     }
 
-    edit(index: number, field: string, value: Event) {
+    doEdit(index: number, field: string, value: Event) {
         this.saveBatch.update(batch => {
 
             // get existing record
@@ -201,14 +202,14 @@ export class CollectionComponent {
         ).subscribe({
             next: () => {
                 this.stopEditing();
-                this.editing.set(false);
+                this.editSwitch.set(false);
             }
         });
     }
 
     stopEditing() {
         this.saveBatch.set([]);
-        this.editing.set(false);
+        this.editSwitch.set(false);
     }
 
     getEventVal(value: Event) {
