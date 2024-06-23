@@ -40,11 +40,15 @@ def login():
     except (req.exceptions.RequestException, json.JSONDecodeError) as e:
         logger.error('Failed to generate a token %s', json.dumps(e))
         logger.error(traceback.format_exc())
-        return make_response('Failed to generate token... \n' + traceback.format_exc(), 500)
+        return make_response({
+            'message': 'Failed to generate token... \n' + traceback.format_exc()
+        }, 500)
     except ValueError as e:
         logger.error('Failed authenticate %s', e.args[0])
         logger.error(traceback.format_exc())
-        return make_response(e.args[0], 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
+        return make_response({
+            'message': e.args[0]
+        }, 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
 @app.route('/sign-up', methods=['POST'])
 def signup():
@@ -58,11 +62,15 @@ def signup():
     except (req.exceptions.RequestException, json.JSONDecodeError) as e:
         logger.error('Failed to create user %s', json.dumps(e))
         logger.error(traceback.format_exc())
-        return make_response('Failed to create user... \n' + traceback.format_exc(), 500)
+        return make_response({
+            'message': 'Failed to create user... \n' + traceback.format_exc()
+        }, 500)
     except ValueError as e:
         logger.error('Failed authenticate %s', e.args[0])
         logger.error(traceback.format_exc())
-        return make_response(e.args[0], 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
+        return make_response({
+            'message': e.args[0]
+        }, 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8050)

@@ -1,36 +1,27 @@
 import { Routes } from '@angular/router';
 import { CollectionComponent } from './page-components/collection/collection.component';
 import { SeriesComponent } from './page-components/series/series.component';
-// import { SeriesViewComponent } from './views/series-view/series-view.component';
-// import { ListViewComponent } from './views/list-view/list-view.component';
-// import { GridViewComponent } from './views/grid-view/grid-view.component';
+import { LoginComponent } from './home/login/login.component';
+import { loggedInGuard } from './guards/logged-in.guard';
 
 export const routes: Routes = [
     {
+        path: '',
+        redirectTo: '/login',
+        pathMatch: 'full'
+    },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
         path: 'collection',
         component: CollectionComponent,
-        // children: [
-        //     {
-        //         path: 'grid',
-        //         component: GridViewComponent
-        //     },
-        //     {
-        //         path: 'list',
-        //         component: ListViewComponent
-        //     },
-        //     {
-        //         path: 'series',
-        //         component: SeriesViewComponent
-        //     }
-        // ]
+        canActivate: [loggedInGuard]
     },
     {
         path: 'series',
-        component: SeriesComponent
-    },
-    {
-        path: '',
-        redirectTo: 'collection',
-        pathMatch: 'full'
+        component: SeriesComponent,
+        canActivate: [loggedInGuard]
     }
 ];

@@ -1,7 +1,10 @@
 import { TitleCasePipe } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../../services/data/user.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-login',
@@ -12,33 +15,51 @@ import { FormsModule } from '@angular/forms';
 })
 export class LoginComponent {
 
-    http = inject(HttpClient);
+    private readonly userService = inject(UserService);
+    private readonly router = inject(Router);
+    private readonly destroyRef = inject(DestroyRef);
 
-    route = 'login'
+    protected readonly _path = signal('login');
+    protected nextRoute = computed(() => this._path() === 'login' ? 'sign-up' : 'login');
 
-    username = '';
-    password = '';
-    token = '';
+    protected loginError = signal('');
 
-    nextRoute = () => this.route === 'login' ? 'sign-up' : 'login';
-    switchRoute = () => this.route = this.nextRoute();
+    protected username = '';
+    protected password = '';
 
-    login() {
-        this.http.post<{ token: string }>(
-            'http://localhost:8050/' + this.route,
-            { username: this.username, password: this.password }
-        ).subscribe((res) => {
-            this.token = res.token;
+    /**
+     * User login or sign up to get the user's auth token.
+     * This is parameterized by the current path (login or sign-up).
+     * If the login is successful, the user is redirected to the collection page.
+     */
+    protected login() {
+        this.userService.login(this.username, this.password, '/' + this._path()).pipe(
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+            next: () => {
+                this.loginError.set('');
+                this.router.navigate(['collection']);
+            },
+            error: (err: HttpErrorResponse) => {
+                this.loginError.set(err.error.message);
+            }
         });
     }
 
-    test() {
-        this.http.get<string>(
-            'http://localhost:8050/test',
-            { headers: { Authorization: 'Bearer ' + this.token } }
-        ).subscribe((res) => {
-            console.log(res);
-        });
+    /**
+     * Switch between the login and sign-up pages.
+     */
+    protected switchRoute() {
+        this._path.set(this.nextRoute())
     }
+
+    // test() {
+    //     this.http.get<string>(
+    //         'http://localhost:8050/test',
+    //         { headers: { Authorization: 'Bearer ' + this.token } }
+    //     ).subscribe((res) => {
+    //         console.log(res);
+    //     });
+    // }
 
 }
