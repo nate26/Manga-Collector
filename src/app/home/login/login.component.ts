@@ -15,9 +15,22 @@ export class LoginComponent {
 
     username = '';
     password = '';
+    token = '';
 
     login() {
-        this.http.post('http://localhost:8050/login', { username: this.username, password: this.password }).subscribe((res) => {
+        this.http.post<{ token: string }>(
+            'http://localhost:8050/login',
+            { username: this.username, password: this.password }
+        ).subscribe((res) => {
+            this.token = res.token;
+        });
+    }
+
+    test() {
+        this.http.get<string>(
+            'http://localhost:8050/test',
+            { headers: { Authorization: 'Bearer ' + this.token } }
+        ).subscribe((res) => {
             console.log(res);
         });
     }

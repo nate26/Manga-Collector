@@ -5,12 +5,11 @@ and interacting with the data layer to get the necessary data. It also handles t
 and wishlist data.
 '''
 
-from functools import wraps
 import json
 import traceback
-from flask import Flask, jsonify, Response, request, session, make_response
+from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
-import requests
+import requests as req
 from src.enums.host_enum import HostEnum
 from src.util.manga_logger import MangaLogger
 from src.util.auth import Auth
@@ -18,11 +17,13 @@ from src.util.auth import Auth
 app = Flask(__name__)
 CORS(app)
 
+app.config['SECRET_KEY'] ='WizvzMPeFhp7HO4P9QtXKmbFHQ5H6PAJcTLUBsggW-Y'
+
 host = HostEnum.LOCAL
 logger = MangaLogger(host).register_logger(__name__)
 auth = Auth(host)
 
-# print(auth.generate_token())
+print(auth.generate_secret())
 
 # def token_required(func):
 #     @wraps(func)
@@ -35,11 +36,17 @@ auth = Auth(host)
 #         except:
 #             return jsonify({'message': 'Token is invalid'}), 403
 #         return decorated
-
-# @app.route('/test', methods=['GET'])
 # @token_required
-# def test():
-#     return jsonify({'message': 'This is only available with valid token'})
+
+@app.route('/test', methods=['GET'])
+def test():
+    '''Test endpoint to check if the server is running'''
+    authorization = request.headers.get('Authorization')
+    if authorization:
+        decoded = auth.decode(authorization.split(' ')[1], app.config['SECRET_KEY'])
+        print(decoded)
+        return jsonify(decoded)
+    return jsonify({'message': 'This is only available with valid token'})
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -48,14 +55,12 @@ def login():
     '''
     try:
         body = json.loads(request.data)
-        if body['username'] and body['password']:
+        if auth.authenticate(body):
             token = auth.encode(body, app.config['SECRET_KEY'])
-            print(token)
             return jsonify({'token': token})
-        else:
-            return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Required"'})
-    except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
-        print(e)
+        return make_response('Could not verify', 401,
+                             {'WWW-Authenticate': 'Basic realm="Login Required"'})
+    except (req.exceptions.RequestException, json.JSONDecodeError) as e:
         logger.error('Failed to generate a token %s', json.dumps(e))
         logger.error(traceback.format_exc())
         return make_response('Failed to generate token... \n' + traceback.format_exc(), 500)
