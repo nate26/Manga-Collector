@@ -1,16 +1,16 @@
-import { TitleCasePipe } from '@angular/common';
+import { JsonPipe, TitleCasePipe } from '@angular/common';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../services/data/user.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { take } from 'rxjs';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [FormsModule, TitleCasePipe],
+    imports: [ReactiveFormsModule, TitleCasePipe, JsonPipe],
     templateUrl: './login.component.html',
     styleUrl: './login.component.css'
 })
@@ -18,7 +18,6 @@ export class LoginComponent {
 
     private readonly userService = inject(UserService);
     private readonly router = inject(Router);
-    private readonly activatedRoute = inject(ActivatedRoute);
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly _path = signal('login');
@@ -26,8 +25,45 @@ export class LoginComponent {
 
     protected loginError = signal('');
 
-    protected username = '';
-    protected password = '';
+    userForm = new FormGroup({
+        email: new FormControl('', [Validators.required, Validators.email]),
+        username: new FormControl('', Validators.required),
+        password: new FormControl('', [
+            Validators.required,
+            Validators.pattern(
+                '(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!#^~%*?&,.<>"\'\\;:{\\}\\[\\]\\|\\+\\-\\=\\_\\)\\(\\)\\`\\/\\\\\\]])[A-Za-z0-9d$@].{7,}'
+            )
+        ]),
+    });
+
+    protected formChange = toSignal(this.userForm.valueChanges);
+
+    protected emailError = computed(() => {
+        this.formChange();
+        if (!this.userForm.controls.email.touched || this.userForm.controls.email.valid) {
+            return '';
+        }
+        if (this.userForm.controls.email.errors?.['required']) {
+            return 'An valid email address is required.';
+        }
+        return 'Please provide a valid email address.';
+    });
+
+    protected usernameError = computed(() => {
+        this.formChange();
+        if (!this.userForm.controls.username.touched || this.userForm.controls.username.valid) {
+            return '';
+        }
+        if (this.userForm.controls.username.errors?.['required']) {
+            return 'A username is required.';
+        }
+        return 'Your username must be at least 3 characters long.';
+    });
+
+    protected passwordError = computed(() => {
+        this.formChange();
+        return this.userForm.controls.password.touched && this.userForm.controls.password.invalid;
+    });
 
     /**
      * User login or sign up to get the user's auth token.
@@ -35,7 +71,11 @@ export class LoginComponent {
      * If the login is successful, the user is redirected to the collection page.
      */
     protected login() {
-        this.userService.login(this.username, this.password, '/' + this._path()).pipe(
+        if (this.userForm.invalid) return;
+
+        const { username, password } = this.userForm.value;
+
+        this.userService.login(username!, password!, '/' + this._path()).pipe(
             takeUntilDestroyed(this.destroyRef),
             take(1)
         ).subscribe({
