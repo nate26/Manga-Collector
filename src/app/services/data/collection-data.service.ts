@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable, catchError, map, of, tap, throwError, switchMap } from 'rxjs';
+import { Observable, catchError, map, of, tap, throwError, switchMap, EMPTY } from 'rxjs';
 import { IVolume } from '../../interfaces/iVolume.interface';
 import { IGQLDeleteCollectionResult, IGQLGetCollectionVolumes, IGQLModifyCollectionResult } from '../../interfaces/iGQLRequests.interface';
 import { ICollection } from '../../interfaces/iCollection.interface';
@@ -98,7 +98,10 @@ export class CollectionDataService {
                 tags: collection.tags ?? []
             }))
         }))),
-        catchError((err: Error) => throwError(() => 'Could not get data because ' + err.message))
+        catchError((err: Error) => {
+            console.error('Could not get data because ', err)
+            return EMPTY;
+        })
     );
 
     readonly MODIFY_COLLECTION = gql`

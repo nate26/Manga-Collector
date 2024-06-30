@@ -44,7 +44,7 @@ body {
 }
 
 .text {
-    color: white;
+    color: var(--text-color);
     align-content: center;
     margin: auto 0;
     font-family: var(--manga-font);
@@ -158,6 +158,10 @@ input[type='checkbox'] {
 
 .text-g {
     color: #868686;
+}
+
+.error-text {
+    color: rgb(184, 72, 72);
 }
 
 .retail-price {

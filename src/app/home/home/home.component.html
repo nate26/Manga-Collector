@@ -12,7 +12,7 @@
             <button class="nav-button text" (click)="userService.logout()">Sign Out</button>
         }
         @else {
-            <button class="nav-button text" (click)="routeTo('/login')">Login</button>
+            <button class="nav-button text" (click)="callOpenLogin()">Login</button>
         }
     </div>
 </div>

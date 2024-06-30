@@ -1,74 +1,43 @@
-<div style="height: 100vh; width: fit-content; display: flex; align-items: center; margin: auto;">
+<div class="login-area">
+    <h1 class="text" style="color: var(--text-color); font-size: 2rem; margin-bottom: 20px;">{{pathContext.name}}</h1>
+    <form [formGroup]="userForm" (ngSubmit)="login()" class="text">
 
-    <div style="background-color: var(--item-background-color); padding: 20px; border-radius: 5px; border: 2px solid rgb(16, 12, 29)">
-
-        <h1 class="text" style="color: var(--text-color); font-size: 2rem; margin-bottom: 20px;">{{_path() | titlecase}}</h1>
-    
-        <form [formGroup]="userForm" (ngSubmit)="login()" class="text">
-    
-            <div>
-                <label for="email">Email</label>
-                <input type="email" formControlName="email">
-                @if (emailError(); as emailErrorText) {
-                    <p style="color: rgb(184, 72, 72);">{{ emailErrorText }}</p>
-                }
-            </div>
-            
-            <div>
-                <label for="username">Username</label>
-                <input type="text" formControlName="username">
-                @if (usernameError(); as usernameErrorText) {
-                    <p style="color: rgb(184, 72, 72);">{{ usernameErrorText }}</p>
-                }
-            </div>
-
-            <div>
-                <label for="password">Password</label>
-                <input type="password" formControlName="password">
-                @if (passwordError()) {
-                    <ul style="color: rgb(184, 72, 72);">
-                        <li>Password must contain at least one numbers</li>
-                        <li>At least one letter must be capital</li>
-                        <li>Password must contain a special character {{'(@, $, !, &, etc...)'}}</li>
-                        <li>Password length must be a minimum of 8 characters</li>
-                    </ul>
-                }
-            </div>
-    
-            @if (loginError()) {
-                <p style="color: red;">{{loginError()}}</p>
+        <!-- <div>
+            <label for="email">Email</label>
+            <input type="email" formControlName="email">
+            @if (emailError(); as emailErrorText) {
+                <p class="error-text">{{ emailErrorText }}</p>
             }
-    
-            <button type="submit" class="btn active-button" [disabled]="!userForm.valid">Login</button>
-    
-        </form>
-
-    </div>
-
-
-    <!-- <form (submit)="login()" class="text"
-        style="background-color: var(--item-background-color); padding: 20px; border-radius: 5px; border: 2px solid rgb(16, 12, 29)">
-
-        <h1 class="text" style="color: var(--text-color); font-size: 2rem; margin-bottom: 20px;">{{_path() | titlecase}}</h1>
-
+        </div> -->
+        
         <div>
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" required [formControl]="username">
+            <input type="text" formControlName="username">
+            @if (usernameError$ | async; as usernameErrorText) {
+                <p class="error-text">{{ usernameErrorText }}</p>
+            }
         </div>
 
         <div>
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required [formControl]="password">
+            <input type="password" formControlName="password">
+            @if (passwordError$ | async) {
+                <ul class="error-text">
+                    <li>Password must contain at least one numbers</li>
+                    <li>At least one letter must be capital</li>
+                    <li>Password must contain a special character {{'(@, $, !, &, etc...)'}}</li>
+                    <li>Password length must be a minimum of 8 characters</li>
+                </ul>
+            }
         </div>
 
         @if (loginError()) {
-            <p style="color: red;">{{loginError()}}</p>
+            <p class="error-text">{{loginError()}}</p>
         }
 
-        <button type="submit" class="btn active-button">Login</button>
+        <button type="submit" class="btn active-button" [disabled]="!userForm.valid">Login</button>
 
-    </form> -->
+    </form>
 
-    <button class="btn active-button" (click)="switchRoute()">{{nextRoute()}}</button>
 
 </div>

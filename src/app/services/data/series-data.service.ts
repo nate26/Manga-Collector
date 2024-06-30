@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable, catchError, map, switchMap, tap, throwError } from 'rxjs';
+import { EMPTY, Observable, catchError, map, switchMap, tap } from 'rxjs';
 import { ISeriesRecord } from '../../interfaces/iSeries.interface';
 import { IGQLGetCollectionSeries } from '../../interfaces/iGQLRequests.interface';
 import { ActivatedRoute } from '@angular/router';
@@ -100,7 +100,10 @@ export class SeriesDataService {
                 }))
             }))
         }))),
-        catchError((err: Error) => throwError(() => 'Could not get data because ' + err.message))
+        catchError((err: Error) => {
+            console.error('Could not get data because ', err)
+            return EMPTY;
+        })
     );
 
 }
