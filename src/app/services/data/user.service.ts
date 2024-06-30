@@ -5,6 +5,7 @@ import { Observable, filter, iif, map, of, shareReplay, switchMap, tap } from 'r
 
 export type UserData = {
     username: string;
+    email: string;
     user_id: string;
     profile: {
         picture: string | null;
@@ -28,27 +29,47 @@ export class UserService {
     private readonly http = inject(HttpClient);
     private readonly SERVER_URL = 'http://localhost:8050/';
 
-    private readonly _loginData = signal({ username: '', password: '', loginOrSignInPath: '' });
+    private readonly _loginData = signal({
+        username: '',
+        password: '',
+        email: '',
+        loginOrSignInPath: ''
+    });
 
     private readonly _userData$ = toObservable(this._loginData).pipe(
-        switchMap(({ username, password, loginOrSignInPath }) => {
+        switchMap(({ username, password, email, loginOrSignInPath }) => {
             const cachedToken = localStorage.getItem('token');
             const cachedExpiration = localStorage.getItem('expiration');
             const cachedRefreshToken = localStorage.getItem('refresh_token');
             const cachedUsername = localStorage.getItem('username');
+            const cachedEmail = localStorage.getItem('email');
             const cachedUserId = localStorage.getItem('user_id');
+            const cachedPicture = localStorage.getItem('picture');
+            const cachedBanner = localStorage.getItem('banner');
+            const cachedColor = localStorage.getItem('color');
+            const cachedTheme = localStorage.getItem('theme');
+            const cachedPersonalStores = localStorage.getItem('personal_stores');
             return iif(
-                () => Boolean(cachedToken && cachedExpiration && cachedRefreshToken && cachedUsername && cachedUserId),
+                () => Boolean(
+                    cachedToken &&
+                    cachedExpiration &&
+                    cachedRefreshToken &&
+                    cachedUsername &&
+                    cachedEmail &&
+                    cachedUserId
+                    //TODO add other validations once defaults get set
+                ),
                 of(<UserData>{
                     username: cachedUsername,
+                    email: cachedEmail,
                     user_id: cachedUserId,
                     profile: {
-                        picture: localStorage.getItem('picture'),
-                        banner: localStorage.getItem('banner'),
-                        color: localStorage.getItem('color'),
-                        theme: localStorage.getItem('theme')
+                        picture: cachedPicture,
+                        banner: cachedBanner,
+                        color: cachedColor,
+                        theme: cachedTheme
                     },
-                    personal_stores: JSON.parse(localStorage.getItem('personal_stores') ?? '[]'),
+                    personal_stores: JSON.parse(cachedPersonalStores ?? '[]'),
                     authentication: {
                         token: cachedToken,
                         expiration: cachedExpiration,
@@ -56,13 +77,14 @@ export class UserService {
                     }
                 }),
                 iif(
-                    () => Boolean(username && password && loginOrSignInPath),
-                    this.http.post<UserData>(this.SERVER_URL + loginOrSignInPath, { username, password }).pipe(
+                    () => Boolean(username && password && email && loginOrSignInPath),
+                    this.http.post<UserData>(this.SERVER_URL + loginOrSignInPath, { username, password, email }).pipe(
                         tap(data => {
                             localStorage.setItem('token', data.authentication.token);
                             localStorage.setItem('expiration', data.authentication.expiration);
                             localStorage.setItem('refresh_token', data.authentication.refresh_token);
                             localStorage.setItem('username', data.username);
+                            localStorage.setItem('email', data.email);
                             localStorage.setItem('user_id', data.user_id);
                             localStorage.setItem('picture', data.profile.picture ?? '');
                             localStorage.setItem('banner', data.profile.banner ?? '');
@@ -97,8 +119,8 @@ export class UserService {
      * @param path the path to login or sign up
      * @returns a cached observable of the user's token
      */
-    login(username: string, password: string, loginOrSignInPath: string): Observable<UserData> {
-        this._loginData.set({ username, password, loginOrSignInPath });
+    login(username: string, password: string, email: string, loginOrSignInPath: string): Observable<UserData> {
+        this._loginData.set({ username, password, email, loginOrSignInPath });
         return this.userData$;
     }
 
@@ -119,13 +141,14 @@ export class UserService {
         localStorage.removeItem('expiration');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('username');
+        localStorage.removeItem('email');
         localStorage.removeItem('user_id');
         localStorage.removeItem('picture');
         localStorage.removeItem('banner');
         localStorage.removeItem('color');
         localStorage.removeItem('theme');
         localStorage.removeItem('personal_stores');
-        this._loginData.set({ username: '', password: '', loginOrSignInPath: '' });
+        this._loginData.set({ username: '', password: '', email: '', loginOrSignInPath: '' });
     }
 
 }

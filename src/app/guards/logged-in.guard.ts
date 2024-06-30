@@ -1,6 +1,7 @@
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { UserService } from '../services/data/user.service';
 import { inject } from '@angular/core';
+import { LoginService } from '../services/login.service';
 
 /**
  * A guard that checks if the user is logged in. If not, the user is redirected to the login page.
@@ -8,16 +9,13 @@ import { inject } from '@angular/core';
  */
 export const loggedInGuard: CanActivateFn = (_route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const router = inject(Router);
+    const loginService = inject(LoginService);
     const isLoggedIn = inject(UserService).isLoggedIn();
     const user_id = localStorage.getItem('user_id');
     const viewOtherUser = (state.url.includes('/collection') || state.url.includes('/series')) && state.url.includes('?user_id=');
 
     if (!isLoggedIn && state.url === '/login') {
         return true;
-    }
-
-    if (!isLoggedIn && !viewOtherUser) {
-        router.navigate(['login']);
     }
 
     if (isLoggedIn) {
@@ -29,5 +27,5 @@ export const loggedInGuard: CanActivateFn = (_route: ActivatedRouteSnapshot, sta
         }
     }
 
-    return isLoggedIn || viewOtherUser;
+    return isLoggedIn || viewOtherUser || loginService.openLogin();
 };

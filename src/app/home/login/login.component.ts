@@ -1,18 +1,27 @@
-import { AsyncPipe, JsonPipe } from '@angular/common';
-import { Component, DestroyRef, inject, model, signal } from '@angular/core';
+import { AsyncPipe, JsonPipe, NgTemplateOutlet } from '@angular/common';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../services/data/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { map, take } from 'rxjs';
-import { LoginService } from '../../services/login.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export const LOGIN_PATH_CONTEXT = {
+    path: '/login',
+    name: 'Login'
+};
+
+export const SIGNUP_PATH_CONTEXT = {
+    path: '/sign-up',
+    name: 'Sign Up'
+};
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ReactiveFormsModule, JsonPipe, AsyncPipe],
+    imports: [ReactiveFormsModule, JsonPipe, AsyncPipe, NgTemplateOutlet],
     templateUrl: './login.component.html',
     styleUrl: './login.component.css'
 })
@@ -23,17 +32,12 @@ export class LoginComponent {
     private readonly _destroyRef = inject(DestroyRef);
     private readonly _dialogRef = inject(MatDialogRef<LoginComponent>);
 
-    protected readonly pathContext = inject<{ path: string; name: string; }>(MAT_DIALOG_DATA);
-
-    test = model('');
-
-    loginService = inject(LoginService);
-
-    protected loginError = signal('');
+    protected readonly pathContext = signal(inject<typeof LOGIN_PATH_CONTEXT>(MAT_DIALOG_DATA));
+    protected readonly isPathLogin = computed(() => this.pathContext().path === LOGIN_PATH_CONTEXT.path);
 
     //#region Form
     protected userForm = new FormGroup({
-        email: new FormControl('', [Validators.required, Validators.email]),
+        email: new FormControl(null),
         username: new FormControl('', Validators.required),
         password: new FormControl('', [
             Validators.required,
@@ -42,7 +46,12 @@ export class LoginComponent {
             )
         ]),
     });
+    //#endregion
 
+    protected loginError = signal('');
+    private readonly EMAIL_VALIDATORS = [Validators.required, Validators.email];
+
+    //#region Validators
     protected emailError$ = this.userForm.valueChanges.pipe(
         map(() => {
             if (!this.userForm.controls.email.touched || this.userForm.controls.email.valid) {
@@ -77,12 +86,12 @@ export class LoginComponent {
      * This is parameterized by the current path (login or sign-up).
      * If the login is successful, the user is redirected to the collection page.
      */
-    protected login() {
+    protected login(): void {
         if (this.userForm.invalid) return;
 
-        const { username, password } = this.userForm.value;
+        const { username, password, email } = this.userForm.value;
 
-        this._userService.login(username!, password!, this.pathContext.path).pipe(
+        this._userService.login(username!, password!, email!, this.pathContext().path).pipe(
             takeUntilDestroyed(this._destroyRef),
             take(1)
         ).subscribe({
@@ -94,6 +103,18 @@ export class LoginComponent {
                 this.loginError.set(err.error.message);
             }
         });
+    }
+
+    protected switchPath() {
+        if (this.isPathLogin()) {
+            this.pathContext.set(SIGNUP_PATH_CONTEXT);
+            this.userForm.controls.email.setValue(null);
+            this.userForm.controls.email.setValidators([]);
+        }
+        else {
+            this.pathContext.set(LOGIN_PATH_CONTEXT);
+            this.userForm.controls.email.setValidators(this.EMAIL_VALIDATORS);
+        }
     }
 
 }

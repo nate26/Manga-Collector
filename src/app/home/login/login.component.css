@@ -2,3 +2,42 @@
     background-color: var(--item-background-color);
     padding: 20px;
 }
+
+.login-title {
+    margin-bottom: 20px;
+}
+
+.login-form {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-input {
+    padding: 6px;
+}
+
+.login-button {
+    margin: 8px auto;
+}
+
+.login-input-invalid {
+    margin: 4px 0;
+}
+
+.login-invalid-text {
+    transform: scaleY(-8px);
+    animation: drop-in 0.3s ease-in;
+}
+
+@keyframes drop-in {
+    0% {
+        transform: scaleY(-8px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scaleY(0px);
+        opacity: 1;
+    }
+}
