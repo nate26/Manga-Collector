@@ -77,7 +77,13 @@ export class LoginComponent {
     );
 
     protected passwordError$ = this.userForm.valueChanges.pipe(
-        map(() => this.userForm.controls.password.touched && this.userForm.controls.password.invalid)
+        // TODO - Implement password error handling to get a single error message
+        map(() => {
+            if (!this.userForm.controls.username.touched || this.userForm.controls.username.valid) {
+                return '';
+            }
+            return 'error';
+        })
     );
     //#endregion
 
