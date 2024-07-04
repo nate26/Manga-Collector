@@ -7,7 +7,9 @@
         </div>
     }
     @else {
-        <div class="login-input-invalid"></div>
+        <div class="login-input-invalid">
+            <span class="login-invalid-text"></span>
+        </div>
     }
 </ng-template>
 
@@ -18,28 +20,21 @@
         @if (!isPathLogin()) {
             <div>
                 <label for="email">Email</label>
-                <input type="email" formControlName="email">
+                <input class="login-input" type="email" formControlName="email">
                 <ng-container *ngTemplateOutlet="invalidText; context: { error: emailError$ }"></ng-container>
             </div>
         }
         
         <div>
             <label for="username">Username</label>
-            <input type="text" formControlName="username">
+            <input class="login-input" type="text" formControlName="username">
             <ng-container *ngTemplateOutlet="invalidText; context: { error: usernameError$ }"></ng-container>
         </div>
 
         <div>
             <label for="password">Password</label>
-            <input type="password" formControlName="password">
-            @if (passwordError$ | async) {
-                <ul class="error-text">
-                    <li>Password must contain at least one numbers</li>
-                    <li>At least one letter must be capital</li>
-                    <li>Password must contain a special character {{'(@, $, !, &, etc...)'}}</li>
-                    <li>Password length must be a minimum of 8 characters</li>
-                </ul>
-            }
+            <input class="login-input" type="password" formControlName="password">
+            <ng-container *ngTemplateOutlet="invalidText; context: { error: passwordError$ }"></ng-container>
         </div>
 
         @if (loginError()) {

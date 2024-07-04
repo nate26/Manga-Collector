@@ -4,6 +4,8 @@
 }
 
 .login-title {
+    display: flex;
+    justify-content: center;
     margin-bottom: 20px;
 }
 
@@ -14,6 +16,7 @@
 }
 
 .login-input {
+    font-size: 100%;
     padding: 6px;
 }
 
@@ -22,22 +25,27 @@
 }
 
 .login-input-invalid {
-    margin: 4px 0;
+    font-size: 88%;
+    font-style: italic;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
 }
 
 .login-invalid-text {
-    transform: scaleY(-8px);
+    display: inline-block;
+    translate: 0 0;
     animation: drop-in 0.3s ease-in;
 }
 
 @keyframes drop-in {
     0% {
-        transform: scaleY(-8px);
+        translate: 0 -25px;
         opacity: 0;
     }
 
     100% {
-        transform: scaleY(0px);
+        translate: 0 0;
         opacity: 1;
     }
 }
