@@ -7,7 +7,7 @@ import { PageNotFoundComponent } from './home/page-not-found/page-not-found.comp
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: '/login',
+        redirectTo: '/collection',
         pathMatch: 'full'
     },
     {

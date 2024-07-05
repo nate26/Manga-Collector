@@ -14,12 +14,8 @@ export const loggedInGuard: CanActivateFn = (_route: ActivatedRouteSnapshot, sta
     const user_id = localStorage.getItem('user_id');
     const viewOtherUser = (state.url.includes('/collection') || state.url.includes('/series')) && state.url.includes('?user_id=');
 
-    if (!isLoggedIn && state.url === '/login') {
-        return true;
-    }
-
     if (isLoggedIn) {
-        if (state.url === '/login' || state.url === '/collection' && user_id) {
+        if (state.url === '/collection' && user_id) {
             router.navigate(['collection'], { queryParams: { user_id } });
         }
         else if (state.url === '/series' && user_id) {

@@ -70,12 +70,12 @@ class Auth:
             self.logger.error('Token is invalid')
             return None
 
-    def __encode(self, body: dict, secret: str) -> dict[str, str | float]:
+    def __encode(self, username: str, secret: str) -> dict[str, str | float]:
         '''
         Encodes a JWT token with the given body and secret
         
         Parameters:
-        - body (dict): The body of the JWT token
+        - username (str): Username for the body of the JWT token
         - secret (str): The secret to encode the JWT token
         
         Returns:
@@ -85,14 +85,14 @@ class Auth:
         return {
             "token": jwt.encode(
                 {
-                    'username': body['username'],
+                    'username': username,
                     'exp': expiration
                 },
                 secret
             ),
             "expiration": expiration.timestamp(),
             "refresh_token": jwt.encode(
-                { 'username': body['username'] },
+                { 'username': username },
                 self.refresh_secret
             )
         }
@@ -113,10 +113,10 @@ class Auth:
     def login(self, body):
         '''
         Log in authentication for the user with the given body.
-        Will not log in if the username / password was invalid or the user does not exist.
+        Will not log in if the email / password was invalid or the user does not exist.
         
         Parameters:
-        - body (dict): The body with the username and password
+        - body (dict): The body with the email and password
         
         Returns:
         - str: The encoded JWT token
@@ -127,30 +127,34 @@ class Auth:
         - json.JSONDecodeError: If the JSON file has an error
         '''
         try:
-            if not (self.__validate_input(body['password'], password=True) or
-                    self.__validate_input(body['username'])):
-                raise ValueError('Password is missing or is invalid')
+            self.__validate_input('email', body['email'])
+            self.__validate_input('password', body['password'])
+        except ValueError as e:
+            self.logger.error('Failed to validate input %s', e)
+            raise e
 
+        try:
             all_users: dict[str, User] = self.local_dao.open_file(
                 FilePathEnum.USERS.value[self.host.value]
             )
 
-            username = body['username']
-            if username not in all_users:
-                raise ValueError('User does not exist, please sign in.')
+            email = body['email']
+            if email not in all_users:
+                raise ValueError('There is no account with this email... please sign in.')
 
             password_hash = str(bcrypt.hashpw(body['password'].encode('utf-8'), self.password_salt))
-            if all_users[username]['password'] != password_hash:
+            if all_users[email]['password'] != password_hash:
                 raise ValueError('Password is incorrect')
 
-            authentication = self.__encode(body, self.secret)
+            authentication = self.__encode(all_users[email]['username'], self.secret)
             return {
-                "username": all_users[username]['username'],
-                "user_id": all_users[username]['user_id'],
+                "email": all_users[email]['email'],
+                "username": all_users[email]['username'],
+                "user_id": all_users[email]['user_id'],
                 "profile": {
-                    **all_users[username]['profile']
+                    **all_users[email]['profile']
                 },
-                "personal_stores": all_users[username]['personal_stores'],
+                "personal_stores": all_users[email]['personal_stores'],
                 "authentication": {
                     **authentication
                 }
@@ -177,20 +181,25 @@ class Auth:
         - json.JSONDecodeError: If the JSON file has an error
         '''
         try:
-            if not (self.__validate_input(body['password'], password=True) or
-                    self.__validate_input(body['username'])):
-                raise ValueError('Password is missing or is invalid')
+            self.__validate_input('email', body['email'])
+            self.__validate_input('username', body['username'])
+            self.__validate_input('password', body['password'])
+        except ValueError as e:
+            self.logger.error('Failed to validate input %s', e)
+            raise e
 
+        try:
             all_users: dict[str, User] = self.local_dao.open_file(
                 FilePathEnum.USERS.value[self.host.value]
             )
 
-            username = body['username']
-            if username in all_users:
-                raise ValueError('User already exists with this username. Please choose a unique username.')
+            email = body['email']
+            if email in all_users:
+                raise ValueError('There is already an account with this email... please login.')
 
             password_hash = str(bcrypt.hashpw(body['password'].encode('utf-8'), self.password_salt))
-            all_users[username] = User({
+            all_users[email] = User({
+                'email': body['email'],
                 'username': body['username'],
                 'password': password_hash,
                 'user_id': str(uuid.uuid4()),
@@ -203,15 +212,16 @@ class Auth:
                 'personal_stores': []
             })
             self.local_dao.save_file(FilePathEnum.USERS.value[self.host.value], all_users)
-            
-            authentication = self.__encode(body, self.secret)
+
+            authentication = self.__encode(all_users[email]['username'], self.secret)
             return {
-                "username": all_users[username]['username'],
-                "user_id": all_users[username]['user_id'],
+                "email": all_users[email]['email'],
+                "username": all_users[email]['username'],
+                "user_id": all_users[email]['user_id'],
                 "profile": {
-                    **all_users[username]['profile']
+                    **all_users[email]['profile']
                 },
-                "personal_stores": all_users[username]['personal_stores'],
+                "personal_stores": all_users[email]['personal_stores'],
                 "authentication": {
                     **authentication
                 }

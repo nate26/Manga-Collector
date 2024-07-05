@@ -17,19 +17,19 @@
     <h1 class="text login-title">{{pathContext().name}}</h1>
     <form class="text login-form" [formGroup]="userForm" (ngSubmit)="login()">
 
+        <div>
+            <label for="email">Email</label>
+            <input class="login-input" type="email" formControlName="email">
+            <ng-container *ngTemplateOutlet="invalidText; context: { error: emailError$ }"></ng-container>
+        </div>
+        
         @if (!isPathLogin()) {
             <div>
-                <label for="email">Email</label>
-                <input class="login-input" type="email" formControlName="email">
-                <ng-container *ngTemplateOutlet="invalidText; context: { error: emailError$ }"></ng-container>
+                <label for="username">Username</label>
+                <input class="login-input" type="text" formControlName="username">
+                <ng-container *ngTemplateOutlet="invalidText; context: { error: usernameError$ }"></ng-container>
             </div>
         }
-        
-        <div>
-            <label for="username">Username</label>
-            <input class="login-input" type="text" formControlName="username">
-            <ng-container *ngTemplateOutlet="invalidText; context: { error: usernameError$ }"></ng-container>
-        </div>
 
         <div>
             <label for="password">Password</label>

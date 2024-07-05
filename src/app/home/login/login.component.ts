@@ -37,8 +37,8 @@ export class LoginComponent {
 
     //#region Form
     protected userForm = new FormGroup({
-        email: new FormControl(null),
-        username: new FormControl('', Validators.required),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        username: new FormControl(null),
         password: new FormControl('', [
             Validators.required,
             Validators.pattern(
@@ -49,7 +49,7 @@ export class LoginComponent {
     //#endregion
 
     protected loginError = signal('');
-    private readonly EMAIL_VALIDATORS = [Validators.required, Validators.email];
+    private readonly USERNAME_VALIDATORS = [Validators.required, Validators.minLength(3)];
 
     //#region Validators
     protected emailError$ = this.userForm.valueChanges.pipe(
@@ -73,6 +73,9 @@ export class LoginComponent {
             }
             if (this.userForm.controls.username.errors?.['required']) {
                 return 'A username is required.';
+            }
+            if (this.userForm.controls.username.errors?.['minlength']) {
+                return 'Your username must be at least 3 characters long.';
             }
             return 'Your username must be at least 3 characters long.';
         })
@@ -116,6 +119,7 @@ export class LoginComponent {
             next: (userData) => {
                 this.loginError.set('');
                 this._router.navigate(['collection'], { queryParams: { user_id: userData.user_id } });
+                this._dialogRef.close(true);
             },
             error: (err: HttpErrorResponse) => {
                 this.loginError.set(err.error.message);
@@ -126,12 +130,12 @@ export class LoginComponent {
     protected switchPath() {
         if (this.isPathLogin()) {
             this.pathContext.set(SIGNUP_PATH_CONTEXT);
-            this.userForm.controls.email.setValue(null);
-            this.userForm.controls.email.setValidators([]);
+            this.userForm.controls.username.setValidators(this.USERNAME_VALIDATORS);
         }
         else {
             this.pathContext.set(LOGIN_PATH_CONTEXT);
-            this.userForm.controls.email.setValidators(this.EMAIL_VALIDATORS);
+            this.userForm.controls.username.setValue(null);
+            this.userForm.controls.username.setValidators([]);
         }
     }
 
