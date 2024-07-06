@@ -1,5 +1,5 @@
 <div class="display-area">
-    @if (userService.isLoggedIn()) {
+    @if (userService.canUserEdit()) {
         <div class="editor-header">
             @if (isEditing()) {
                 <button class="btn active-button" (click)="save()" [disabled]="saveBatch().length === 0 && deleteBatch().length === 0">

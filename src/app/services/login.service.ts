@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { LoginComponent } from '../home/login/login.component';
+import { UserData } from './data/user.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,7 @@ export class LoginService {
      * @returns An observable that emits whether the user is logged in
      * when the dialog is closed.
      */
-    openLogin(): Observable<boolean> {
+    openLogin(): Observable<UserData> {
         return this._matDialog.open(LoginComponent, {
             data: {
                 path: '/login',

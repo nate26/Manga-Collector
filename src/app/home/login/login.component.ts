@@ -1,22 +1,12 @@
 import { AsyncPipe, JsonPipe, NgTemplateOutlet } from '@angular/common';
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserService } from '../../services/data/user.service';
+import { LOGIN_PATH_CONTEXT, SIGNUP_PATH_CONTEXT, UserService } from '../../services/data/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { debounceTime, map, take } from 'rxjs';
+import { debounceTime, iif, map } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-export const LOGIN_PATH_CONTEXT = {
-    path: '/login',
-    name: 'Login'
-};
-
-export const SIGNUP_PATH_CONTEXT = {
-    path: '/sign-up',
-    name: 'Sign Up'
-};
 
 @Component({
     selector: 'app-login',
@@ -31,6 +21,7 @@ export class LoginComponent {
     private readonly _router = inject(Router);
     private readonly _destroyRef = inject(DestroyRef);
     private readonly _dialogRef = inject(MatDialogRef<LoginComponent>);
+    private readonly _cdr = inject(ChangeDetectorRef);
 
     protected readonly pathContext = signal(inject<typeof LOGIN_PATH_CONTEXT>(MAT_DIALOG_DATA));
     protected readonly isPathLogin = computed(() => this.pathContext().path === LOGIN_PATH_CONTEXT.path);
@@ -49,11 +40,10 @@ export class LoginComponent {
     //#endregion
 
     protected loginError = signal('');
-    private readonly USERNAME_VALIDATORS = [Validators.required, Validators.minLength(3)];
 
     //#region Validators
     protected emailError$ = this.userForm.valueChanges.pipe(
-        debounceTime(1500),
+        debounceTime(500),
         map(() => {
             if (!this.userForm.controls.email.touched || this.userForm.controls.email.valid) {
                 return '';
@@ -66,7 +56,7 @@ export class LoginComponent {
     );
 
     protected usernameError$ = this.userForm.valueChanges.pipe(
-        debounceTime(1500),
+        debounceTime(500),
         map(() => {
             if (!this.userForm.controls.username.touched || this.userForm.controls.username.valid) {
                 return '';
@@ -82,7 +72,7 @@ export class LoginComponent {
     );
 
     protected passwordError$ = this.userForm.valueChanges.pipe(
-        debounceTime(1500),
+        debounceTime(500),
         map(() => {
             const value = this.userForm.controls.password.value;
             if (!value || !this.userForm.controls.password.touched || this.userForm.controls.password.valid) {
@@ -112,14 +102,16 @@ export class LoginComponent {
 
         const { username, password, email } = this.userForm.value;
 
-        this._userService.login(username!, password!, email!, this.pathContext().path).pipe(
-            takeUntilDestroyed(this._destroyRef),
-            take(1)
+        iif(
+            () => this.isPathLogin(),
+            this._userService.login(email, password),
+            this._userService.signUp(email, username, password)
+        ).pipe(
+            takeUntilDestroyed(this._destroyRef)
         ).subscribe({
             next: (userData) => {
                 this.loginError.set('');
-                this._router.navigate(['collection'], { queryParams: { user_id: userData.user_id } });
-                this._dialogRef.close(true);
+                this._dialogRef.close(userData);
             },
             error: (err: HttpErrorResponse) => {
                 this.loginError.set(err.error.message);
@@ -130,12 +122,13 @@ export class LoginComponent {
     protected switchPath() {
         if (this.isPathLogin()) {
             this.pathContext.set(SIGNUP_PATH_CONTEXT);
-            this.userForm.controls.username.setValidators(this.USERNAME_VALIDATORS);
+            this.userForm.controls.username.setValidators([Validators.required, Validators.minLength(3)]);
+            this._cdr.detectChanges();
         }
         else {
             this.pathContext.set(LOGIN_PATH_CONTEXT);
-            this.userForm.controls.username.setValue(null);
             this.userForm.controls.username.setValidators([]);
+            this.userForm.controls.username.setValue(null);
         }
     }
 

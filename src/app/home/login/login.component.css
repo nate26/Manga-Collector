@@ -38,6 +38,11 @@
     animation: drop-in 0.3s ease-in;
 }
 
+.login-error {
+    text-align: center;
+    font-size: inherit;
+}
+
 @keyframes drop-in {
     0% {
         translate: 0 -25px;

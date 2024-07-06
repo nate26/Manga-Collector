@@ -38,14 +38,14 @@
         </div>
 
         @if (loginError()) {
-            <p class="error-text">{{loginError()}}</p>
+            <span class="login-input-invalid login-error error-text">{{loginError()}}</span>
         }
 
         <button type="submit" class="btn active-button login-button" [disabled]="!userForm.valid">
             {{pathContext().name}}
         </button>
 
-        <button class="link-button" (click)="switchPath()">
+        <button type="button" class="link-button" (click)="switchPath()">
             @if (isPathLogin()) {
                 Don't have an account? Sign up here.
             }

@@ -33,7 +33,7 @@ export class CollectionComponent {
     newVolumes = signal<IVolume[]>([]);
 
     protected editSwitch = signal(false);
-    protected isEditing = computed(() => this.editSwitch() && this.userService.isLoggedIn());
+    protected isEditing = computed(() => this.editSwitch() && this.userService.userDataIsValid());
 
     saveBatch = signal<ICollection[]>([]); // temp cache of save changes
     saved = signal<ICollection[]>([]); // cache of all prior saved records

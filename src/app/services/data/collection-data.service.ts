@@ -139,7 +139,7 @@ export class CollectionDataService {
 
     saveToCollection(records: ICollection[]) {
         if (records.length === 0) return of([]);
-        return this.userService.userData$.pipe(
+        return of(this.userService.userData()).pipe(
             switchMap(({ user_id }) => this.apollo.mutate<IGQLModifyCollectionResult>({
                 mutation: this.MODIFY_COLLECTION,
                 variables: { token: window.localStorage.getItem('token'), user_id: user_id, volumes_update: records }
@@ -159,7 +159,7 @@ export class CollectionDataService {
 
     deleteFromCollection(records: string[]) {
         if (records.length === 0) return of([]);
-        return this.userService.userData$.pipe(
+        return of(this.userService.userData()).pipe(
             switchMap(({ user_id }) => this.apollo.mutate<IGQLDeleteCollectionResult>({
                 mutation: this.DELETE_COLLECTION,
                 variables: { token: window.localStorage.getItem('token'), user_id, ids_delete: records }

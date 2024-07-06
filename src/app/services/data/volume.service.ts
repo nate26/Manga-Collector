@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable, tap, map, catchError, throwError, shareReplay, switchMap } from 'rxjs';
+import { Observable, tap, map, catchError, throwError, shareReplay, switchMap, of } from 'rxjs';
 import { IGQLAllRecord, IGQLGetRecord } from '../../interfaces/iGQLRequests.interface';
 import { IVolume } from '../../interfaces/iVolume.interface';
 import { UserService } from './user.service';
@@ -107,7 +107,7 @@ export class VolumeService {
     `;
 
     queryVolume(isbn: string): Observable<IVolume> {
-        return this.userService.userData$.pipe(
+        return of(this.userService.userData()).pipe(
             switchMap(({ user_id }) =>
                 this.apollo.watchQuery<IGQLGetRecord>(
                     { query: this.SINGLE_VOLUME_QUERY, variables: { isbn, user_id } }
