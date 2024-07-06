@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, pipe, tap, throwError } from 'rxjs';
+import { Observable, pipe, shareReplay, switchMap, tap, throwError } from 'rxjs';
 
 export type UserData = {
     username: string;
@@ -38,6 +38,7 @@ export const SIGNUP_PATH_CONTEXT = {
 export class UserService {
 
     private readonly http = inject(HttpClient);
+    private readonly _activatedRoute = inject(ActivatedRoute);
     private readonly SERVER_URL = 'http://localhost:8050/';
 
     userData = signal<UserData>({
@@ -71,8 +72,23 @@ export class UserService {
         )
     });
 
-    private readonly _routeChanged = toSignal(inject(ActivatedRoute).queryParams, { initialValue: { user_id: null } })
-    canUserEdit = computed(() => this.userData().user_id === this._routeChanged().user_id);
+    userIdFromRoute$ = this._activatedRoute.queryParams.pipe(
+        switchMap(params => {
+            if (!params['username']) {
+                return throwError(() => Error('No username provided.'));
+            }
+            return this.http.get<UserData>(
+                this.SERVER_URL + '/get-user-by-username?username=' + params['username']
+            );
+        }),
+        shareReplay(1)
+    );
+
+    private readonly _routeChanged = toSignal(
+        this._activatedRoute.queryParams,
+        { initialValue: { username: null } }
+    )
+    canUserEdit = computed(() => this.userData().username === this._routeChanged().username);
 
     private readonly _saveUserData = pipe(
         tap((data: UserData) => {

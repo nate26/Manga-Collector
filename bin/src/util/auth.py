@@ -2,6 +2,7 @@
 
 import json
 from datetime import datetime, timezone, timedelta
+import re
 import uuid
 import bcrypt
 import jwt
@@ -97,7 +98,7 @@ class Auth:
             )
         }
 
-    def __validate_input(self, input_text: str, password=False):
+    def __validate_input(self, input_type: str, input_text: str):
         '''
         Validates the input
         
@@ -107,8 +108,27 @@ class Auth:
         Returns:
         - bool: True if the input is valid, False otherwise
         '''
-        return input_text and isinstance(input_text, str) and \
-            (len(input_text) > 8 if password else len(input_text) > 3)
+        if input_type == 'email' and isinstance(input_text, str) and not re.match((
+            '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)'
+            '*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\'
+            '[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])'
+            '?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])'
+            '|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]'
+            '|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-'
+            '\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'
+        ), input_text):
+            raise ValueError('Email is not valid')
+
+        if input_type == 'username' and isinstance(input_text, str) and len(input_text) < 4:
+            raise ValueError('Username must be at least 4 characters long')
+
+        if input_type == 'password' and isinstance(input_text, str) and not re.match((
+            '(?=.*[A-Za-z])(?=.*[0-9])'
+            '(?=.*[$@$!#^~%*?&,.<>"\'\\;:{\\}\\[\\]\\|\\+\\-\\=\\_\\)\\(\\)\\`\\/\\\\\\]])'
+            '[A-Za-z0-9d$@].{8,}'
+        ), input_text):
+            raise ValueError('Password must be at least 8 characters long with at least '
+                             '1 capital letter, 1 number, and 1 special character')
 
     def login(self, body):
         '''
@@ -229,4 +249,44 @@ class Auth:
 
         except (FileNotFoundError, json.JSONDecodeError, ValueError) as e:
             self.logger.error('Failed to sign up user %s', e)
+            raise e
+
+    def get_user(self, username: str):
+        '''
+        Gets the user with the given username
+        
+        Parameters:
+        - username (str): The user to get
+        
+        Returns:
+        - dict: The user's data
+        
+        Exceptions:
+        - ValueError: If the user does not exist
+        - FileNotFoundError: If the file is not found
+        - json.JSONDecodeError: If the JSON file has an error
+        '''
+        try:
+            all_users: dict[str, User] = self.local_dao.open_file(
+                FilePathEnum.USERS.value[self.host.value]
+            )
+            user_data = next(
+                (user for user in all_users.values() if user.get('username') == username),
+                None
+            )
+            if not user_data:
+                raise ValueError('User does not exist')
+
+            return {
+                "email": user_data['email'],
+                "username": user_data['username'],
+                "user_id": user_data['user_id'],
+                "profile": {
+                    **user_data['profile']
+                },
+                "personal_stores": user_data['personal_stores']
+            }
+
+        except (FileNotFoundError, json.JSONDecodeError, ValueError) as e:
+            self.logger.error('Failed to get user %s', e)
             raise e

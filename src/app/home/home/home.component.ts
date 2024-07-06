@@ -21,7 +21,7 @@ export class HomeComponent {
     }
 
     routeToUserPage(path: string) {
-        this._router.navigate([path], { queryParams: { user_id: localStorage.getItem('user_id') } });
+        this._router.navigate([path], { queryParams: { username: localStorage.getItem('username') } });
     }
 
     callOpenLogin() {

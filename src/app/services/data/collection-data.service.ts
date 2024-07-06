@@ -5,7 +5,6 @@ import { IVolume } from '../../interfaces/iVolume.interface';
 import { IGQLDeleteCollectionResult, IGQLGetCollectionVolumes, IGQLModifyCollectionResult } from '../../interfaces/iGQLRequests.interface';
 import { ICollection } from '../../interfaces/iCollection.interface';
 import { UserService } from './user.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +12,6 @@ import { ActivatedRoute } from '@angular/router';
 export class CollectionDataService {
 
     private readonly apollo = inject(Apollo);
-    private readonly router = inject(ActivatedRoute);
     private readonly userService = inject(UserService);
 
     readonly COLLECTION_VOLUMES_QUERY = gql`
@@ -81,7 +79,7 @@ export class CollectionDataService {
         }
     `;
 
-    collectionVolumes$: Observable<IVolume[]> = this.router.queryParams.pipe(
+    collectionVolumes$: Observable<IVolume[]> = this.userService.userIdFromRoute$.pipe(
         switchMap(({ user_id }) =>
             this.apollo.watchQuery<IGQLGetCollectionVolumes>({
                 query: this.COLLECTION_VOLUMES_QUERY,
