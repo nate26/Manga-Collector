@@ -8,5 +8,6 @@ flask-cors
 pyjwt
 pytz
 requests
+requests_aws4auth
 # sqlalchemy_json
 websockets
