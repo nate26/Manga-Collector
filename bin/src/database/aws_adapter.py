@@ -1,49 +1,47 @@
-
-
-import json
-# import traceback
-# from datetime import datetime, timedelta
-# from decimal import Decimal
-# from typing import List
-
-# import boto3
+from datetime import datetime, timedelta
+from typing import List
 import requests
-# from boto3.dynamodb.conditions import Attr
-# from botocore.exceptions import ClientError
+from src.interfaces.icollection import ICollection
+from src.enums.file_path_enum import FilePathEnum
+from src.enums.host_enum import HostEnum
+from src.util.local_dao import LocalDAO
 from src.util.manga_logger import MangaLogger
-
-# from src.interfaces.icollection import ICollection
-from requests_aws4auth import AWS4Auth
-
-
-# # Convert Decimal to float
-# class DecimalEncoder(json.JSONEncoder):
-#     def default(self, obj):
-#         if isinstance(obj, Decimal):
-#             return float(obj)
-#         return json.JSONEncoder.default(self, obj)
 
 class AWSAdapter:
 
-    def __init__(self, host) -> None:
+    def __init__(self, host: HostEnum) -> None:
         self.logger = MangaLogger(host).register_logger(__name__)
-        # Use AWS4Auth to sign a requests session
         self.session = requests.Session()
-        self.session.auth = AWS4Auth(
-            # An AWS 'ACCESS KEY' associated with an IAM user.
-            '',
-            # The 'secret' that goes with the above access key.                    
-            '',    
-            # The region you want to access.
-            'us-east-2',
-            # The service you want to access.
-            'appsync'
-        )
+        vault = LocalDAO(host).open_file(FilePathEnum.VAULT.value[host.value])
+        self.collection_host = vault['aws_collection_host']
+        self.collection_api_key = vault['aws_collection_api_key']
 
-    def get_data(self):
-        # Use JSON format string for the query. It does not need reformatting.
+
+    def get_collection_data(self, user_id: str) -> List[ICollection]:
+        """
+        Gets the data from the AWS directory
+        
+        Parameters
+        ----------
+        user_id : str
+            The user_id to get the data from
+        
+        Returns
+        -------
+        List[ICollection]
+            The data from the AWS directory
+        
+        Raises
+        ------
+        JSONDecodeError:
+            If the response contents from AWS are not in a valid JSON format.
+        RequestException:
+            If the get request to AWS fails
+        """
+        start = datetime.now()
+
         graphql_query = """{
-            listMangaUserCollections(filter: {user_id: {eq: "f69c759a-00dd-4dbe-8e58-96cd7a05969e"}}) {
+            listMangaUserCollections(filter: { user_id: { eq: "%s" } }) {
                 items {
                     id
                     user_id
@@ -59,14 +57,26 @@ class AWSAdapter:
                     updated
                 }
             }
-        }"""
-        # Now we can simply post the request...
+        }""" % user_id
+
         response = self.session.request(
-            url='',
-            method='POST',
-            json={'query': graphql_query}
+            url = 'https://' + self.collection_host + '/graphql',
+            method = 'POST',
+            json = { 'query': graphql_query },
+            headers = {
+                'Content-type': 'application/graphql', 
+                'x-api-key': self.collection_api_key,
+                'host': self.collection_host
+            }
         )
-        print(response.text)
+
+        end = (datetime.now() - start).total_seconds()
+        self.logger.info('Time to get data from AWS: %s', str(timedelta(seconds=end)))
+
+        # catch error cases
+        # add try / except block
+
+        return response.json()['data']['listMangaUserCollections']['items']
 
 
 
