@@ -15,6 +15,8 @@ class AWSAdapter:
         vault = LocalDAO(host).open_file(FilePathEnum.VAULT.value[host.value])
         self.collection_host = vault['aws_collection_host']
         self.collection_api_key = vault['aws_collection_api_key']
+        self.user_list_host = vault['aws_user_list_host']
+        self.user_list_api_key = vault['aws_user_list_api_key']
 
 
     def get_collection_data(self, user_id: str) -> List[ICollection]:
