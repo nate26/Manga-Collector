@@ -31,7 +31,6 @@ class Queries:
     def __init__(self, host) -> None:
         self.data = Data(host)
         self.logger = MangaLogger(host).register_logger(__name__)
-        self.aws_adapter = AWSAdapter(host)
 
     def __get_data(self, user_id: str | None = None):
         '''
@@ -53,10 +52,10 @@ class Queries:
                     executor.submit(self.data.get_volumes_data),
                     executor.submit(self.data.get_series_data),
                     executor.submit(self.data.get_shop_data),
-                    executor.submit(self.aws_adapter.get_collection_data \
+                    executor.submit(self.data.get_collection_data \
                         if user_id is not None else lambda _: [], user_id),
-                    # executor.submit(self.data.get_wishlist_data \
-                    #     if user_id is not None else lambda _: [], user_id)
+                    executor.submit(self.data.get_wishlist_data \
+                        if user_id is not None else lambda _: [], user_id),
                     executor.submit(lambda : [])
                 ]
                 return executor.map(lambda x: x.result(), futures)

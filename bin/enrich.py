@@ -47,7 +47,7 @@ from src.enums.host_enum import HostEnum
 from src.database.aws_adapter import AWSAdapter
 
 data = AWSAdapter(HostEnum.LOCAL)
-# result = data.get_user_list_data('111')
+result = data.get_user_list_data('111')
 # result = data.save_user_list_item([{
 # #     "id": "f5de942d-f52a-41e2-9a60-ff41869b6e5a",
 # #     "inserted": "07/14/2024, 18:47:52",
@@ -64,7 +64,7 @@ data = AWSAdapter(HostEnum.LOCAL)
 #     "user_id": "111",
 #     "user_list": "Something else"
 # }]) # type: ignore
-result = data.delete_user_list_item(['2f7815b7-66a7-485e-a27b-8100c612aede'], '111')
+# result = data.delete_user_list_item(['2f7815b7-66a7-485e-a27b-8100c612aede'], '111')
 print(result)
 
 # try:

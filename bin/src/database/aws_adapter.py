@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import json
 from typing import Any, List
 import uuid
 import requests
@@ -14,7 +13,6 @@ class AWSAdapter:
 
     def __init__(self, host: HostEnum) -> None:
         self.logger = MangaLogger(host).register_logger(__name__)
-        self.session = requests.Session()
         vault = LocalDAO(host).open_file(FilePathEnum.VAULT.value[host.value])
         self.collection_host = vault['aws_collection_host']
         self.collection_api_key = vault['aws_collection_api_key']
@@ -23,12 +21,14 @@ class AWSAdapter:
 
     #region Collection
 
-    def __call_collection_gql(self, graphql_query) -> requests.Response:
+    def __call_collection_gql(self, graphql: str, variables = {}) -> requests.Response:
         start = datetime.now()
-        response = self.session.request(
+        response = requests.post(
             url = 'https://' + self.collection_host + '/graphql',
-            method = 'POST',
-            json = { 'query': graphql_query },
+            json = {
+                'query': graphql,
+                'variables': variables
+            },
             headers = {
                 'Content-type': 'application/graphql', 
                 'x-api-key': self.collection_api_key,
@@ -36,22 +36,16 @@ class AWSAdapter:
             }
         )
         end = (datetime.now() - start).total_seconds()
-        self.logger.info('Time to get collection data from AWS: %s', str(timedelta(seconds=end)))
+        self.logger.info('Time to call collection data from AWS: %s', str(timedelta(seconds=end)))
         if 'errors' in response.json():
             self.logger.error(response.json()['errors'])
-            raise requests.exceptions.RequestException(response.json()['errors'])
         return response
 
     def get_collection_data(self, user_id: str) -> List[ICollection]:
         """
         Gets the collection data from the AWS directory
-        
-        Raises
-        ------
-        requests.exceptions.RequestException:
-            If the request to AWS fails
         """
-        graphql_query = """{
+        graphql_query = """query listMangaUserCollections {
             listMangaUserCollections(filter: { user_id: { eq: "%s" } }) {
                 items {
                     id
@@ -71,6 +65,103 @@ class AWSAdapter:
         }""" % user_id
         response = self.__call_collection_gql(graphql_query)
         return response.json()['data']['listMangaUserCollections']['items']
+
+    def get_single_collection_item(self, id: str, user_id: str) -> ICollection:
+        """
+        Gets a single collection item by id from the AWS directory.
+        """
+        graphql_query = """query getMangaUserCollection {
+            getMangaUserCollection(id: "%s", user_id: "%s") {
+                id
+                user_id
+                cost
+                giftToMe
+                purchaseDate
+                isbn
+                merchant
+                read
+                tags
+                state
+                inserted
+                updated
+            }
+        }""" % (id, user_id)
+        print(graphql_query)
+        response = self.__call_collection_gql(graphql_query)
+        return response.json()['data']['getMangaUserCollection']
+
+    def save_collection_item(self, save_items: List[ICollection]) -> List[Any]:
+        """
+        Saves a list of items to the collection data.
+        If the item has an id, it will update the item. If it does not, it will create a new item.
+
+        Returns
+        -------
+        List[Any]
+            A list of the results from the AWS call
+        """
+        results = []
+        for save_item in save_items:
+            graphql_mutation = ("""mutation save_collection_item($input: UpdateMangaUserCollectionInput!) {
+                updateMangaUserCollection(input: $input) {
+                    id
+                    user_id
+                    cost
+                    giftToMe
+                    purchaseDate
+                    isbn
+                    merchant
+                    read
+                    tags
+                    state
+                    inserted
+                    updated
+                }
+            }""")
+            if 'id' not in save_item:
+                save_item['id'] = str(uuid.uuid4())
+                save_item['inserted'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+                graphql_mutation = ("""mutation save_collection_item($input: CreateMangaUserCollectionInput!) {
+                    createMangaUserCollection(input: $input) {
+                        id
+                        user_id
+                        cost
+                        giftToMe
+                        purchaseDate
+                        isbn
+                        merchant
+                        read
+                        tags
+                        state
+                        inserted
+                        updated
+                    }
+                }""")
+            save_item['updated'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+            result = self.__call_collection_gql(graphql_mutation, { 'input': save_item })
+            results.append(result.json())
+        return results
+
+    def delete_collection_item(self, ids: List[str], user_id: str) -> List[Any]:
+        """
+        Deletes a list of items from the user list data by the provided ids.
+
+        Returns
+        -------
+        List[Any]
+            A list of the results from the AWS call
+        """
+        results = []
+        for id in ids:
+            graphql_mutation = ("""mutation deleteMangaUserCollection {
+                deleteMangaUserCollection(input: {id: "%s", user_id: "%s"}) {
+                    id
+                    user_id
+                }
+            }""") % (id, user_id)
+            result = self.__call_collection_gql(graphql_mutation)
+            results.append(result.json())
+        return results
 
     #endregion
 
@@ -139,7 +230,13 @@ class AWSAdapter:
 
     def save_user_list_item(self, save_items: List[IWishlist]) -> List[Any]:
         """
-        Gets the user list data from the AWS directory. Returns true if it was successful
+        Saves a list of items to the user list data.
+        If the item has an id, it will update the item. If it does not, it will create a new item.
+
+        Returns
+        -------
+        List[Any]
+            A list of the results from the AWS call
         """
         results = []
         for save_item in save_items:
@@ -177,7 +274,12 @@ class AWSAdapter:
 
     def delete_user_list_item(self, ids: List[str], user_id: str) -> List[Any]:
         """
-        Gets the user list data from the AWS directory. Returns true if it was successful
+        Deletes a list of items from the user list data by the provided ids.
+
+        Returns
+        -------
+        List[Any]
+            A list of the results from the AWS call
         """
         results = []
         for id in ids:
