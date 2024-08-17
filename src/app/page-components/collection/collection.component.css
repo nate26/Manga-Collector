@@ -1,8 +1,8 @@
-
 .collection-viewport {
     width: 62vw;
     margin: auto;
-    background-color: #252529; /* #282828; #2a2835 */
+    background-color: #252529;
+    /* #282828; #2a2835 */
 }
 
 .img-link {
@@ -33,15 +33,17 @@
 
 .editor-header {
     display: flex;
-    width: 100%;
+    /* width: 100%; */
     background-color: var(--item-background-color);
     margin-bottom: 10px;
 }
 
 .volumes {
     overflow: auto;
-    height: calc(100vh - 233px); /* 66px */
-    width: 100vw; /* min-width: 1012px; */
+    height: calc(100vh - 233px);
+    /* 66px */
+    /* width: 100vw; */
+    /* min-width: 1012px; */
 }
 
 .volume-row {
@@ -59,7 +61,7 @@
 }
 
 .edited-row {
-    box-shadow: 0 0 10px rgb(255  255  255 / 20%), 0 0 5px rgb(95 147 255);
+    box-shadow: 0 0 10px rgb(255 255 255 / 20%), 0 0 5px rgb(95 147 255);
     transition: box-shadow 0.3s ease-in;
 }
 

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollectionDataService } from '../../services/data/collection-data.service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
@@ -9,6 +9,8 @@ import { VolumeService } from '../../services/data/volume.service';
 import { forkJoin, tap } from 'rxjs';
 import { ITheme } from '../../interfaces/iSeries.interface';
 import { UserService } from '../../services/data/user.service';
+import { TagChipComponent } from '../../common/tag-chip/tag-chip.component';
+import { TagListComponent } from '../../common/tag-list/tag-list.component';
 
 interface TextEvent extends Event {
     target: EventTarget & { value: string };
@@ -17,7 +19,7 @@ interface TextEvent extends Event {
 @Component({
     selector: 'app-collection',
     standalone: true,
-    imports: [CommonModule, SearchVolumesComponent],
+    imports: [CommonModule, SearchVolumesComponent, TagChipComponent, TagListComponent],
     templateUrl: './collection.component.html',
     styleUrl: './collection.component.css'
 })
@@ -28,9 +30,28 @@ export class CollectionComponent {
     private readonly destroy = inject(DestroyRef);
     protected readonly userService = inject(UserService);
 
+    e = effect(() => console.log(this.availableMerchants(), this.filterCategory(), this.filterMerchant(), this.filterRead()))
+
+    // this.collectionDataService.collectionVolumes$
     volumes = toSignal(this.collectionDataService.collectionVolumes$, { initialValue: [] });
     volumeIDs = computed(() => this.volumes().map(vol => vol.user_collection_data[0].id));
     newVolumes = signal<IVolume[]>([]);
+    availableCategories = computed(
+        () => this.volumes()
+            .map(vol => vol.category)
+            .filter((v, i, a) => a.indexOf(v) === i)
+    );
+    availableMerchants = computed(
+        () => this.volumes()
+            .map(vol => vol.user_collection_data[0].merchant)
+            .filter((v, i, a) => a.indexOf(v) === i)
+    );
+    availableTags = computed(
+        () => this.volumes()
+            .map(vol => vol.user_collection_data[0].tags)
+            .flat()
+            .filter((v, i, a) => a.indexOf(v) === i)
+    );
 
     protected editSwitch = signal(false);
     protected isEditing = computed(() => this.editSwitch() && this.userService.userDataIsValid());
@@ -50,7 +71,7 @@ export class CollectionComponent {
     filterPurchaseDate = signal<string>('');
     filterRead = signal<string>('');
     filterGiftToMe = signal<string>('');
-    filterTags = signal<string>('');
+    filterTags = signal<string[]>([]);
 
     // separate filter and saved states for performance
     editedVolumes = computed(() => {
@@ -109,7 +130,8 @@ export class CollectionComponent {
                 // check giftToMe
                 && (this.filterGiftToMe() === '' || record.giftToMe === (this.filterGiftToMe() === 'YES'))
                 // check tags
-                && (!this.filterTags() || record.tags.join(',').toLowerCase().includes(this.filterTags().toLowerCase()));
+                && (this.filterTags().length === 0 ||
+                    this.filterTags().some(fTag => record.tags.some(tag => fTag.toLowerCase() === tag.toLowerCase())));
         });
     });
 
@@ -150,20 +172,26 @@ export class CollectionComponent {
 
     doEdit(index: number, field: string, value: Event) {
         this.saveBatch.update(batch => {
-
-            // get existing record
-            const record = this.filteredVolumes()[index].user_collection_data[0];
-
-            // parse new value
-            const eventVal = this.getEventVal(value);
+            const existingRecord = this.filteredVolumes()[index].user_collection_data[0];
+            const newValue = this.getEventVal(value);
             let parsedValue;
-            if (field === 'tags') parsedValue = eventVal ? eventVal.split(',').map(t => t.trim()) : [];
-            else if (field === 'cost') parsedValue = parseFloat(eventVal);
+            if (field === 'cost') parsedValue = parseFloat(newValue);
             else if (field === 'read' || field === 'giftToMe') parsedValue = (<HTMLInputElement>value.target).checked;
-            else parsedValue = eventVal;
+            else parsedValue = newValue;
+            return this._batchEdit(batch, { ...existingRecord, [field]: parsedValue });
+        });
+    }
 
-            return this._batchEdit(batch, { ...record, [field]: parsedValue });
-        })
+    editTags(index: number, value: string[]): void {
+        this.saveBatch.update(batch => {
+            return this._batchEdit(
+                batch,
+                {
+                    ...this.filteredVolumes()[index].user_collection_data[0],
+                    tags: value
+                }
+            );
+        });
     }
 
     markForDelete(record: ICollection) {

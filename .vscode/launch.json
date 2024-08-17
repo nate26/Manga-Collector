@@ -8,7 +8,7 @@
             "name": "Run Scraper Mock",
             "type": "python",
             "request": "launch",
-            "cwd": "./",
+            "cwd": "${cwd}/bin",
             "program": "./run_scraper_mock.py",
             "console": "integratedTerminal",
             "justMyCode": true
@@ -17,8 +17,17 @@
             "name": "Run Rest Service",
             "type": "python",
             "request": "launch",
-            "cwd": "./bin/",
+            "cwd": "${cwd}/bin",
             "program": "./manga_library_rest.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Run GQL",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${cwd}/bin",
+            "program": "./graphql_manga_api.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
