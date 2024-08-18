@@ -1,6 +1,9 @@
+"""Adapter for connecting to AWS Graphql API"""
+
 from datetime import datetime, timedelta
 from typing import Any, List
 import uuid
+from numpy import save
 import requests
 from src.interfaces.icollection import ICollection
 from src.interfaces.iwishlist import IWishlist
@@ -10,6 +13,7 @@ from src.util.local_dao import LocalDAO
 from src.util.manga_logger import MangaLogger
 
 class AWSAdapter:
+    """Adapter for connecting to AWS Graphql API"""
 
     def __init__(self, host: HostEnum) -> None:
         self.logger = MangaLogger(host).register_logger(__name__)
@@ -21,19 +25,21 @@ class AWSAdapter:
 
     #region Collection
 
-    def __call_collection_gql(self, graphql: str, variables = {}) -> requests.Response:
+    def __call_collection_gql(self, graphql: str, variables: dict | None = None
+                              ) -> requests.Response:
         start = datetime.now()
         response = requests.post(
             url = 'https://' + self.collection_host + '/graphql',
             json = {
                 'query': graphql,
-                'variables': variables
+                'variables': variables or {}
             },
             headers = {
-                'Content-type': 'application/graphql', 
+                'Content-type': 'application/graphql',
                 'x-api-key': self.collection_api_key,
                 'host': self.collection_host
-            }
+            },
+            timeout=30
         )
         end = (datetime.now() - start).total_seconds()
         self.logger.info('Time to call collection data from AWS: %s', str(timedelta(seconds=end)))
@@ -66,7 +72,7 @@ class AWSAdapter:
         response = self.__call_collection_gql(graphql_query)
         return response.json()['data']['listMangaUserCollections']['items']
 
-    def get_single_collection_item(self, id: str, user_id: str) -> ICollection:
+    def get_single_collection_item(self, vol_id: str, user_id: str) -> ICollection:
         """
         Gets a single collection item by id from the AWS directory.
         """
@@ -85,7 +91,7 @@ class AWSAdapter:
                 inserted
                 updated
             }
-        }""" % (id, user_id)
+        }""" % (vol_id, user_id)
         print(graphql_query)
         response = self.__call_collection_gql(graphql_query)
         return response.json()['data']['getMangaUserCollection']
@@ -102,7 +108,7 @@ class AWSAdapter:
         """
         results = []
         for save_item in save_items:
-            graphql_mutation = ("""mutation save_collection_item($input: UpdateMangaUserCollectionInput!) {
+            graphql_mutation = """mutation save_coll($input: UpdateMangaUserCollectionInput!) {
                 updateMangaUserCollection(input: $input) {
                     id
                     user_id
@@ -117,11 +123,11 @@ class AWSAdapter:
                     inserted
                     updated
                 }
-            }""")
+            }"""
             if 'id' not in save_item:
                 save_item['id'] = str(uuid.uuid4())
                 save_item['inserted'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-                graphql_mutation = ("""mutation save_collection_item($input: CreateMangaUserCollectionInput!) {
+                graphql_mutation = """mutation save_coll($input: CreateMangaUserCollectionInput!) {
                     createMangaUserCollection(input: $input) {
                         id
                         user_id
@@ -136,8 +142,9 @@ class AWSAdapter:
                         inserted
                         updated
                     }
-                }""")
+                }"""
             save_item['updated'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+            del save_item['temp_id']
             result = self.__call_collection_gql(graphql_mutation, { 'input': save_item })
             results.append(result.json())
         return results
@@ -152,13 +159,13 @@ class AWSAdapter:
             A list of the results from the AWS call
         """
         results = []
-        for id in ids:
+        for vol_id in ids:
             graphql_mutation = ("""mutation deleteMangaUserCollection {
                 deleteMangaUserCollection(input: {id: "%s", user_id: "%s"}) {
                     id
                     user_id
                 }
-            }""") % (id, user_id)
+            }""") % (vol_id, user_id)
             result = self.__call_collection_gql(graphql_mutation)
             results.append(result.json())
         return results
@@ -167,19 +174,21 @@ class AWSAdapter:
 
     #region User List
 
-    def __call_user_list_gql(self, graphql: str, variables = {}) -> requests.Response:
+    def __call_user_list_gql(self, graphql: str, variables: dict | None = None
+                             ) -> requests.Response:
         start = datetime.now()
         response = requests.post(
             url = 'https://' + self.user_list_host + '/graphql',
             json = {
                 'query': graphql,
-                'variables': variables
+                'variables': variables or {}
             },
             headers = {
-                'Content-type': 'application/graphql', 
+                'Content-type': 'application/graphql',
                 'x-api-key': self.user_list_api_key,
                 'host': self.user_list_host
-            }
+            },
+            timeout=30
         )
         end = (datetime.now() - start).total_seconds()
         self.logger.info('Time to call user list data from AWS: %s', str(timedelta(seconds=end)))
@@ -208,7 +217,7 @@ class AWSAdapter:
         response = self.__call_user_list_gql(graphql_query)
         return response.json()['data']['listMangaUserLists']['items']
 
-    def get_single_user_list_item(self, id: str, user_id: str) -> IWishlist:
+    def get_single_user_list_item(self, vol_id: str, user_id: str) -> IWishlist:
         """
         Gets a single user list item by id from the AWS directory.
         """
@@ -223,7 +232,7 @@ class AWSAdapter:
                 updated
                 user_list
             }
-        }""" % (id, user_id)
+        }""" % (vol_id, user_id)
         print(graphql_query)
         response = self.__call_user_list_gql(graphql_query)
         return response.json()['data']['getMangaUserLists']
@@ -240,7 +249,7 @@ class AWSAdapter:
         """
         results = []
         for save_item in save_items:
-            graphql_mutation = ("""mutation save_user_list_item($input: UpdateMangaUserListsInput!) {
+            graphql_mutation = """mutation save_userlist($input: UpdateMangaUserListsInput!) {
                 updateMangaUserLists(input: $input) {
                     id
                     inserted
@@ -251,11 +260,11 @@ class AWSAdapter:
                     user_id
                     user_list
                 }
-            }""")
+            }"""
             if 'id' not in save_item:
                 save_item['id'] = str(uuid.uuid4())
                 save_item['inserted'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-                graphql_mutation = ("""mutation save_user_list_item($input: CreateMangaUserListsInput!) {
+                graphql_mutation = """mutation save_userlist($input: CreateMangaUserListsInput!) {
                     createMangaUserLists(input: $input) {
                         id
                         inserted
@@ -266,7 +275,7 @@ class AWSAdapter:
                         user_id
                         user_list
                     }
-                }""")
+                }"""
             save_item['updated'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
             result = self.__call_user_list_gql(graphql_mutation, { 'input': save_item })
             results.append(result.json())
@@ -282,13 +291,13 @@ class AWSAdapter:
             A list of the results from the AWS call
         """
         results = []
-        for id in ids:
+        for vol_id in ids:
             graphql_mutation = ("""mutation deleteMangaUserLists {
                 deleteMangaUserLists(input: {id: "%s", user_id: "%s"}) {
                     id
                     user_id
                 }
-            }""") % (id, user_id)
+            }""") % (vol_id, user_id)
             result = self.__call_user_list_gql(graphql_mutation)
             results.append(result.json())
         return results

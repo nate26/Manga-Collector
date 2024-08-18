@@ -19,14 +19,14 @@ from src.util.manga_logger import MangaLogger
 class Data:
     '''
     A class used to get and write to local json files.
-    
+
     ...
-    
+
     Attributes
     ----------
     host : HostEnum
         The the host machine to know where to access data for logging
-    
+
     Methods
     -------
     get_library_data()
@@ -59,7 +59,7 @@ class Data:
     def get_volumes_data(self) -> Dict[str, IVolume]:
         '''
         Gets the volumes data from a json file
-        
+
         Returns:
         - dict: The volumes data from the given file path.
         '''
@@ -68,7 +68,7 @@ class Data:
     def get_series_data(self) -> Dict[str, ISeries]:
         '''
         Gets the series data from a json file
-        
+
         Returns:
         - dict: The series data from the given file path.
         '''
@@ -77,7 +77,7 @@ class Data:
     def get_shop_data(self) -> Dict[str, IShop]:
         '''
         Gets the shop data from a json file
-        
+
         Returns:
         - dict: The shop data from the given file path.
         '''
@@ -86,10 +86,10 @@ class Data:
     def get_collection_data(self, user_id: str) -> List[ICollection]:
         '''
         Gets the collection data from AWS
-        
+
         Parameters:
         - user_id (str): The user id to get the data for.
-        
+
         Returns:
         - dict: The collection data from the given file path.
         '''
@@ -108,10 +108,10 @@ class Data:
                                volumes_update: List[ICollection]) -> List[Any]:
         '''
         Inserts records into the AWS collection data
-        
+
         Parameters:
         - data (Any): The records to insert.
-        
+
         Returns:
         - str: The response from the AWS insert operation.
         '''
@@ -120,9 +120,9 @@ class Data:
             return []
         results = self.aws_dao.save_collection_item(volumes_update)
         saved: List[ICollection] = [
-            result['data']['createMangaUserLists']
-            if 'createMangaUserLists' in result['data']
-            else result['data']['updateMangaUserLists']
+            result['data']['createMangaUserCollection']
+            if 'createMangaUserCollection' in result['data']
+            else result['data']['updateMangaUserCollection']
             for result
             in results
             if 'errors' not in result
@@ -151,10 +151,10 @@ class Data:
     def delete_from_collection_data(self, user_id: str, ids_delete: List[str]) -> List[Any]:
         '''
         Deletes records from AWS collection data
-        
+
         Parameters:
         - data (Any): The records to delete.
-        
+
         Returns:
         - str: The text response from the AWS delete operation.
         '''
@@ -179,10 +179,10 @@ class Data:
     def get_wishlist_data(self, user_id: str) -> List[IWishlist]:
         '''
         Gets the wishlist data from AWS
-        
+
         Parameters:
         - user_id (str): The user id to get the data for.
-        
+
         Returns:
         - dict: The wishlist data from the given file path.
         '''
@@ -200,10 +200,10 @@ class Data:
     def add_to_wishlist_data(self, user_id: str, list_updates: List[IWishlist]) -> List[Any]:
         '''
         Inserts records into the AWS wishlist data
-        
+
         Parameters:
         - data (Any): The records to insert.
-        
+
         Returns:
         - str: The response from the AWS insert operation.
         '''
@@ -215,10 +215,10 @@ class Data:
     def delete_from_wishlist_data(self, user_id: str, ids_delete: List[str]) -> List[Any]:
         '''
         Deletes records from AWS wishlist data
-        
+
         Parameters:
         - data (Any): The records to delete.
-        
+
         Returns:
         - str: The text response from the AWS delete operation.
         '''

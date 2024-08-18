@@ -5,16 +5,12 @@ from typing import List
 class ICoverImage(dict):
     '''Cover image details of a book'''
     __getattr__ = dict.get
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
     name: str
     url: str
 
 class IVolume(dict):
     '''Volume details for a book'''
     __getattr__ = dict.get
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
     isbn: str
     brand: str
     series: str
