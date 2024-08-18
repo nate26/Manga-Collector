@@ -35,7 +35,8 @@ body {
     flex-direction: column;
     align-items: center;
     margin: auto;
-    margin-top: 75px;
+    margin-top: 15px;
+    /* margin-top: 75px; */
 }
 
 .block {
@@ -96,7 +97,7 @@ body {
 }
 
 .inactive-button {
-    background-color: var(--item-background-color);
+    /* background-color: var(--item-background-color); */
     color: var(--item-mute-text-color);
     border-color: var(--item-mute-text-color);
 }
@@ -241,7 +242,7 @@ input[type='checkbox'] {
     padding: 1px;
     background-color: darkgray;
     margin: 0 6px
-} 
+}
 
 .nav-buttons {
     text-align: right;

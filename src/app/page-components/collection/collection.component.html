@@ -1,69 +1,67 @@
 <div class="flex space-between mt-20">
-    <div class="grid grid-cols-[min-content_auto] gap-3 h-fit w-72 m-8">
-        <div class="text text-sm w-fit">Name</div>
-        <input type="text" class="text mc-input" (change)="filterName.set(getEventVal($event))">
+    <div>
+        @if (userService.canUserEdit()) {
+            @if (isEditing()) {
+                <button class="btn active-button" (click)="save()" [disabled]="saveBatch().length === 0 && deleteBatch().length === 0">
+                    Save
+                </button>
+                <button class="btn active-button" (click)="stopEditing()">
+                    Cancel
+                </button>
+                <app-search-volumes (selectVolume)="addVolume($event)" />
+            }
+            @else {
+                <button class="btn inactive-button" (click)="editSwitch.set(true)">Edit</button>
+            }
+        }
+        <div class="grid grid-cols-[min-content_auto] gap-3 h-fit w-72 m-8">
+            <div class="text text-sm w-fit">Name</div>
+            <input type="text" class="text mc-input" (change)="filterName.set(getEventVal($event))">
 
-        <div class="text text-sm w-fit">Category</div>
-        <!-- <input type="text" class="text mc-input" (change)="filterCategory.set(getEventVal($event))"> -->
-        <select class="mc-input text-white">
-            <option class="text-white" [value]="">Filter by Category</option>
-            @for (category of availableCategories(); track $index) {
-                <option class="text-white" [value]="category" (change)="filterCategory.set(category)">{{ category | titlecase }}</option>
-            }
-        </select>
-        
-        <div class="text text-sm w-fit">Volume</div>
-        <input type="text" class="text mc-input" (change)="filterVolume.set(getEventVal($event))">
-        
-        <div class="text text-sm w-fit">Cost</div>
-        <input type="number" min="0" step="0.01" class="text mc-input" (change)="filterCost.set(getEventVal($event))">
-        
-        <div class="text text-sm w-fit">Merchant</div>
-        <select class="mc-input text-white">
-            <option class="text-white" [value]="">Filter by Merchant</option>
-            @for (merchant of availableMerchants(); track $index) {
-                <option class="text-white" [value]="merchant" (change)="filterMerchant.set(merchant)">{{ merchant | titlecase }}</option>
-            }
-        </select>
-        <!-- <input type="text" class="text mc-input" (change)="filterMerchant.set(getEventVal($event))"> -->
-        
-        <div class="text text-sm w-fit" style="font-size: 10pt;">Purchase Date</div>
-        <input type="date" class="text mc-input" (change)="filterPurchaseDate.set(getEventVal($event))">
-        
-        <div class="text text-sm w-fit">Read</div>
-        <!-- <input type="text" class="text mc-input" (change)="filterRead.set(getEventVal($event))"> -->
-        <input type="checkbox" class="green-checkbox al_center" [checked]="filterRead()"
-            (change)="filterRead.set(getEventVal($event) === 'on' ? 'YES' : 'NO')">
-        
-        <div class="text text-sm w-fit">Gift</div>
-        <!-- <input type="text" class="text mc-input" (change)="filterGiftToMe.set(getEventVal($event))"> -->
-        <input type="checkbox" class="blue-checkbox al_center" [checked]="filterGiftToMe()"
-            (change)="filterGiftToMe.set(getEventVal($event) === 'on' ? 'YES' : 'NO')">
-        
-        <div class="mt-1 text-sm w-fit text-white">Tags</div>
-        <app-tag-list [filterTags]="filterTags()" [editMode]="true" (updateTags)="filterTags.set($event)"></app-tag-list>
+            <div class="text text-sm w-fit">Category</div>
+            <!-- <input type="text" class="text mc-input" (change)="filterCategory.set(getEventVal($event))"> -->
+            <select class="mc-input text-white">
+                <option class="text-white" [value]="">Filter by Category</option>
+                @for (category of availableCategories(); track $index) {
+                    <option class="text-white" [value]="category" (change)="filterCategory.set(category)">{{ category | titlecase }}</option>
+                }
+            </select>
+
+            <div class="text text-sm w-fit">Volume</div>
+            <input type="text" class="text mc-input" (change)="filterVolume.set(getEventVal($event))">
+
+            <div class="text text-sm w-fit">Cost</div>
+            <input type="number" min="0" step="0.01" class="text mc-input" (change)="filterCost.set(getEventVal($event))">
+
+            <div class="text text-sm w-fit">Merchant</div>
+            <select class="mc-input text-white">
+                <option class="text-white" [value]="">Filter by Merchant</option>
+                @for (merchant of availableMerchants(); track $index) {
+                    <option class="text-white" [value]="merchant" (change)="filterMerchant.set(merchant)">{{ merchant | titlecase }}</option>
+                }
+            </select>
+            <!-- <input type="text" class="text mc-input" (change)="filterMerchant.set(getEventVal($event))"> -->
+
+            <div class="text text-sm w-fit" style="font-size: 10pt;">Purchase Date</div>
+            <input type="date" class="text mc-input" (change)="filterPurchaseDate.set(getEventVal($event))">
+
+            <div class="text text-sm w-fit">Read</div>
+            <!-- <input type="text" class="text mc-input" (change)="filterRead.set(getEventVal($event))"> -->
+            <input type="checkbox" class="green-checkbox al_center" [checked]="filterRead()"
+                (change)="filterRead.set(getEventVal($event) === 'on' ? 'YES' : 'NO')">
+
+            <div class="text text-sm w-fit">Gift</div>
+            <!-- <input type="text" class="text mc-input" (change)="filterGiftToMe.set(getEventVal($event))"> -->
+            <input type="checkbox" class="blue-checkbox al_center" [checked]="filterGiftToMe()"
+                (change)="filterGiftToMe.set(getEventVal($event) === 'on' ? 'YES' : 'NO')">
+
+            <div class="mt-1 text-sm w-fit text-white">Tags</div>
+            <app-tag-list [filterTags]="filterTags()" [editMode]="true" (updateTags)="filterTags.set($event)"></app-tag-list>
+        </div>
     </div>
 
     <div class="display-area">
-        @if (userService.canUserEdit()) {
-            <div class="editor-header">
-                @if (isEditing()) {
-                    <button class="btn active-button" (click)="save()" [disabled]="saveBatch().length === 0 && deleteBatch().length === 0">
-                        Save
-                    </button>
-                    <button class="btn active-button" (click)="stopEditing()">
-                        Cancel
-                    </button>
-                    <app-search-volumes (selectVolume)="addVolume($event)" />
-                }
-                @else {
-                    <button class="btn inactive-button" (click)="editSwitch.set(true)">Edit</button>
-                }
-            </div>
-        }
-
         <div class="volumes">
-
             @if (filteredVolumes(); as volumes) {
                 @for (volume of volumes; track $index) {
                     @defer (on viewport) {
@@ -81,7 +79,7 @@
                             </div>
                             <div class="cell w60">
                                 @if (isEditing()) {
-                                    <input type="number" min="0" step="0.01" class="text" 
+                                    <input type="number" min="0" step="0.01" class="text"
                                         [value]="volume.user_collection_data[0].cost" (change)="doEdit($index, 'cost', $event)">
                                 }
                                 @else {
@@ -219,7 +217,7 @@
                                                 </div>
                                             </div>
                                             <hr>
-                                            @if (volume.brand) { 
+                                            @if (volume.brand) {
                                                 <div class="text t-wrap">Checkout more from <span style="text-decoration: underline;">{{volume.brand}}</span></div>
                                             }
                                         </div>
