@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollectionDataService } from '../../services/data/collection-data.service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
@@ -29,8 +29,6 @@ export class CollectionComponent {
     private readonly volumeService = inject(VolumeService);
     private readonly destroy = inject(DestroyRef);
     protected readonly userService = inject(UserService);
-
-    e = effect(() => console.log(this.availableMerchants(), this.filterCategory(), this.filterMerchant(), this.filterRead()))
 
     // this.collectionDataService.collectionVolumes$
     volumes = toSignal(this.collectionDataService.collectionVolumes$, { initialValue: [] });
@@ -116,13 +114,13 @@ export class CollectionComponent {
             // check name
             return (!this.filterName() || (volume.name ?? '').toLowerCase().includes(this.filterName().toLowerCase()))
                 // check category
-                && (this.filterCategory() === '' || volume.category === this.filterCategory())
+                && (this.filterCategory() === '' || (volume.category + '') === (this.filterCategory() + ''))
                 // check volume
                 && (!this.filterVolume() || volume.volume === this.filterVolume())
                 // check cost
                 && (!this.filterCost() || record.cost.toString() === this.filterCost())
                 // check merchant
-                && (this.filterMerchant() === '' || record.merchant === this.filterMerchant())
+                && (this.filterMerchant() === '' || (record.merchant + '') === this.filterMerchant())
                 // check purchaseDate
                 && (!this.filterPurchaseDate() || (record.purchaseDate ?? '').toLowerCase().includes(this.filterPurchaseDate().toLowerCase()))
                 // check read
@@ -241,7 +239,14 @@ export class CollectionComponent {
     }
 
     getEventVal(value: Event) {
-        return (<TextEvent>value).target.value;
+        const target = (value as TextEvent & {
+            target: {
+                type: string;
+                checked: boolean;
+                value: string;
+            };
+        }).target;
+        return target.type === 'checkbox' ? (target.checked ? 'YES' : 'NO') : target.value;
     }
 
     addVolume(vol: IVolume) {

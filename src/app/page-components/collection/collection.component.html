@@ -15,46 +15,52 @@
             }
         }
         <div class="grid grid-cols-[min-content_auto] gap-3 h-fit w-72 m-8">
+
+            <!-- Filter Name -->
             <div class="text text-sm w-fit">Name</div>
             <input type="text" class="text mc-input" (change)="filterName.set(getEventVal($event))">
 
+            <!-- Filter Category -->
             <div class="text text-sm w-fit">Category</div>
-            <!-- <input type="text" class="text mc-input" (change)="filterCategory.set(getEventVal($event))"> -->
-            <select class="mc-input text-white">
-                <option class="text-white" [value]="">Filter by Category</option>
+            <select class="mc-input text-white" (change)="filterCategory.set(getEventVal($event))">
+                <option class="text-white" value="">Filter by Category</option>
                 @for (category of availableCategories(); track $index) {
-                    <option class="text-white" [value]="category" (change)="filterCategory.set(category)">{{ category | titlecase }}</option>
+                    <option class="text-white" [value]="category">{{ category ?? '[BLANK]' | titlecase }}</option>
                 }
             </select>
 
+            <!-- Filter Volume -->
             <div class="text text-sm w-fit">Volume</div>
             <input type="text" class="text mc-input" (change)="filterVolume.set(getEventVal($event))">
 
+            <!-- Filter Cost -->
             <div class="text text-sm w-fit">Cost</div>
             <input type="number" min="0" step="0.01" class="text mc-input" (change)="filterCost.set(getEventVal($event))">
 
+            <!-- Filter Merchant -->
             <div class="text text-sm w-fit">Merchant</div>
-            <select class="mc-input text-white">
-                <option class="text-white" [value]="">Filter by Merchant</option>
+            <select class="mc-input text-white" (change)="filterMerchant.set(getEventVal($event))">
+                <option class="text-white" value="">Filter by Merchant</option>
                 @for (merchant of availableMerchants(); track $index) {
-                    <option class="text-white" [value]="merchant" (change)="filterMerchant.set(merchant)">{{ merchant | titlecase }}</option>
+                    <option class="text-white" [value]="merchant">{{ merchant ?? '[BLANK]' | titlecase }}</option>
                 }
             </select>
-            <!-- <input type="text" class="text mc-input" (change)="filterMerchant.set(getEventVal($event))"> -->
 
+            <!-- Filter Purchase Date -->
             <div class="text text-sm w-fit" style="font-size: 10pt;">Purchase Date</div>
             <input type="date" class="text mc-input" (change)="filterPurchaseDate.set(getEventVal($event))">
 
+            <!-- Filter Read -->
             <div class="text text-sm w-fit">Read</div>
-            <!-- <input type="text" class="text mc-input" (change)="filterRead.set(getEventVal($event))"> -->
-            <input type="checkbox" class="green-checkbox al_center" [checked]="filterRead()"
-                (change)="filterRead.set(getEventVal($event) === 'on' ? 'YES' : 'NO')">
+            <input type="checkbox" class="green-checkbox al_center" [checked]="filterRead() === 'YES'"
+                (change)="filterRead.set(getEventVal($event))">
 
+            <!-- Filter Gift -->
             <div class="text text-sm w-fit">Gift</div>
-            <!-- <input type="text" class="text mc-input" (change)="filterGiftToMe.set(getEventVal($event))"> -->
-            <input type="checkbox" class="blue-checkbox al_center" [checked]="filterGiftToMe()"
-                (change)="filterGiftToMe.set(getEventVal($event) === 'on' ? 'YES' : 'NO')">
+            <input type="checkbox" class="blue-checkbox al_center" [checked]="filterGiftToMe() === 'YES'"
+                (change)="filterGiftToMe.set(getEventVal($event))">
 
+            <!-- Filter Tags -->
             <div class="mt-1 text-sm w-fit text-white">Tags</div>
             <app-tag-list [filterTags]="filterTags()" [editMode]="true" (updateTags)="filterTags.set($event)"></app-tag-list>
         </div>

@@ -3,7 +3,6 @@
 from datetime import datetime, timedelta
 from typing import Any, List
 import uuid
-from numpy import save
 import requests
 from src.interfaces.icollection import ICollection
 from src.interfaces.iwishlist import IWishlist
@@ -127,6 +126,7 @@ class AWSAdapter:
             if 'id' not in save_item:
                 save_item['id'] = str(uuid.uuid4())
                 save_item['inserted'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+                del save_item['temp_id']
                 graphql_mutation = """mutation save_coll($input: CreateMangaUserCollectionInput!) {
                     createMangaUserCollection(input: $input) {
                         id
@@ -144,7 +144,6 @@ class AWSAdapter:
                     }
                 }"""
             save_item['updated'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-            del save_item['temp_id']
             result = self.__call_collection_gql(graphql_mutation, { 'input': save_item })
             results.append(result.json())
         return results
