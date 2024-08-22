@@ -15,7 +15,7 @@ export class CoverImageSlideshowComponent {
     @Input() title!: string;
 
     getCover() {
-        return this.cover.sort((a) => a.name === 'primary' ? -1 : 1)[0].url.replace('www', 'legacy')
+        return this.cover.sort((a) => a.name === 'primary' ? -1 : 1)[0].url.replace('www', 'legacy');
     }
 
 }

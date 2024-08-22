@@ -11,7 +11,7 @@ const _navigateToPage = (router: Router, url: string, username: string | null) =
     else if (url === '/series' && username) {
         router.navigate(['series'], { queryParams: { username } });
     }
-}
+};
 
 /**
  * A guard that checks if the user is logged in. If not, the user is redirected to the login page.
@@ -25,12 +25,12 @@ export const loggedInGuard: CanActivateFn = (_route: ActivatedRouteSnapshot, sta
     const viewOtherUser = (state.url.includes('/collection') || state.url.includes('/series')) && state.url.includes('?username=');
 
     if (isLoggedIn) {
-        _navigateToPage(router, state.url, username)
+        _navigateToPage(router, state.url, username);
     }
 
     return isLoggedIn || viewOtherUser || loginService.openLogin().pipe(
         tap((userData) => {
-            _navigateToPage(router, state.url, userData.username)
+            _navigateToPage(router, state.url, userData.username);
         }),
         map(() => true)
     );

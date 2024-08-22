@@ -3,6 +3,13 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, pipe, shareReplay, switchMap, tap, throwError } from 'rxjs';
+import { REST_SERVER_URL } from '../../app.config';
+
+export type AuthenticationData = {
+    token: string;
+    expiration: string;
+    refresh_token: string;
+};
 
 export type UserData = {
     username: string;
@@ -15,11 +22,7 @@ export type UserData = {
         theme: string | null;
     };
     personal_stores: string[];
-    authentication: {
-        token: string;
-        expiration: string;
-        refresh_token: string;
-    };
+    authentication: AuthenticationData;
 }
 
 export const LOGIN_PATH_CONTEXT = {
@@ -39,7 +42,6 @@ export class UserService {
 
     private readonly http = inject(HttpClient);
     private readonly _activatedRoute = inject(ActivatedRoute);
-    private readonly SERVER_URL = 'http://localhost:8050/';
 
     userData = signal<UserData>({
         username: localStorage.getItem('username')!,
@@ -78,7 +80,7 @@ export class UserService {
                 return throwError(() => Error('No username provided.'));
             }
             return this.http.get<UserData>(
-                this.SERVER_URL + '/get-user-by-username?username=' + params['username']
+                REST_SERVER_URL + '/get-user-by-username?username=' + params['username']
             );
         }),
         shareReplay(1)
@@ -90,7 +92,7 @@ export class UserService {
     )
     canUserEdit = computed(() => this.userData().username === this._routeChanged().username);
 
-    private readonly _saveUserData = pipe(
+    readonly saveUserData = pipe(
         tap((data: UserData) => {
             localStorage.setItem('token', data.authentication.token);
             localStorage.setItem('expiration', data.authentication.expiration);
@@ -120,8 +122,8 @@ export class UserService {
         if (!email || !password) {
             return throwError(() => Error('Email and password are required to login.'));
         }
-        return this.http.post<UserData>(this.SERVER_URL + LOGIN_PATH_CONTEXT.path, { email, password }).pipe(
-            this._saveUserData
+        return this.http.post<UserData>(REST_SERVER_URL + LOGIN_PATH_CONTEXT.path, { email, password }).pipe(
+            this.saveUserData
         );
     }
 
@@ -140,8 +142,8 @@ export class UserService {
         if (!email || !username || !password) {
             return throwError(() => Error('Email, username, and password are required to sign up for an account.'));
         }
-        return this.http.post<UserData>(this.SERVER_URL + SIGNUP_PATH_CONTEXT.path, { email, username, password }).pipe(
-            this._saveUserData
+        return this.http.post<UserData>(REST_SERVER_URL + SIGNUP_PATH_CONTEXT.path, { email, username, password }).pipe(
+            this.saveUserData
         );
     }
 
@@ -151,7 +153,7 @@ export class UserService {
      * @returns an observable of whether the username is available
      */
     checkUsername(username: string): Observable<boolean> {
-        return this.http.post<boolean>(this.SERVER_URL + '/check-username', { username });
+        return this.http.post<boolean>(REST_SERVER_URL + '/check-username', { username });
     }
 
     /**

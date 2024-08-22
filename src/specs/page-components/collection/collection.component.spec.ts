@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { CollectionComponent } from './collection.component';
+import { CollectionComponent } from '../../../app/page-components/collection/collection.component';
 
 describe('CollectionComponent', () => {
     let component: CollectionComponent;

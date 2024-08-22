@@ -51,7 +51,7 @@ export class SearchVolumesComponent {
                 else return a.volume.volume.localeCompare(b.volume.volume, undefined, { numeric: true });
             }).map(({ volume }) => volume);
         })
-    )
+    );
 
     similarity = (search: string, option: string) => {
         let longer = option;
@@ -65,7 +65,7 @@ export class SearchVolumesComponent {
             return 1.0;
         }
         return (longerLength - this.editDistance(longer, shorter)) / longerLength;
-    }
+    };
 
     editDistance = (s1: string, s2: string) => {
         s1 = s1.toLowerCase();
@@ -92,7 +92,7 @@ export class SearchVolumesComponent {
                 costs[s2.length] = lastValue;
         }
         return costs[s2.length];
-    }
+    };
 
     constructor(private volumesService: VolumeService) {
         outputToObservable(this.selectVolume).pipe(

@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { CollectionDataService } from './collection-data.service';
+import { CollectionDataService } from '../../../app/services/data/collection-data.service';
 
 describe('CollectionDataService', () => {
     let service: CollectionDataService;

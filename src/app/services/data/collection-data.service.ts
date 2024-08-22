@@ -103,8 +103,8 @@ export class CollectionDataService {
     );
 
     readonly MODIFY_COLLECTION = gql`
-        mutation modify_collection($token: String!, $user_id: ID!, $volumes_update: [CollectionDataInput]!) {
-            modify_collection(token: $token, user_id: $user_id, volumes_update: $volumes_update) {
+        mutation modify_collection($user_id: ID!, $volumes_update: [CollectionDataInput]!) {
+            modify_collection(user_id: $user_id, volumes_update: $volumes_update) {
                 response {
                     id
                     state
@@ -126,8 +126,8 @@ export class CollectionDataService {
     `;
 
     readonly DELETE_COLLECTION = gql`
-        mutation delete_collection_records($token: String!, $user_id: ID!, $ids_delete: [String]!) {
-            delete_collection_records(token: $token, user_id: $user_id, ids_delete: $ids_delete) {
+        mutation delete_collection_records($user_id: ID!, $ids_delete: [String]!) {
+            delete_collection_records(user_id: $user_id, ids_delete: $ids_delete) {
                 response
                 success
                 errors
@@ -140,7 +140,7 @@ export class CollectionDataService {
         return of(this.userService.userData()).pipe(
             switchMap(({ user_id }) => this.apollo.mutate<IGQLModifyCollectionResult>({
                 mutation: this.MODIFY_COLLECTION,
-                variables: { token: window.localStorage.getItem('token'), user_id: user_id, volumes_update: records }
+                variables: { user_id: user_id, volumes_update: records }
             })),
             map(result => {
                 if (result.data?.modify_collection.success && result.data?.modify_collection.response) {
@@ -160,7 +160,7 @@ export class CollectionDataService {
         return of(this.userService.userData()).pipe(
             switchMap(({ user_id }) => this.apollo.mutate<IGQLDeleteCollectionResult>({
                 mutation: this.DELETE_COLLECTION,
-                variables: { token: window.localStorage.getItem('token'), user_id, ids_delete: records }
+                variables: { user_id, ids_delete: records }
             })),
             map(result => {
                 if (result.data?.delete_collection_records.success && result.data?.delete_collection_records.response) {

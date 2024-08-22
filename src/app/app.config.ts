@@ -2,16 +2,20 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ApolloClientOptions, ApolloLink, InMemoryCache } from '@apollo/client/core';
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
 import { APOLLO_OPTIONS, Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
+import { authInterceptor } from './services/interceptors/auth-interceptor';
+
+export const REST_SERVER_URL = 'http://localhost:8050/';
+export const GQL_SERVER_URL = 'http://localhost:4000/graphql';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        provideHttpClient(withFetch()),
+        provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes),
         provideAnimations(),
@@ -20,7 +24,7 @@ export const appConfig: ApplicationConfig = {
             useFactory: (httpLink: HttpLink): ApolloClientOptions<unknown> => ({
                 link: ApolloLink.from([
                     removeTypenameFromVariables(),
-                    httpLink.create({ uri: 'http://localhost:4000/graphql' }),
+                    httpLink.create({ uri: GQL_SERVER_URL }),
                 ]),
                 cache: new InMemoryCache(),
             }),

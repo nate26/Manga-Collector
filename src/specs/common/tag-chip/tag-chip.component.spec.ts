@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SearchVolumesComponent } from '../../../app/common/search-volumes/search-volumes.component';
+import { TagChipComponent } from '../../../app/common/tag-chip/tag-chip.component';
 
-describe('SearchVolumesComponent', () => {
-    let component: SearchVolumesComponent;
-    let fixture: ComponentFixture<SearchVolumesComponent>;
+describe('TagChipComponent', () => {
+    let component: TagChipComponent;
+    let fixture: ComponentFixture<TagChipComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SearchVolumesComponent]
+            imports: [TagChipComponent]
         })
             .compileComponents();
 
-        fixture = TestBed.createComponent(SearchVolumesComponent);
+        fixture = TestBed.createComponent(TagChipComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

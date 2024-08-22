@@ -1,7 +1,7 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollectionDataService } from '../../services/data/collection-data.service';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ICollection } from '../../interfaces/iCollection.interface';
 import { SearchVolumesComponent } from '../../common/search-volumes/search-volumes.component';
 import { IVolume } from '../../interfaces/iVolume.interface';
@@ -11,10 +11,6 @@ import { ITheme } from '../../interfaces/iSeries.interface';
 import { UserService } from '../../services/data/user.service';
 import { TagChipComponent } from '../../common/tag-chip/tag-chip.component';
 import { TagListComponent } from '../../common/tag-list/tag-list.component';
-
-interface TextEvent extends Event {
-    target: EventTarget & { value: string };
-}
 
 @Component({
     selector: 'app-collection',
@@ -239,7 +235,7 @@ export class CollectionComponent {
     }
 
     getEventVal(value: Event) {
-        const target = (value as TextEvent & {
+        const target = (value as InputEvent & {
             target: {
                 type: string;
                 checked: boolean;
