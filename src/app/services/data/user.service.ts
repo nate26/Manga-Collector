@@ -71,7 +71,7 @@ export class UserService {
             userData.email &&
             userData.user_id
             //TODO add other validations once defaults get set
-        )
+        );
     });
 
     userIdFromRoute$ = this._activatedRoute.queryParams.pipe(
@@ -89,7 +89,7 @@ export class UserService {
     private readonly _routeChanged = toSignal(
         this._activatedRoute.queryParams,
         { initialValue: { username: null } }
-    )
+    );
     canUserEdit = computed(() => this.userData().username === this._routeChanged().username);
 
     readonly saveUserData = pipe(
