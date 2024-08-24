@@ -48,3 +48,5 @@ bin/db/old
 /.nx
 bin/db/vault.json
 bin/db/users.json
+bin/db/z_collection.json
+bin/db/z_wishlist.json
