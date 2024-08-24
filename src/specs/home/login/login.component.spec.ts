@@ -48,6 +48,7 @@ fdescribe('LoginComponent', () => {
         expect(component['isPathLogin']()).toBeFalse();
     });
 
+    //#region email validators
     it('should not return an email error if it is untouched', fakeAsync(() => {
         let text: string | undefined;
         component['emailError$'].subscribe((error) => text = error);
@@ -97,8 +98,11 @@ fdescribe('LoginComponent', () => {
         tick(1);
         expect(text).toBe('');
     }));
+    //#endregion
 
+    //#region username validators
     it('should not return a username error if it is untouched', fakeAsync(() => {
+        component['pathContext'].set(SIGNUP_PATH_CONTEXT);
         let text: string | undefined;
         component['usernameError$'].subscribe((error) => text = error);
         component['userForm'].controls.username.markAsUntouched();
@@ -107,16 +111,28 @@ fdescribe('LoginComponent', () => {
         expect(text).toBe('');
     }));
 
-    it('should not return an username error if it is valid', fakeAsync(() => {
+    it('should not return an username error on the login path', fakeAsync(() => {
+        component['pathContext'].set(LOGIN_PATH_CONTEXT);
         let text: string | undefined;
         component['usernameError$'].subscribe((error) => text = error);
-        component['userForm'].controls.email.markAsTouched();
+        component['userForm'].controls.username.markAsTouched();
+        component['userForm'].controls.username.setValue('');
+        tick(500);
+        expect(text).toBe('');
+    }));
+
+    it('should not return an username error if it is valid', fakeAsync(() => {
+        component['pathContext'].set(SIGNUP_PATH_CONTEXT);
+        let text: string | undefined;
+        component['usernameError$'].subscribe((error) => text = error);
+        component['userForm'].controls.username.markAsTouched();
         component['userForm'].controls.username.setValue('usr');
         tick(500);
         expect(text).toBe('');
     }));
 
     it('should return an username error if it touched and empty', fakeAsync(() => {
+        component['pathContext'].set(SIGNUP_PATH_CONTEXT);
         let text: string | undefined;
         component['usernameError$'].subscribe((error) => text = error);
         component['userForm'].controls.username.markAsTouched();
@@ -129,6 +145,7 @@ fdescribe('LoginComponent', () => {
     }));
 
     it('should return an username error if it is invalid', fakeAsync(() => {
+        component['pathContext'].set(SIGNUP_PATH_CONTEXT);
         let text: string | undefined;
         component['usernameError$'].subscribe((error) => text = error);
         component['userForm'].controls.username.markAsTouched();
@@ -136,11 +153,12 @@ fdescribe('LoginComponent', () => {
         invalidUsernames.forEach(username => {
             component['userForm'].controls.username.setValue(username);
             tick(500);
-            expect(text).toBe('Your username must be at least 3 characters long.');
+            expect(text).toBe('Your username must be at least 3 characters.');
         });
     }));
 
     it('should not get a username error response until after 500 debounce', fakeAsync(() => {
+        component['pathContext'].set(SIGNUP_PATH_CONTEXT);
         let text: string | undefined;
         component['usernameError$'].subscribe((error) => text = error);
         component['userForm'].controls.username.markAsUntouched();
@@ -150,4 +168,80 @@ fdescribe('LoginComponent', () => {
         tick(1);
         expect(text).toBe('');
     }));
+    //#endregion
+
+    //#region password validators
+    it('should not return a password error if it is empty', fakeAsync(() => {
+        let text: string | undefined;
+        component['passwordError$'].subscribe((error) => text = error);
+        component['userForm'].controls.password.markAsTouched();
+        component['userForm'].controls.password.setValue('');
+        tick(500);
+        expect(text).toBe('');
+    }));
+    it('should not return a password error if it is untouched', fakeAsync(() => {
+        let text: string | undefined;
+        component['passwordError$'].subscribe((error) => text = error);
+        component['userForm'].controls.password.markAsUntouched();
+        component['userForm'].controls.password.setValue('');
+        tick(500);
+        expect(text).toBe('');
+    }));
+
+    it('should not return an password error if it is valid', fakeAsync(() => {
+        let text: string | undefined;
+        component['passwordError$'].subscribe((error) => text = error);
+        component['userForm'].controls.password.markAsTouched();
+        component['userForm'].controls.password.setValue('123Apples!');
+        tick(500);
+        expect(text).toBe('');
+    }));
+
+    it('should return an password error if there are no capital letters', fakeAsync(() => {
+        let text: string | undefined;
+        component['passwordError$'].subscribe((error) => text = error);
+        component['userForm'].controls.password.markAsTouched();
+        component['userForm'].controls.password.setValue('123apples!');
+        tick(500);
+        expect(text).toBe('Password must contain at least one capital letter.');
+    }));
+
+    it('should return an password error if there are no numbers letters', fakeAsync(() => {
+        let text: string | undefined;
+        component['passwordError$'].subscribe((error) => text = error);
+        component['userForm'].controls.password.markAsTouched();
+        component['userForm'].controls.password.setValue('Appples!');
+        tick(500);
+        expect(text).toBe('Password must contain at least one number.');
+    }));
+
+    it('should return an password error if it is less than 8 characters long', fakeAsync(() => {
+        let text: string | undefined;
+        component['passwordError$'].subscribe((error) => text = error);
+        component['userForm'].controls.password.markAsTouched();
+        component['userForm'].controls.password.setValue('1Apple!');
+        tick(500);
+        expect(text).toBe('Password must be at least 8 characters long.');
+    }));
+
+    it('should return an password error if there are no special characters', fakeAsync(() => {
+        let text: string | undefined;
+        component['passwordError$'].subscribe((error) => text = error);
+        component['userForm'].controls.password.markAsTouched();
+        component['userForm'].controls.password.setValue('123Apples');
+        tick(500);
+        expect(text).toBe('Password must contain a special character.');
+    }));
+
+    it('should not get a password error response until after 500 debounce', fakeAsync(() => {
+        let text: string | undefined;
+        component['passwordError$'].subscribe((error) => text = error);
+        component['userForm'].controls.password.markAsUntouched();
+        component['userForm'].controls.password.setValue('');
+        tick(499);
+        expect(text).toBeUndefined();
+        tick(1);
+        expect(text).toBe('');
+    }));
+    //#endregion
 });

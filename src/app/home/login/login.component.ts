@@ -1,6 +1,6 @@
 import { AsyncPipe, JsonPipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { LOGIN_PATH_CONTEXT, SIGNUP_PATH_CONTEXT, UserService } from '../../services/data/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -40,13 +40,14 @@ export class LoginComponent {
             )
         ]),
         username: new FormControl<string | null>(null, [
-            Validators.required,
+            (control: AbstractControl): ValidationErrors | null =>
+                !this.isPathLogin() ? Validators.required(control) : null,
             Validators.minLength(3)
         ]),
         password: new FormControl('', [
             Validators.required,
             Validators.pattern(
-                '(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!#^~%*?&,.<>"\'\\;:{\\}\\[\\]\\|\\+' +
+                '(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!#^~%*?&,.<>"\'\\;:{\\}\\[\\]\\|\\+' +
                 '\\-\\=\\_\\)\\(\\)\\`\\/\\\\\\]])[A-Za-z0-9d$@].{8,}'
             )
         ]),
@@ -78,7 +79,7 @@ export class LoginComponent {
             if (this.userForm.controls.username.errors?.['required']) {
                 return 'A username is required.';
             }
-            return 'Your username must be at least 3 characters long.';
+            return 'Your username must be at least 3 characters.';
         })
     );
 

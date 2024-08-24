@@ -12,21 +12,26 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) 
     const userService = inject(UserService);
     const { username, authentication } = userService.userData();
 
+    const { token, refresh_token, expiration } = authentication;
+    if (!token || !refresh_token || !expiration) {
+        return next(req);
+    }
+
     return iif(
-        () => parseFloat(authentication.expiration ?? '0') > (Date.now() / 1000)
-            && Boolean(authentication.token),
-        of(authentication.token),
+        () => parseFloat(expiration!) > (Date.now() / 1000)
+            && Boolean(token),
+        of(token),
         inject(HttpClient).post<AuthenticationData>(
             REST_SERVER_URL + '/refreshToken',
-            { username, refresh_token: authentication.refresh_token }
+            { username, refresh_token }
         ).pipe(
             map(authentication => ({ ...userService.userData(), authentication } as UserData)),
             userService.saveUserData,
             map(({ authentication }) => authentication.token)
         )
     ).pipe(
-        switchMap(token => next(req.clone({
-            headers: req.headers.append('X-Authentication-Token', token!)
+        switchMap(providedToken => next(req.clone({
+            headers: req.headers.append('X-Authentication-Token', providedToken!)
         })))
     );
 }
