@@ -10,7 +10,7 @@ import { APOLLO_OPTIONS, Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { authInterceptor } from './services/interceptors/auth-interceptor';
 
-export const REST_SERVER_URL = 'http://localhost:8050/';
+export const REST_SERVER_URL = 'http://localhost:8050';
 export const GQL_SERVER_URL = 'http://localhost:4000/graphql';
 
 export const appConfig: ApplicationConfig = {

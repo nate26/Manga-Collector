@@ -31,7 +31,7 @@ export interface IVolume {
     description: string;
     series_data: ISeries;
     retail_price: number;
-    purchase_options: IShop;
+    purchase_options: IShop[];
     user_collection_data: ICollection[];
     user_wishlist_data: IWishlist[];
 }

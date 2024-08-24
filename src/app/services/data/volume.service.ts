@@ -38,7 +38,11 @@ export class VolumeService {
         }),
         map(response => response.data.all_records.records),
         shareReplay(),
-        catchError((err) => throwError(() => new Error('Could not get all volumes because ', err)))
+        catchError((err) =>
+            throwError(() =>
+                Error('Could not get all volumes because ' + err.message, err)
+            )
+        )
     );
 
     readonly SINGLE_VOLUME_QUERY = gql`
@@ -116,8 +120,12 @@ export class VolumeService {
             tap(({ error }) => {
                 if (error) throw error;
             }),
-            map(response => response.data.get_record.record),
-            catchError((err) => throwError(() => new Error('Could not get all volumes because ', err)))
+            map(response => response.data.get_record.record!),
+            catchError((err) =>
+                throwError(() =>
+                    new Error('Could not get all volumes because ' + err.message, err)
+                )
+            )
         );
     }
 }

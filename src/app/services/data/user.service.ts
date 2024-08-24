@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, pipe, shareReplay, switchMap, tap, throwError } from 'rxjs';
+import { filter, Observable, pipe, shareReplay, switchMap, tap, throwError } from 'rxjs';
 import { REST_SERVER_URL } from '../../app.config';
 
 export type AuthenticationData = {
@@ -25,6 +25,27 @@ export type UserData = {
     authentication: AuthenticationData;
 }
 
+//TODO better way to do this in typescript without duplicating the type
+export type AuthenticationDataPartial = {
+    token: string | null;
+    expiration: string | null;
+    refresh_token: string | null;
+};
+
+export type UserDataPartial = {
+    username: string | null;
+    email: string | null;
+    user_id: string | null;
+    profile: {
+        picture: string | null;
+        banner: string | null;
+        color: string | null;
+        theme: string | null;
+    };
+    personal_stores: string[] | null;
+    authentication: AuthenticationDataPartial;
+};
+
 export const LOGIN_PATH_CONTEXT = {
     path: '/login',
     name: 'Login'
@@ -43,7 +64,7 @@ export class UserService {
     private readonly http = inject(HttpClient);
     private readonly _activatedRoute = inject(ActivatedRoute);
 
-    userData = signal<UserData>({
+    userData = signal<UserDataPartial>({
         username: localStorage.getItem('username')!,
         email: localStorage.getItem('email')!,
         user_id: localStorage.getItem('user_id')!,
@@ -75,22 +96,18 @@ export class UserService {
     });
 
     userIdFromRoute$ = this._activatedRoute.queryParams.pipe(
-        switchMap(params => {
-            if (!params['username']) {
-                return throwError(() => Error('No username provided.'));
-            }
-            return this.http.get<UserData>(
-                REST_SERVER_URL + '/get-user-by-username?username=' + params['username']
-            );
-        }),
+        filter(params => Boolean(params['username'])),
+        switchMap(params => this.http.get<UserData>(
+            REST_SERVER_URL + '/get-user-by-username?username=' + params['username']
+        )),
         shareReplay(1)
     );
 
-    private readonly _routeChanged = toSignal(
-        this._activatedRoute.queryParams,
-        { initialValue: { username: null } }
+    private readonly _userDataOnRoute = toSignal<UserDataPartial, UserDataPartial>(
+        this.userIdFromRoute$,
+        { initialValue: { authentication: {} } as UserDataPartial }
     );
-    canUserEdit = computed(() => this.userData().username === this._routeChanged().username);
+    canUserEdit = computed(() => this.userData().user_id === this._userDataOnRoute().user_id);
 
     readonly saveUserData = pipe(
         tap((data: UserData) => {

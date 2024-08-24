@@ -97,7 +97,7 @@ export class CollectionDataService {
             }))
         }))),
         catchError((err: Error) => {
-            console.error('Could not get data because ', err)
+            console.error('Could not get data because ', err);
             return EMPTY;
         })
     );
@@ -144,10 +144,10 @@ export class CollectionDataService {
             })),
             map(result => {
                 if (result.data?.modify_collection.success && result.data?.modify_collection.response) {
-                    return result.data.modify_collection.response
+                    return result.data.modify_collection.response;
                 }
                 else {
-                    console.error('could not save data... ', result)
+                    console.error('could not save data... ', result);
                     throw new Error(result.errors?.join(', '));
                 }
             }),
@@ -164,10 +164,10 @@ export class CollectionDataService {
             })),
             map(result => {
                 if (result.data?.delete_collection_records.success && result.data?.delete_collection_records.response) {
-                    return result.data.delete_collection_records.response
+                    return result.data.delete_collection_records.response;
                 }
                 else {
-                    console.error('could not delete data... ', result)
+                    console.error('could not delete data... ', result);
                     throw new Error(result.errors?.join(', '));
                 }
             }),
@@ -189,7 +189,7 @@ export class CollectionDataService {
             tags: [],
             user_id,
             temp_id: Date.now().toString()
-        }
+        };
     }
 
 }

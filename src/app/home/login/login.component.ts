@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component, DestroyRef, computed, inject, signal } fr
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LOGIN_PATH_CONTEXT, SIGNUP_PATH_CONTEXT, UserService } from '../../services/data/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { debounceTime, iif, map } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -18,7 +17,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class LoginComponent {
 
     private readonly _userService = inject(UserService);
-    private readonly _router = inject(Router);
     private readonly _destroyRef = inject(DestroyRef);
     private readonly _dialogRef = inject(MatDialogRef<LoginComponent>);
     private readonly _cdr = inject(ChangeDetectorRef);
@@ -41,7 +39,10 @@ export class LoginComponent {
                 '\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'
             )
         ]),
-        username: new FormControl(null),
+        username: new FormControl<string | null>(null, [
+            Validators.required,
+            Validators.minLength(3)
+        ]),
         password: new FormControl('', [
             Validators.required,
             Validators.pattern(
@@ -62,7 +63,7 @@ export class LoginComponent {
                 return '';
             }
             if (this.userForm.controls.email.errors?.['required']) {
-                return 'An valid email address is required.';
+                return 'An email address is required.';
             }
             return 'Please provide a valid email address.';
         })
@@ -76,9 +77,6 @@ export class LoginComponent {
             }
             if (this.userForm.controls.username.errors?.['required']) {
                 return 'A username is required.';
-            }
-            if (this.userForm.controls.username.errors?.['minlength']) {
-                return 'Your username must be at least 3 characters long.';
             }
             return 'Your username must be at least 3 characters long.';
         })

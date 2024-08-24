@@ -32,6 +32,7 @@
 - [ ] Add Batching on Get for Performance
 - [ ] Address Cover Images (performance, safety, cookies)
 - [ ] GQL Rate Limiting
+- [ ] Cleanup Interfaces with GQL
 
 ### Editing:
 - [ ] [<font color="orange"> REQUIRED </font>] Error Message on Save Fail

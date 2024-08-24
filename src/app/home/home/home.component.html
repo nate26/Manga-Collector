@@ -2,17 +2,17 @@
     <div class="flex">
         <h1 class="text">Manga Collector</h1>
         @if (userService.userDataIsValid()) {
-            <button class="nav-button text" (click)="routeToUserPage('series')">My Series</button>
-            <button class="nav-button text" (click)="routeToUserPage('collection')">My Volumes</button>
+            <button id="my-series" class="nav-button text" (click)="routeToUserPage('series')">My Series</button>
+            <button id="my-collection" class="nav-button text" (click)="routeToUserPage('collection')">My Volumes</button>
         }
     </div>
     <div>
         <!-- user icon -->
         @if (userService.userDataIsValid()) {
-            <button class="nav-button text" (click)="userService.logout()">Sign Out</button>
+            <button id="sign-out" class="nav-button text" (click)="userService.logout()">Sign Out</button>
         }
         @else {
-            <button class="nav-button text" (click)="callOpenLogin()">Login</button>
+            <button id="log-in" class="nav-button text" (click)="callOpenLogin()">Login</button>
         }
     </div>
 </div>
