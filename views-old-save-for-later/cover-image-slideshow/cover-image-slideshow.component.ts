@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ICoverImage } from '../../interfaces/iVolume.interface';
+import { ICoverImage } from '../../src/app/interfaces/iVolume.interface';
 
 @Component({
     selector: 'app-cover-image-slideshow',

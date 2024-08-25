@@ -10,10 +10,10 @@ import { UserService } from './user.service';
 })
 export class SeriesDataService {
 
-    private readonly apollo = inject(Apollo);
-    private readonly userService = inject(UserService);
+    private readonly _apollo = inject(Apollo);
+    private readonly _userService = inject(UserService);
 
-    readonly SERIES_VOLUMES_QUERY = gql`
+    private readonly SERIES_VOLUMES_QUERY = gql`
         query get_collection_series($user_id: ID!) {
             get_collection_series(user_id: $user_id) {
                 records {
@@ -79,9 +79,9 @@ export class SeriesDataService {
         }
     `;
 
-    collectionSeries$: Observable<ISeriesRecord[]> = this.userService.userIdFromRoute$.pipe(
+    readonly collectionSeries$: Observable<ISeriesRecord[]> = this._userService.userIdFromRoute$.pipe(
         switchMap(({ user_id }) =>
-            this.apollo.watchQuery<IGQLGetCollectionSeries>({
+            this._apollo.watchQuery<IGQLGetCollectionSeries>({
                 query: this.SERIES_VOLUMES_QUERY,
                 variables: { user_id }
             }).valueChanges
@@ -101,7 +101,7 @@ export class SeriesDataService {
             }))
         }))),
         catchError((err: Error) => {
-            console.error('Could not get data because ', err)
+            console.error('Could not get data because ', err);
             return EMPTY;
         })
     );

@@ -1,5 +1,5 @@
 import { AsyncPipe, JsonPipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectorRef, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { LOGIN_PATH_CONTEXT, SIGNUP_PATH_CONTEXT, UserService } from '../../services/data/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -19,13 +19,12 @@ export class LoginComponent {
     private readonly _userService = inject(UserService);
     private readonly _destroyRef = inject(DestroyRef);
     private readonly _dialogRef = inject(MatDialogRef<LoginComponent>);
-    private readonly _cdr = inject(ChangeDetectorRef);
 
     protected readonly pathContext = signal(inject<typeof LOGIN_PATH_CONTEXT>(MAT_DIALOG_DATA));
     protected readonly isPathLogin = computed(() => this.pathContext().path === LOGIN_PATH_CONTEXT.path);
 
     //#region Form
-    protected userForm = new FormGroup({
+    protected readonly userForm = new FormGroup({
         email: new FormControl('', [
             Validators.required,
             // Validators.email
@@ -54,10 +53,10 @@ export class LoginComponent {
     });
     //#endregion
 
-    protected loginError = signal('');
+    protected readonly loginError = signal('');
 
     //#region Validators
-    protected emailError$ = this.userForm.valueChanges.pipe(
+    protected readonly emailError$ = this.userForm.valueChanges.pipe(
         debounceTime(500),
         map(() => {
             if (!this.userForm.controls.email.touched || this.userForm.controls.email.valid) {
@@ -70,7 +69,7 @@ export class LoginComponent {
         })
     );
 
-    protected usernameError$ = this.userForm.valueChanges.pipe(
+    protected readonly usernameError$ = this.userForm.valueChanges.pipe(
         debounceTime(500),
         map(() => {
             if (!this.userForm.controls.username.touched || this.userForm.controls.username.valid) {
@@ -83,7 +82,7 @@ export class LoginComponent {
         })
     );
 
-    protected passwordError$ = this.userForm.valueChanges.pipe(
+    protected readonly passwordError$ = this.userForm.valueChanges.pipe(
         debounceTime(500),
         map(() => {
             const value = this.userForm.controls.password.value;
@@ -134,14 +133,15 @@ export class LoginComponent {
     protected switchPath() {
         if (this.isPathLogin()) {
             this.pathContext.set(SIGNUP_PATH_CONTEXT);
-            this.userForm.controls.username.setValidators([Validators.required, Validators.minLength(3)]);
-            this._cdr.detectChanges();
         }
         else {
             this.pathContext.set(LOGIN_PATH_CONTEXT);
-            this.userForm.controls.username.setValidators([]);
             this.userForm.controls.username.setValue(null);
         }
+    }
+
+    protected closeLogin() {
+        this._dialogRef.close();
     }
 
 }

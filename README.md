@@ -8,6 +8,7 @@
 - [x] <font color="gray"> ~~Collection Editor~~ </font>
 - [x] <font color="gray"> ~~Authorization~~ </font>
 - [ ] [<font color="limegreen"> IN PROGRESS </font>] Series Viewer
+- [ ] Browse Volume Sales
 - [ ] Admin Records Editor
 - [ ] Admin Add Volumes
 - [ ] Item Search
@@ -33,6 +34,25 @@
 - [ ] Address Cover Images (performance, safety, cookies)
 - [ ] GQL Rate Limiting
 - [ ] Cleanup Interfaces with GQL
+
+### Series Viewer:
+- [ ] Fix Volume Image Display
+- [ ] Lazy Load Volume Data
+- [ ] Add Volume Tags (Owned, Unowned, Sale, Read)
+- [ ] Volume Details Window
+- [ ] Add Sale Data to Volume Details if Unowned
+- [ ] Add Collection Data to Volume Details if Owned
+- [ ] Create Series Page
+- [ ] Link to Series Page
+
+### Browse Volume Sales:
+- [ ] Display Volumes With Sales
+- [ ] Display Sale Price Tag
+- [ ] Provide Link To Store
+- [ ] Display Link to Series Page
+
+### Browse Series:
+- [ ] Display Series Suggestions
 
 ### Editing:
 - [ ] [<font color="orange"> REQUIRED </font>] Error Message on Save Fail

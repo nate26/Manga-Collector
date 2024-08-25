@@ -86,7 +86,8 @@ body {
     outline: 2px solid white;
 }
 
-.btn {
+.btn,
+.btn-sm {
     border-style: solid;
     border-width: 2px;
     border-radius: 5px;
@@ -94,6 +95,10 @@ body {
     margin: 8px;
     cursor: pointer;
     width: fit-content;
+}
+
+.btn-sm {
+    padding: 4px 10px;
 }
 
 .inactive-button {

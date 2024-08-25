@@ -84,7 +84,7 @@ describe('VolumeService', () => {
                 }
             ] as IVolume[]);
             expect(apolloMock.watchQuery).toHaveBeenCalledOnceWith({
-                query: service.VOLUMES_BASIC_QUERY,
+                query: service['VOLUMES_BASIC_QUERY'],
                 variables: { user_id: null }
             });
         });
@@ -186,7 +186,7 @@ describe('VolumeService', () => {
                 error: fail
             });
             expect(apolloMock.watchQuery).toHaveBeenCalledWith({
-                query: service.SINGLE_VOLUME_QUERY,
+                query: service['SINGLE_VOLUME_QUERY'],
                 variables: { isbn: '1234567890', user_id: '12345678' }
             });
             expect(result).toEqual({

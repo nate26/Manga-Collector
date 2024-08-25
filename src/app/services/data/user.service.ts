@@ -64,7 +64,7 @@ export class UserService {
     private readonly http = inject(HttpClient);
     private readonly _activatedRoute = inject(ActivatedRoute);
 
-    userData = signal<UserDataPartial>({
+    readonly userData = signal<UserDataPartial>({
         username: localStorage.getItem('username')!,
         email: localStorage.getItem('email')!,
         user_id: localStorage.getItem('user_id')!,
@@ -82,7 +82,7 @@ export class UserService {
         }
     });
 
-    userDataIsValid = computed(() => {
+    readonly userDataIsValid = computed(() => {
         const userData = this.userData();
         return Boolean(
             userData.authentication.token &&
@@ -95,7 +95,7 @@ export class UserService {
         );
     });
 
-    userIdFromRoute$ = this._activatedRoute.queryParams.pipe(
+    readonly userIdFromRoute$ = this._activatedRoute.queryParams.pipe(
         filter(params => Boolean(params['username'])),
         switchMap(params => this.http.get<UserData>(
             REST_SERVER_URL + '/get-user-by-username?username=' + params['username']
@@ -107,7 +107,7 @@ export class UserService {
         this.userIdFromRoute$,
         { initialValue: { authentication: {} } as UserDataPartial }
     );
-    canUserEdit = computed(() => this.userData().user_id === this._userDataOnRoute().user_id);
+    readonly canUserEdit = computed(() => this.userData().user_id === this._userDataOnRoute().user_id);
 
     readonly saveUserData = pipe(
         tap((data: UserData) => {

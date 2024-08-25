@@ -11,10 +11,10 @@ import { UserService } from './user.service';
 })
 export class CollectionDataService {
 
-    private readonly apollo = inject(Apollo);
-    private readonly userService = inject(UserService);
+    private readonly _apollo = inject(Apollo);
+    private readonly _userService = inject(UserService);
 
-    readonly COLLECTION_VOLUMES_QUERY = gql`
+    private readonly COLLECTION_VOLUMES_QUERY = gql`
         query get_collection_volumes($user_id: ID!) {
             get_collection_volumes(user_id: $user_id) {
                 records {
@@ -79,9 +79,9 @@ export class CollectionDataService {
         }
     `;
 
-    collectionVolumes$: Observable<IVolume[]> = this.userService.userIdFromRoute$.pipe(
+    readonly collectionVolumes$: Observable<IVolume[]> = this._userService.userIdFromRoute$.pipe(
         switchMap(({ user_id }) =>
-            this.apollo.watchQuery<IGQLGetCollectionVolumes>({
+            this._apollo.watchQuery<IGQLGetCollectionVolumes>({
                 query: this.COLLECTION_VOLUMES_QUERY,
                 variables: { user_id }
             }).valueChanges
@@ -102,7 +102,7 @@ export class CollectionDataService {
         })
     );
 
-    readonly MODIFY_COLLECTION = gql`
+    private readonly MODIFY_COLLECTION = gql`
         mutation modify_collection($user_id: ID!, $volumes_update: [CollectionDataInput]!) {
             modify_collection(user_id: $user_id, volumes_update: $volumes_update) {
                 response {
@@ -125,7 +125,7 @@ export class CollectionDataService {
         }
     `;
 
-    readonly DELETE_COLLECTION = gql`
+    private readonly DELETE_COLLECTION = gql`
         mutation delete_collection_records($user_id: ID!, $ids_delete: [String]!) {
             delete_collection_records(user_id: $user_id, ids_delete: $ids_delete) {
                 response
@@ -137,8 +137,8 @@ export class CollectionDataService {
 
     saveToCollection(records: ICollection[]) {
         if (records.length === 0) return of([]);
-        return of(this.userService.userData()).pipe(
-            switchMap(({ user_id }) => this.apollo.mutate<IGQLModifyCollectionResult>({
+        return of(this._userService.userData()).pipe(
+            switchMap(({ user_id }) => this._apollo.mutate<IGQLModifyCollectionResult>({
                 mutation: this.MODIFY_COLLECTION,
                 variables: { user_id: user_id, volumes_update: records }
             })),
@@ -157,8 +157,8 @@ export class CollectionDataService {
 
     deleteFromCollection(records: string[]) {
         if (records.length === 0) return of([]);
-        return of(this.userService.userData()).pipe(
-            switchMap(({ user_id }) => this.apollo.mutate<IGQLDeleteCollectionResult>({
+        return of(this._userService.userData()).pipe(
+            switchMap(({ user_id }) => this._apollo.mutate<IGQLDeleteCollectionResult>({
                 mutation: this.DELETE_COLLECTION,
                 variables: { user_id, ids_delete: records }
             })),

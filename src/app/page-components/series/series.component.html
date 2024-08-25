@@ -6,7 +6,7 @@
                     <!-- @defer (on viewport) { -->
                         <div class="series-row">
                             @defer (on viewport) {
-                                <img [src]="series.cover_image" alt="{{'cover image for' + series.title}}" class="cover-image"
+                                <img [src]="series.cover_image" appLazyImage alt="{{'cover image for' + series.title}}" class="cover-image"
                                     (click)="showVolumeDetails(series)" (keypress)="selectedSeries.set(series)" tabindex={$index}>
                             }
                             @placeholder {
@@ -34,7 +34,7 @@
                                     @for (volume of series.volumes; track $index) {
                                         @defer (on viewport) {
                                             <div class="vol-cover">
-                                                <img [src]="volume.primary_cover_image_url" alt="{{'cover image for' + series.title}}"
+                                                <img [src]="volume.primary_cover_image_url" appLazyImage alt="{{'cover image for' + series.title}}"
                                                     class="cover-image vol-cover-image">
                                                 <div class="text al_center vol-cover-text">{{volume.display_name}}</div>
                                             </div>

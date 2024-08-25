@@ -13,25 +13,27 @@
     }
 </ng-template>
 
-<div class="login-area">
+<div class="login-area relative">
+    <button class="btn-sm inactive-button absolute top-2 right-2" (click)="closeLogin()">X</button>
+
     <h1 class="text login-title">{{pathContext().name}}</h1>
     <form class="text login-form" [formGroup]="userForm" (ngSubmit)="login()">
 
-        <div>
+        <div id="email-form">
             <label for="email">Email</label>
             <input class="login-input" type="email" formControlName="email">
             <ng-container *ngTemplateOutlet="invalidText; context: { error: emailError$ }"></ng-container>
         </div>
-        
+
         @if (!isPathLogin()) {
-            <div>
+            <div id="username-form">
                 <label for="username">Username</label>
                 <input class="login-input" type="text" formControlName="username">
                 <ng-container *ngTemplateOutlet="invalidText; context: { error: usernameError$ }"></ng-container>
             </div>
         }
 
-        <div>
+        <div id="password-form">
             <label for="password">Password</label>
             <input class="login-input" type="password" formControlName="password">
             <ng-container *ngTemplateOutlet="invalidText; context: { error: passwordError$ }"></ng-container>
@@ -45,7 +47,7 @@
             {{pathContext().name}}
         </button>
 
-        <button type="button" class="link-button" (click)="switchPath()">
+        <button id="login-nav-link" type="button" class="link-button" (click)="switchPath()">
             @if (isPathLogin()) {
                 Don't have an account? Sign up here.
             }

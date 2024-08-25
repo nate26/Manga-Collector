@@ -18,7 +18,7 @@ export class LoginService {
      * @returns An observable that emits whether the user is logged in
      * when the dialog is closed.
      */
-    openLogin(): Observable<UserData> {
+    openLogin(): Observable<UserData | undefined> {
         return this._matDialog.open(LoginComponent, {
             data: {
                 path: '/login',

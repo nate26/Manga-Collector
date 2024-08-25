@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } fr
 import { UserService } from '../services/data/user.service';
 import { inject } from '@angular/core';
 import { LoginService } from '../services/login.service';
-import { map, tap } from 'rxjs';
+import { filter, map, tap } from 'rxjs';
 
 const _navigateToPage = (router: Router, url: string, username: string | null) => {
     if (url === '/collection' && username) {
@@ -20,17 +20,23 @@ const _navigateToPage = (router: Router, url: string, username: string | null) =
 export const loggedInGuard: CanActivateFn = (_route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const loginService = inject(LoginService);
     const router = inject(Router);
-    const isLoggedIn = inject(UserService).userDataIsValid();
-    const username = localStorage.getItem('username');
-    const viewOtherUser = (state.url.includes('/collection') || state.url.includes('/series')) && state.url.includes('?username=');
+    const userService = inject(UserService);
+    const isLoggedIn = userService.userDataIsValid();
+    const username = userService.userData().username;
+    const viewOtherUser =
+        (state.url.includes('/collection') || state.url.includes('/series'))
+        && state.url.includes('?username=')
+        && Boolean(state.url.split('?username=')[1]);
 
-    if (isLoggedIn) {
+    if (isLoggedIn && !state.url.includes('?username=')) {
         _navigateToPage(router, state.url, username);
+        return true;
     }
 
-    return isLoggedIn || viewOtherUser || loginService.openLogin().pipe(
+    return viewOtherUser || loginService.openLogin().pipe(
+        filter((userData) => Boolean(userData)),
         tap((userData) => {
-            _navigateToPage(router, state.url, userData.username);
+            _navigateToPage(router, state.url.split('?username=')[0], userData!.username);
         }),
         map(() => true)
     );

@@ -1,4 +1,4 @@
-import { Component, HostListener, output, signal } from '@angular/core';
+import { Component, HostListener, inject, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -25,13 +25,18 @@ import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-inter
 })
 export class SearchVolumesComponent {
 
-    selectVolume = output<IVolume>();
+    private readonly _volumeService = inject(VolumeService);
 
-    searchActive = signal(true);
+    readonly selectVolume = output<IVolume>();
+    protected readonly disableSearchOnSelect = outputToObservable(this.selectVolume).pipe(
+        takeUntilDestroyed()
+    ).subscribe(() => this.searchActive.set(false));
 
-    searchControl = new FormControl<string>('');
-    searchResults$ = combineLatest({
-        volumes: this.volumesService.volumesBasic$,
+    protected readonly searchActive = signal(true);
+
+    protected readonly searchControl = new FormControl<string>('');
+    protected readonly searchResults$ = combineLatest({
+        volumes: this._volumeService.volumesBasic$,
         search: this.searchControl.valueChanges.pipe(startWith(''))
     }).pipe(
         debounceTime(300),
@@ -53,7 +58,7 @@ export class SearchVolumesComponent {
         })
     );
 
-    similarity = (search: string, option: string) => {
+    protected readonly similarity = (search: string, option: string) => {
         let longer = option;
         let shorter = search;
         if (option.length < search.length) {
@@ -67,7 +72,7 @@ export class SearchVolumesComponent {
         return (longerLength - this.editDistance(longer, shorter)) / longerLength;
     };
 
-    editDistance = (s1: string, s2: string) => {
+    protected readonly editDistance = (s1: string, s2: string) => {
         s1 = s1.toLowerCase();
         s2 = s2.toLowerCase();
 
@@ -94,14 +99,8 @@ export class SearchVolumesComponent {
         return costs[s2.length];
     };
 
-    constructor(private volumesService: VolumeService) {
-        outputToObservable(this.selectVolume).pipe(
-            takeUntilDestroyed()
-        ).subscribe(() => this.searchActive.set(false));
-    }
-
     @HostListener('document:keydown', ['$event'])
-    hideOnEscape(event: KeyboardEvent) {
+    protected hideOnEscape(event: KeyboardEvent) {
         if (event.key === 'Escape') this.searchActive.set(false);
     }
 

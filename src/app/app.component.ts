@@ -11,6 +11,6 @@ import { HomeComponent } from './home/home/home.component';
     styleUrl: './app.component.css'
 })
 export class AppComponent {
-    title = 'Manga Tracker';
+    title = 'Manga Collector';
 
 }

@@ -13,7 +13,7 @@ export class VolumeService {
     private readonly apollo = inject(Apollo);
     private readonly userService = inject(UserService);
 
-    readonly VOLUMES_BASIC_QUERY = gql`
+    private readonly VOLUMES_BASIC_QUERY = gql`
         query all_records($user_id: ID) {
             all_records(user_id: $user_id) {
                 records {
@@ -29,7 +29,7 @@ export class VolumeService {
         }
     `;
 
-    volumesBasic$: Observable<IVolume[]> = this.apollo.watchQuery<IGQLAllRecord>({
+    readonly volumesBasic$: Observable<IVolume[]> = this.apollo.watchQuery<IGQLAllRecord>({
         query: this.VOLUMES_BASIC_QUERY,
         variables: { user_id: null }
     }).valueChanges.pipe(
@@ -45,7 +45,7 @@ export class VolumeService {
         )
     );
 
-    readonly SINGLE_VOLUME_QUERY = gql`
+    private readonly SINGLE_VOLUME_QUERY = gql`
         query get_record($isbn: ID!, $user_id: ID!) {
             get_record(isbn: $isbn, user_id: $user_id) {
                 record {

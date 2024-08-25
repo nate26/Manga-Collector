@@ -72,7 +72,7 @@
                 @for (volume of volumes; track $index) {
                     @defer (on viewport) {
                         <div class="volume-row" [ngClass]="volumeRowClass(volume)">
-                            <img [src]="volume.primary_cover_image_url" alt="{{'cover image for' + volume.name}}" class="cover-image"
+                            <img [src]="volume.primary_cover_image_url" appLazyImage alt="{{'cover image for' + volume.name}}" class="cover-image"
                                 (click)="showVolumeDetails(volume)" (keypress)="selectedVol.set(volume)" tabindex={$index}>
                             <div class="cell w260">
                                 <a class="text t-wrap" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
@@ -133,7 +133,7 @@
                             </div>
                             @if (isEditing()) {
                                 <div class="cell w50">
-                                    <button class="btn active-button" (click)="markForDelete(volume.user_collection_data[0])">
+                                    <button class="btn-sm inactive-button" (click)="markForDelete(volume.user_collection_data[0])">
                                         X
                                     </button>
                                 </div>
@@ -145,7 +145,7 @@
                                 @if (volumeIsSelected(volume)) {
                                     <div class="volume-details" style="overflow: hidden">
                                         <div style="height: inherit; font-size: 88%;">
-                                            <img [src]="volume.primary_cover_image_url" alt="{{'cover image for' + volume.name}}" class="cover-image">
+                                            <img [src]="volume.primary_cover_image_url" appLazyImage alt="{{'cover image for' + volume.name}}" class="cover-image">
                                             <div class="text">
                                                 <span class="subject">Added to Your Collection:</span>
                                                 {{volume.user_collection_data[0].inserted | date}}
