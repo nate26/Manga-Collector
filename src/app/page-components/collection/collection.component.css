@@ -1,10 +1,8 @@
-@media screen {}
-
 .collection-viewport {
     width: 62vw;
     margin: auto;
     background-color: #252529;
-    /* background-color: #282828; #2a2835*/
+    /* #282828; #2a2835 */
 }
 
 .img-link {
@@ -31,18 +29,21 @@
 /* ignore above for now */
 
 
+
+
 .editor-header {
     display: flex;
-    width: 100%;
+    /* width: 100%; */
     background-color: var(--item-background-color);
     margin-bottom: 10px;
 }
 
 .volumes {
     overflow: auto;
-    height: calc(100vh - 233px);
-    /*66px*/
-    width: 100vw;
+    height: calc(100vh - 100px);
+    /* height: calc(100vh - 233px); */
+    /* 66px */
+    /* width: 100vw; */
     /* min-width: 1012px; */
 }
 
@@ -53,7 +54,7 @@
     border-radius: 5px;
     height: 60px;
     width: fit-content;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.8), 0px 1px 3px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 6px rgb(0 0 0 / 80%), 0 1px 3px rgb(0 0 0 / 50%);
 }
 
 .volume-row-selected {
@@ -61,7 +62,7 @@
 }
 
 .edited-row {
-    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2), 0px 0px 5px rgb(95, 147, 255);
+    box-shadow: 0 0 10px rgb(255 255 255 / 20%), 0 0 5px rgb(95 147 255);
     transition: box-shadow 0.3s ease-in;
 }
 

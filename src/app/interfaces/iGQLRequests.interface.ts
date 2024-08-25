@@ -9,7 +9,7 @@ export interface IGQLResponse {
 
 export interface IGQLGetRecord extends IGQLResponse {
     get_record: {
-        record: IVolume;
+        record: IVolume | null;
     };
 }
 

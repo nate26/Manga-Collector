@@ -39,6 +39,9 @@
                     {
                         "allowTemplateLiterals": true
                     }
+                ],
+                "semi": [
+                    "warn"
                 ]
             }
         },

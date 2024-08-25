@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { EMPTY, Observable, catchError, map, switchMap, tap } from 'rxjs';
 import { ISeriesRecord } from '../../interfaces/iSeries.interface';
 import { IGQLGetCollectionSeries } from '../../interfaces/iGQLRequests.interface';
 import { UserService } from './user.service';
@@ -9,13 +9,11 @@ import { UserService } from './user.service';
     providedIn: 'root'
 })
 export class SeriesDataService {
-    // TODO remove soon
-    private readonly USER_ID = 'f69c759a-00dd-4dbe-8e58-96cd7a05969e';
 
-    private readonly apollo = inject(Apollo);
-    private readonly userService = inject(UserService);
+    private readonly _apollo = inject(Apollo);
+    private readonly _userService = inject(UserService);
 
-    readonly SERIES_VOLUMES_QUERY = gql`
+    private readonly SERIES_VOLUMES_QUERY = gql`
         query get_collection_series($user_id: ID!) {
             get_collection_series(user_id: $user_id) {
                 records {
@@ -81,10 +79,13 @@ export class SeriesDataService {
         }
     `;
 
-    collectionSeries$: Observable<ISeriesRecord[]> = this.apollo.watchQuery<IGQLGetCollectionSeries>({
-        query: this.SERIES_VOLUMES_QUERY,
-        variables: { user_id: this.USER_ID }
-    }).valueChanges.pipe(
+    readonly collectionSeries$: Observable<ISeriesRecord[]> = this._userService.userIdFromRoute$.pipe(
+        switchMap(({ user_id }) =>
+            this._apollo.watchQuery<IGQLGetCollectionSeries>({
+                query: this.SERIES_VOLUMES_QUERY,
+                variables: { user_id }
+            }).valueChanges
+        ),
         tap(({ error }) => {
             if (error) throw error;
         }),
@@ -99,7 +100,10 @@ export class SeriesDataService {
                 }))
             }))
         }))),
-        catchError((err: Error) => throwError(() => 'Could not get data because ' + err.message))
+        catchError((err: Error) => {
+            console.error('Could not get data because ', err);
+            return EMPTY;
+        })
     );
 
 }

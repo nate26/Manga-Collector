@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable, catchError, map, of, tap, throwError, switchMap } from 'rxjs';
+import { Observable, catchError, map, of, tap, throwError, switchMap, EMPTY } from 'rxjs';
 import { IVolume } from '../../interfaces/iVolume.interface';
 import { IGQLDeleteCollectionResult, IGQLGetCollectionVolumes, IGQLModifyCollectionResult } from '../../interfaces/iGQLRequests.interface';
 import { ICollection } from '../../interfaces/iCollection.interface';
@@ -10,13 +10,11 @@ import { UserService } from './user.service';
     providedIn: 'root'
 })
 export class CollectionDataService {
-    // TODO remove soon
-    private readonly USER_ID = 'f69c759a-00dd-4dbe-8e58-96cd7a05969e';
 
-    private readonly apollo = inject(Apollo);
-    private readonly userService = inject(UserService);
+    private readonly _apollo = inject(Apollo);
+    private readonly _userService = inject(UserService);
 
-    readonly COLLECTION_VOLUMES_QUERY = gql`
+    private readonly COLLECTION_VOLUMES_QUERY = gql`
         query get_collection_volumes($user_id: ID!) {
             get_collection_volumes(user_id: $user_id) {
                 records {
@@ -81,11 +79,13 @@ export class CollectionDataService {
         }
     `;
 
-    // TODO get user_id via route queryParams
-    collectionVolumes$: Observable<IVolume[]> = this.apollo.watchQuery<IGQLGetCollectionVolumes>({
-        query: this.COLLECTION_VOLUMES_QUERY,
-        variables: { user_id: this.USER_ID }
-    }).valueChanges.pipe(
+    readonly collectionVolumes$: Observable<IVolume[]> = this._userService.userIdFromRoute$.pipe(
+        switchMap(({ user_id }) =>
+            this._apollo.watchQuery<IGQLGetCollectionVolumes>({
+                query: this.COLLECTION_VOLUMES_QUERY,
+                variables: { user_id }
+            }).valueChanges
+        ),
         tap(({ error }) => {
             if (error) throw error;
         }),
@@ -96,12 +96,15 @@ export class CollectionDataService {
                 tags: collection.tags ?? []
             }))
         }))),
-        catchError((err: Error) => throwError(() => 'Could not get data because ' + err.message))
+        catchError((err: Error) => {
+            console.error('Could not get data because ', err);
+            return EMPTY;
+        })
     );
 
-    readonly MODIFY_COLLECTION = gql`
-        mutation modify_collection($token: String!, $user_id: ID!, $volumes_update: [CollectionDataInput]!) {
-            modify_collection(token: $token, user_id: $user_id, volumes_update: $volumes_update) {
+    private readonly MODIFY_COLLECTION = gql`
+        mutation modify_collection($user_id: ID!, $volumes_update: [CollectionDataInput]!) {
+            modify_collection(user_id: $user_id, volumes_update: $volumes_update) {
                 response {
                     id
                     state
@@ -122,9 +125,9 @@ export class CollectionDataService {
         }
     `;
 
-    readonly DELETE_COLLECTION = gql`
-        mutation delete_collection_records($token: String!, $user_id: ID!, $ids_delete: [String]!) {
-            delete_collection_records(token: $token, user_id: $user_id, ids_delete: $ids_delete) {
+    private readonly DELETE_COLLECTION = gql`
+        mutation delete_collection_records($user_id: ID!, $ids_delete: [String]!) {
+            delete_collection_records(user_id: $user_id, ids_delete: $ids_delete) {
                 response
                 success
                 errors
@@ -134,17 +137,17 @@ export class CollectionDataService {
 
     saveToCollection(records: ICollection[]) {
         if (records.length === 0) return of([]);
-        return this.userService.userData$.pipe(
-            switchMap(({ user_id }) => this.apollo.mutate<IGQLModifyCollectionResult>({
+        return of(this._userService.userData()).pipe(
+            switchMap(({ user_id }) => this._apollo.mutate<IGQLModifyCollectionResult>({
                 mutation: this.MODIFY_COLLECTION,
-                variables: { token: window.localStorage.getItem('token'), user_id: user_id, volumes_update: records }
+                variables: { user_id: user_id, volumes_update: records }
             })),
             map(result => {
                 if (result.data?.modify_collection.success && result.data?.modify_collection.response) {
-                    return result.data.modify_collection.response
+                    return result.data.modify_collection.response;
                 }
                 else {
-                    console.error('could not save data... ', result)
+                    console.error('could not save data... ', result);
                     throw new Error(result.errors?.join(', '));
                 }
             }),
@@ -154,17 +157,17 @@ export class CollectionDataService {
 
     deleteFromCollection(records: string[]) {
         if (records.length === 0) return of([]);
-        return this.userService.userData$.pipe(
-            switchMap(({ user_id }) => this.apollo.mutate<IGQLDeleteCollectionResult>({
+        return of(this._userService.userData()).pipe(
+            switchMap(({ user_id }) => this._apollo.mutate<IGQLDeleteCollectionResult>({
                 mutation: this.DELETE_COLLECTION,
-                variables: { token: window.localStorage.getItem('token'), user_id, ids_delete: records }
+                variables: { user_id, ids_delete: records }
             })),
             map(result => {
                 if (result.data?.delete_collection_records.success && result.data?.delete_collection_records.response) {
-                    return result.data.delete_collection_records.response
+                    return result.data.delete_collection_records.response;
                 }
                 else {
-                    console.error('could not delete data... ', result)
+                    console.error('could not delete data... ', result);
                     throw new Error(result.errors?.join(', '));
                 }
             }),
@@ -173,6 +176,8 @@ export class CollectionDataService {
     }
 
     buildNewRecord(vol: IVolume): ICollection {
+        const user_id = localStorage.getItem('user_id');
+        if (!user_id) throw new Error('User ID not found');
         return {
             isbn: vol.isbn,
             state: '',
@@ -182,9 +187,9 @@ export class CollectionDataService {
             giftToMe: false,
             read: false,
             tags: [],
-            user_id: this.USER_ID,
+            user_id,
             temp_id: Date.now().toString()
-        }
+        };
     }
 
 }

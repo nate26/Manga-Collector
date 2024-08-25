@@ -1,5 +1,6 @@
 '''GraphQL API to query the manga library'''
 
+from datetime import datetime, timedelta
 from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, ObjectType
 from flask import Flask, jsonify, request
@@ -36,6 +37,7 @@ schema = make_executable_schema(type_defs, query, mutation)
 @app.route('/graphql', methods=['POST'])
 def graphql_server():
     '''GQL server for performing queries'''
+    start_time = datetime.now()
     data = request.get_json()
     success, result = graphql_sync(
         schema,
@@ -44,6 +46,8 @@ def graphql_server():
         debug=app.debug
     )
     status_code = 200 if success else 400
+    end_time = (datetime.now() - start_time).total_seconds()
+    logger.info('Time for /graphql: %s', str(timedelta(seconds=end_time)))
     return jsonify(result), status_code
 
 if __name__ == '__main__':

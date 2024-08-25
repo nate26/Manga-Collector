@@ -3,6 +3,7 @@
 import json
 import traceback
 from typing import List
+from flask import request
 import jwt
 import requests
 from src.enums.host_enum import HostEnum
@@ -14,16 +15,16 @@ from src.util.manga_logger import MangaLogger
 class Mutations:
     '''
     A class used to modify data in the data layer
-    
+
     ...
-    
+
     Attributes
     ----------
     - host: HostEnum
         The host machine to know where to access data for logging
     - data: Data
         The data layer to interact with the DB, passed for maintaining state of cached user data
-    
+
     Methods
     -------
     - update_volume_resolver(_obj, _info, user_id: str, volumes_update: List[ICollection])
@@ -37,26 +38,28 @@ class Mutations:
         self.logger = MangaLogger(host).register_logger(__name__)
         self.auth = Auth(host)
 
-    def update_volume_resolver(self, _obj, _info, token: str, user_id: str,
+    def update_volume_resolver(self, _obj, _info, user_id: str,
                                volumes_update: List[ICollection]):
         '''
         Update an existing volume record in the DB
-        
+
         Parameters:
-        - token (str): The JWT token to authenticate the request
         - user_id (str): The user id to authenticate the request
         - volumes_update (List[ICollection]): The list of volume records to update
-        
+
         Returns:
         - dict: The response payload
-        
+
         Raises:
         - requests.exceptions.RequestException: Could not complete AWS request
         - ValueError: Incorrect volume record format provided
         - AuthenticationError: User not authorized to perform this action
         '''
         try:
-            if self.auth.decode_user(token) is None:
+            if self.auth.decode_user(
+                str(request.headers.get('X-Authentication-Token')),
+                self.auth.secret
+            ) is None:
                 raise jwt.InvalidTokenError('User not authorized')
 
             response = self.data.add_to_collection_data(user_id, volumes_update)
@@ -85,26 +88,28 @@ class Mutations:
             }
         return payload
 
-    def delete_collection_records_resolver(self, _obj, _info, token: str, user_id: str,
+    def delete_collection_records_resolver(self, _obj, _info, user_id: str,
                                            ids_delete: List[str]):
         '''
         Delete an existing volume record in the DB
-        
+
         Parameters:
-        - token (str): The JWT token to authenticate the request
         - user_id (str): The user id to authenticate the request
         - ids_delete (List[str]): The list of volume records to delete
-        
+
         Returns:
         - dict: The response payload
-        
+
         Raises:
         - requests.exceptions.RequestException: Could not complete AWS request
         - ValueError: Incorrect id format provided
         - AuthenticationError: User not authorized to perform this action
         '''
         try:
-            if self.auth.decode_user(token) is None:
+            if self.auth.decode_user(
+                str(request.headers.get('X-Authentication-Token')),
+                self.auth.secret
+            ) is None:
                 raise jwt.InvalidTokenError('User not authorized')
 
             self.data.delete_from_collection_data(user_id, ids_delete)

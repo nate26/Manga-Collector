@@ -266,12 +266,10 @@ type Mutation {
     #     volumes_input: [VolumeRecordInput]!
     # ): SingleVolumeRecordResult!
     modify_collection(
-        token: String!,
         user_id: ID!,
         volumes_update: [CollectionDataInput]!
     ): ModifyAWSResult!
     delete_collection_records(
-        token: String!,
         user_id: ID!,
         ids_delete: [String]!
     ): DeleteAWSResult!

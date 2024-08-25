@@ -1,0 +1,10 @@
+<div class="flex pt-1 pb-1 pl-2 pr-2 rounded-xl" [style.backgroundColor]="color">
+    <span id="tag-name" class="t-wrap text-white">{{ tagName() }}</span>
+    @if (editMode()) {
+        <button
+            id="remove-tag-button"
+            (click)="removeTag.emit()"
+            class="h-3 mt-auto mb-auto ml-1 p-[3px] text-xs leading-[1px] rounded-full text-slate-400 hover:bg-white/[0.3] hover:text-white"
+        >x</button>
+    }
+</div>

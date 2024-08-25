@@ -1,32 +1,55 @@
-import { Component, DestroyRef, computed, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollectionDataService } from '../../services/data/collection-data.service';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop'
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ICollection } from '../../interfaces/iCollection.interface';
 import { SearchVolumesComponent } from '../../common/search-volumes/search-volumes.component';
 import { IVolume } from '../../interfaces/iVolume.interface';
 import { VolumeService } from '../../services/data/volume.service';
 import { forkJoin, tap } from 'rxjs';
 import { ITheme } from '../../interfaces/iSeries.interface';
-
-interface TextEvent extends Event {
-    target: EventTarget & { value: string };
-}
+import { UserService } from '../../services/data/user.service';
+import { TagChipComponent } from '../../common/tag-chip/tag-chip.component';
+import { TagListComponent } from '../../common/tag-list/tag-list.component';
+import { LazyImageDirective } from '../../common/directives/lazy-image/lazy-image.directive';
 
 @Component({
     selector: 'app-collection',
     standalone: true,
-    imports: [CommonModule, SearchVolumesComponent],
+    imports: [CommonModule, SearchVolumesComponent, TagChipComponent, TagListComponent, LazyImageDirective],
     templateUrl: './collection.component.html',
     styleUrl: './collection.component.css'
 })
 export class CollectionComponent {
 
-    volumes = toSignal(this.collectionDataService.collectionVolumes$, { initialValue: [] });
+    private readonly _collectionDataService = inject(CollectionDataService);
+    private readonly _volumeService = inject(VolumeService);
+    private readonly _destroy = inject(DestroyRef);
+    protected readonly userService = inject(UserService);
+
+    // this._collectionDataService.collectionVolumes$
+    volumes = toSignal(this._collectionDataService.collectionVolumes$, { initialValue: [] });
     volumeIDs = computed(() => this.volumes().map(vol => vol.user_collection_data[0].id));
     newVolumes = signal<IVolume[]>([]);
+    availableCategories = computed(
+        () => this.volumes()
+            .map(vol => vol.category)
+            .filter((v, i, a) => a.indexOf(v) === i)
+    );
+    availableMerchants = computed(
+        () => this.volumes()
+            .map(vol => vol.user_collection_data[0].merchant)
+            .filter((v, i, a) => a.indexOf(v) === i)
+    );
+    availableTags = computed(
+        () => this.volumes()
+            .map(vol => vol.user_collection_data[0].tags)
+            .flat()
+            .filter((v, i, a) => a.indexOf(v) === i)
+    );
 
-    editing = signal(false);
+    protected editSwitch = signal(false);
+    protected isEditing = computed(() => this.editSwitch() && this.userService.userDataIsValid());
 
     saveBatch = signal<ICollection[]>([]); // temp cache of save changes
     saved = signal<ICollection[]>([]); // cache of all prior saved records
@@ -43,7 +66,7 @@ export class CollectionComponent {
     filterPurchaseDate = signal<string>('');
     filterRead = signal<string>('');
     filterGiftToMe = signal<string>('');
-    filterTags = signal<string>('');
+    filterTags = signal<string[]>([]);
 
     // separate filter and saved states for performance
     editedVolumes = computed(() => {
@@ -56,7 +79,7 @@ export class CollectionComponent {
                     ...this.newVolumes().find(vol => vol.isbn === volume.isbn)!,
                     user_collection_data: [volume],
                     edited: true
-                }
+                };
             }),
             // add in all new volumes that were previously saved
             ...this.saved().filter(record => this.volumeIDs().indexOf(record.id) === -1).map(volume => {
@@ -64,7 +87,7 @@ export class CollectionComponent {
                     ...this.newVolumes().find(vol => vol.isbn === volume.isbn)!,
                     user_collection_data: [volume],
                     edited: Boolean(this.saveBatch().find(record => record.id === volume.id))
-                }
+                };
             }),
             // modify all existing volumes that were edited
             ...vols.map(volume => {
@@ -88,13 +111,13 @@ export class CollectionComponent {
             // check name
             return (!this.filterName() || (volume.name ?? '').toLowerCase().includes(this.filterName().toLowerCase()))
                 // check category
-                && (this.filterCategory() === '' || volume.category === this.filterCategory())
+                && (this.filterCategory() === '' || (volume.category + '') === (this.filterCategory() + ''))
                 // check volume
                 && (!this.filterVolume() || volume.volume === this.filterVolume())
                 // check cost
                 && (!this.filterCost() || record.cost.toString() === this.filterCost())
                 // check merchant
-                && (this.filterMerchant() === '' || record.merchant === this.filterMerchant())
+                && (this.filterMerchant() === '' || (record.merchant + '') === this.filterMerchant())
                 // check purchaseDate
                 && (!this.filterPurchaseDate() || (record.purchaseDate ?? '').toLowerCase().includes(this.filterPurchaseDate().toLowerCase()))
                 // check read
@@ -102,7 +125,8 @@ export class CollectionComponent {
                 // check giftToMe
                 && (this.filterGiftToMe() === '' || record.giftToMe === (this.filterGiftToMe() === 'YES'))
                 // check tags
-                && (!this.filterTags() || record.tags.join(',').toLowerCase().includes(this.filterTags().toLowerCase()));
+                && (this.filterTags().length === 0 ||
+                    this.filterTags().some(fTag => record.tags.some(tag => fTag.toLowerCase() === tag.toLowerCase())));
         });
     });
 
@@ -114,20 +138,15 @@ export class CollectionComponent {
         else classes.push('volume-row');
         if (volume.edited) classes.push('edited-row');
         return classes.join(' ');
-    }
+    };
 
     volumeIsSelected = (volume: IVolume) => {
         const selectedId = this.selectedVol()?.user_collection_data?.[0]?.id ?? this.selectedVol()?.user_collection_data?.[0]?.temp_id;
         const volId = volume.user_collection_data[0].id ?? volume.user_collection_data[0].temp_id;
         return selectedId === volId && selectedId !== undefined;
-    }
+    };
 
     parseThemes = (themes: ITheme[]) => themes.map(t => t.theme).join(', ');
-
-    constructor(
-        private collectionDataService: CollectionDataService,
-        private volumeService: VolumeService,
-        private destroy: DestroyRef) { }
 
     private _batchEdit(batch: ICollection[], record: ICollection) {
         // update batch if record is already in batch
@@ -139,29 +158,35 @@ export class CollectionComponent {
 
         if (!record.id && this.saved().some(savedRecord => savedRecord.temp_id === record.temp_id)) {
             // remove from saved if we are re-editing it
-            this.saved.update(saved => saved.filter(savedRecord => savedRecord.temp_id !== record.temp_id))
+            this.saved.update(saved => saved.filter(savedRecord => savedRecord.temp_id !== record.temp_id));
         }
 
         // add to batch if not already there
-        return [...batch, record]
+        return [...batch, record];
     }
 
-    edit(index: number, field: string, value: Event) {
+    doEdit(index: number, field: string, value: Event) {
         this.saveBatch.update(batch => {
-
-            // get existing record
-            const record = this.filteredVolumes()[index].user_collection_data[0];
-
-            // parse new value
-            const eventVal = this.getEventVal(value);
+            const existingRecord = this.filteredVolumes()[index].user_collection_data[0];
+            const newValue = this.getEventVal(value);
             let parsedValue;
-            if (field === 'tags') parsedValue = eventVal ? eventVal.split(',').map(t => t.trim()) : [];
-            else if (field === 'cost') parsedValue = parseFloat(eventVal);
+            if (field === 'cost') parsedValue = parseFloat(newValue);
             else if (field === 'read' || field === 'giftToMe') parsedValue = (<HTMLInputElement>value.target).checked;
-            else parsedValue = eventVal;
+            else parsedValue = newValue;
+            return this._batchEdit(batch, { ...existingRecord, [field]: parsedValue });
+        });
+    }
 
-            return this._batchEdit(batch, { ...record, [field]: parsedValue });
-        })
+    editTags(index: number, value: string[]): void {
+        this.saveBatch.update(batch => {
+            return this._batchEdit(
+                batch,
+                {
+                    ...this.filteredVolumes()[index].user_collection_data[0],
+                    tags: value
+                }
+            );
+        });
     }
 
     markForDelete(record: ICollection) {
@@ -175,7 +200,7 @@ export class CollectionComponent {
 
     save() {
         forkJoin({
-            saveResult: this.collectionDataService.saveToCollection(this.saveBatch()).pipe(
+            saveResult: this._collectionDataService.saveToCollection(this.saveBatch()).pipe(
                 tap({
                     next: (saveResult) => {
                         console.log('The following records were saved: ', this.saveBatch());
@@ -185,7 +210,7 @@ export class CollectionComponent {
                     }
                 })
             ),
-            deleteResult: this.collectionDataService.deleteFromCollection(this.deleteBatch()).pipe(
+            deleteResult: this._collectionDataService.deleteFromCollection(this.deleteBatch()).pipe(
                 tap({
                     next: (deleteResult) => {
                         console.log('The following records were deleted: ', this.deleteBatch());
@@ -196,34 +221,41 @@ export class CollectionComponent {
                 })
             )
         }).pipe(
-            takeUntilDestroyed(this.destroy)
+            takeUntilDestroyed(this._destroy)
         ).subscribe({
             next: () => {
                 this.stopEditing();
-                this.editing.set(false);
+                this.editSwitch.set(false);
             }
         });
     }
 
     stopEditing() {
         this.saveBatch.set([]);
-        this.editing.set(false);
+        this.editSwitch.set(false);
     }
 
     getEventVal(value: Event) {
-        return (<TextEvent>value).target.value;
+        const target = (value as InputEvent & {
+            target: {
+                type: string;
+                checked: boolean;
+                value: string;
+            };
+        }).target;
+        return target.type === 'checkbox' ? (target.checked ? 'YES' : 'NO') : target.value;
     }
 
     addVolume(vol: IVolume) {
         const addToBatch = () =>
-            this.saveBatch.update(batch => [...batch, this.collectionDataService.buildNewRecord(vol)]);
+            this.saveBatch.update(batch => [...batch, this._collectionDataService.buildNewRecord(vol)]);
         if (this.newVolumes().find(v => v.isbn === vol.isbn)) {
             addToBatch();
         }
         else {
             // fetch if not in existing cache
-            this.volumeService.queryVolume(vol.isbn).pipe(
-                takeUntilDestroyed(this.destroy)
+            this._volumeService.queryVolume(vol.isbn).pipe(
+                takeUntilDestroyed(this._destroy)
             ).subscribe({
                 next: (volume) => {
                     this.newVolumes.update(volumes => [...volumes, volume]);
@@ -231,7 +263,7 @@ export class CollectionComponent {
                 },
                 error: (err) => {
                     console.error(err);
-                    alert('could not get volume data for ' + vol.display_name + 'to add to collection')
+                    alert('could not get volume data for ' + vol.display_name + 'to add to collection');
                 }
             });
         }

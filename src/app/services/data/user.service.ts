@@ -1,10 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { Observable, filter, shareReplay, switchMap, tap } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { filter, Observable, pipe, shareReplay, switchMap, tap, throwError } from 'rxjs';
+import { REST_SERVER_URL } from '../../app.config';
+
+export type AuthenticationData = {
+    token: string;
+    expiration: string;
+    refresh_token: string;
+};
 
 export type UserData = {
     username: string;
+    email: string;
     user_id: string;
     profile: {
         picture: string | null;
@@ -13,12 +22,39 @@ export type UserData = {
         theme: string | null;
     };
     personal_stores: string[];
-    authentication: {
-        token: string;
-        expiration: string;
-        refresh_token: string;
-    };
+    authentication: AuthenticationData;
 }
+
+//TODO better way to do this in typescript without duplicating the type
+export type AuthenticationDataPartial = {
+    token: string | null;
+    expiration: string | null;
+    refresh_token: string | null;
+};
+
+export type UserDataPartial = {
+    username: string | null;
+    email: string | null;
+    user_id: string | null;
+    profile: {
+        picture: string | null;
+        banner: string | null;
+        color: string | null;
+        theme: string | null;
+    };
+    personal_stores: string[] | null;
+    authentication: AuthenticationDataPartial;
+};
+
+export const LOGIN_PATH_CONTEXT = {
+    path: '/login',
+    name: 'Login'
+};
+
+export const SIGNUP_PATH_CONTEXT = {
+    path: '/sign-up',
+    name: 'Sign Up'
+};
 
 @Injectable({
     providedIn: 'root'
@@ -26,42 +62,106 @@ export type UserData = {
 export class UserService {
 
     private readonly http = inject(HttpClient);
-    private readonly SERVER_URL = 'http://localhost:8050/';
+    private readonly _activatedRoute = inject(ActivatedRoute);
 
-    private _isLoggedIn = signal(false);
-    /**
-     * An observable of whether the user is logged in.
-     */
-    isLoggedIn = computed(() => this._isLoggedIn());
+    readonly userData = signal<UserDataPartial>({
+        username: localStorage.getItem('username')!,
+        email: localStorage.getItem('email')!,
+        user_id: localStorage.getItem('user_id')!,
+        profile: {
+            picture: localStorage.getItem('picture'),
+            banner: localStorage.getItem('banner'),
+            color: localStorage.getItem('color'),
+            theme: localStorage.getItem('theme')
+        },
+        personal_stores: JSON.parse(localStorage.getItem('personal_stores') ?? '[]'),
+        authentication: {
+            token: localStorage.getItem('token')!,
+            expiration: localStorage.getItem('expiration')!,
+            refresh_token: localStorage.getItem('refresh_token')!
+        }
+    });
 
-    private readonly _loginData = signal({ username: '', password: '', path: '' });
+    readonly userDataIsValid = computed(() => {
+        const userData = this.userData();
+        return Boolean(
+            userData.authentication.token &&
+            userData.authentication.expiration &&
+            userData.authentication.refresh_token &&
+            userData.username &&
+            userData.email &&
+            userData.user_id
+            //TODO add other validations once defaults get set
+        );
+    });
 
-    /**
-     * An observable of the user's auth token. This observable is cached and shared among subscribers.
-     */
-    userData$ = toObservable(this._loginData).pipe(
-        filter(({ username, password }) => Boolean(username && password)),
-        switchMap(({ username, password, path }) =>
-            this.http.post<UserData>(this.SERVER_URL + path, { username, password })),
-        tap(data => {
-            window.localStorage.setItem('token', data.authentication.token);
-            window.localStorage.setItem('expiration', data.authentication.expiration);
-            window.localStorage.setItem('refresh_token', data.authentication.refresh_token);
-            this._isLoggedIn.set(true)
-        }),
-        shareReplay()
+    readonly userIdFromRoute$ = this._activatedRoute.queryParams.pipe(
+        filter(params => Boolean(params['username'])),
+        switchMap(params => this.http.get<UserData>(
+            REST_SERVER_URL + '/get-user-by-username?username=' + params['username']
+        )),
+        shareReplay(1)
+    );
+
+    private readonly _userDataOnRoute = toSignal<UserDataPartial, UserDataPartial>(
+        this.userIdFromRoute$,
+        { initialValue: { authentication: {} } as UserDataPartial }
+    );
+    readonly canUserEdit = computed(() => this.userData().user_id === this._userDataOnRoute().user_id);
+
+    readonly saveUserData = pipe(
+        tap((data: UserData) => {
+            localStorage.setItem('token', data.authentication.token);
+            localStorage.setItem('expiration', data.authentication.expiration);
+            localStorage.setItem('refresh_token', data.authentication.refresh_token);
+            localStorage.setItem('username', data.username);
+            localStorage.setItem('email', data.email);
+            localStorage.setItem('user_id', data.user_id);
+            localStorage.setItem('picture', data.profile.picture ?? '');
+            localStorage.setItem('banner', data.profile.banner ?? '');
+            localStorage.setItem('color', data.profile.color ?? '');
+            localStorage.setItem('theme', data.profile.theme ?? '');
+            localStorage.setItem('personal_stores', JSON.stringify(data.personal_stores));
+            this.userData.set(data);
+        })
     );
 
     /**
-     * Login or Sign Up for a user to get a token.
-     * @param username the user's entered username
-     * @param password the user's entered password
-     * @param path the path to login or sign up
+     * Login for a user to get a token.
+     * @param email the email to use, if not provided, an error is thrown
+     * @param password the password to use, if not provided, an error is thrown
      * @returns a cached observable of the user's token
      */
-    login(username: string, password: string, path: string): Observable<UserData> {
-        this._loginData.set({ username, password, path });
-        return this.userData$;
+    login(
+        email: string | null | undefined,
+        password: string | null | undefined
+    ): Observable<UserData> {
+        if (!email || !password) {
+            return throwError(() => Error('Email and password are required to login.'));
+        }
+        return this.http.post<UserData>(REST_SERVER_URL + LOGIN_PATH_CONTEXT.path, { email, password }).pipe(
+            this.saveUserData
+        );
+    }
+
+    /**
+     * Sign Up for a user to create an account and get a token.
+     * @param email the email to use, if not provided, an error is thrown
+     * @param username the username to use, if not provided, an error is thrown
+     * @param password the password to use, if not provided, an error is thrown
+     * @returns a cached observable of the user's token
+     */
+    signUp(
+        email: string | null | undefined,
+        username: string | null | undefined,
+        password: string | null | undefined
+    ): Observable<UserData> {
+        if (!email || !username || !password) {
+            return throwError(() => Error('Email, username, and password are required to sign up for an account.'));
+        }
+        return this.http.post<UserData>(REST_SERVER_URL + SIGNUP_PATH_CONTEXT.path, { email, username, password }).pipe(
+            this.saveUserData
+        );
     }
 
     /**
@@ -70,18 +170,41 @@ export class UserService {
      * @returns an observable of whether the username is available
      */
     checkUsername(username: string): Observable<boolean> {
-        return this.http.post<boolean>(this.SERVER_URL + '/check-username', { username });
+        return this.http.post<boolean>(REST_SERVER_URL + '/check-username', { username });
     }
 
     /**
-     * Log out the user.
+     * Log out the user. This clears the user's data from local storage.
      */
-    signOut() {
-        window.localStorage.removeItem('token');
-        window.localStorage.removeItem('expiration');
-        window.localStorage.removeItem('refresh_token');
-        this._isLoggedIn.set(false);
-        this._loginData.set({ username: '', password: '', path: '' });
+    logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expiration');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('email');
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('picture');
+        localStorage.removeItem('banner');
+        localStorage.removeItem('color');
+        localStorage.removeItem('theme');
+        localStorage.removeItem('personal_stores');
+        this.userData.set({
+            username: '',
+            email: '',
+            user_id: '',
+            profile: {
+                picture: null,
+                banner: null,
+                color: null,
+                theme: null
+            },
+            personal_stores: [],
+            authentication: {
+                token: '',
+                expiration: '',
+                refresh_token: ''
+            }
+        });
     }
 
 }

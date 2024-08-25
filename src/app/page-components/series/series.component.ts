@@ -1,33 +1,32 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SeriesDataService } from '../../services/data/series-data.service';
 import { IVolume } from '../../interfaces/iVolume.interface';
 import { NgClass, NgStyle } from '@angular/common';
 import { ISeriesRecord } from '../../interfaces/iSeries.interface';
+import { LazyImageDirective } from '../../common/directives/lazy-image/lazy-image.directive';
 
 @Component({
     selector: 'app-series',
     standalone: true,
-    imports: [NgStyle, NgClass],
+    imports: [NgStyle, NgClass, LazyImageDirective],
     templateUrl: './series.component.html',
     styleUrl: './series.component.css'
 })
 export class SeriesComponent {
 
-    seriesDataService = inject(SeriesDataService);
+    private readonly _seriesDataService = inject(SeriesDataService);
 
-    series = toSignal(this.seriesDataService.collectionSeries$, { initialValue: [] });
-    url = computed(() => this.series()[0]?.cover_image);
+    protected readonly series = toSignal(this._seriesDataService.collectionSeries$, { initialValue: [] });
 
-    selectedSeries = signal<ISeriesRecord | null>(null);
-
-    seriesIsSelected = (series: ISeriesRecord) => {
+    protected readonly selectedSeries = signal<ISeriesRecord | null>(null);
+    protected readonly seriesIsSelected = (series: ISeriesRecord) => {
         const selectedId = this.selectedSeries()?.series_id ?? this.selectedSeries()?.url;
         const seriesId = this.selectedSeries()?.series_id ? series.series_id : series.url; // fix url to series_id
         return selectedId === seriesId && selectedId !== undefined;
-    }
+    };
 
-    getVolumeStatusColor(volume: IVolume) {
+    protected getVolumeStatusColor(volume: IVolume) {
         if (volume.user_collection_data.length > 0) {
             return { 'background-color': '#A6F7CD' }; //CDA6F7
         }
@@ -44,11 +43,11 @@ export class SeriesComponent {
         }
     }
 
-    navTo(url: string) {
+    protected navTo(url: string) {
         window.open(url, '_blank');
     }
 
-    showVolumeDetails(series: ISeriesRecord) {
+    protected showVolumeDetails(series: ISeriesRecord) {
         if (this.seriesIsSelected(series)) {
             this.selectedSeries.set(null);
         }

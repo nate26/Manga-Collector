@@ -1,12 +1,19 @@
 '''GQL Queries to get data from the DB'''
 
-import json
+from datetime import datetime, timedelta
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
+from typing import List
 
 from requests import RequestException
 from src.data import Data
+from src.interfaces.icollection import ICollection
+from src.interfaces.iseries import ISeries
+from src.interfaces.ishop import IShop
+from src.interfaces.iwishlist import IWishlist
+from src.interfaces.ivolume import ICoverImage
+from src.interfaces.ivolume_display import IVolumeDisplay
 from src.util.manga_logger import MangaLogger
 
 class Queries:
@@ -14,7 +21,7 @@ class Queries:
     A class used to get data from the data layer
 
     ...
-    
+
     Attributes
     ----------
     - host: HostEnum
@@ -35,36 +42,44 @@ class Queries:
     def __get_data(self, user_id: str | None = None):
         '''
         Fetches data from the data layer
-        
+
         Parameters:
         - user_id: str
             The user ID to fetch data for
-        
+
         Returns:
         - tuple: The fetched data
-        
+
         Raises:
         - RequestException: If the request to the data layer fails
         '''
         try:
-            with ThreadPoolExecutor(6) as executor:
+            start_time = datetime.now()
+            with ThreadPoolExecutor(5) as executor:
                 futures = [
                     executor.submit(self.data.get_volumes_data),
                     executor.submit(self.data.get_series_data),
-                    executor.submit(self.data.get_shop_data),
-                    executor.submit(self.data.get_collection_data \
-                        if user_id is not None else lambda _: [], user_id),
-                    executor.submit(self.data.get_wishlist_data \
-                        if user_id is not None else lambda _: [], user_id)
+                    executor.submit(self.data.get_shop_data)
                 ]
-                return executor.map(lambda x: x.result(), futures)
+                if user_id is not None:
+                    futures.append(executor.submit(self.data.get_collection_data, user_id))
+                    futures.append(executor.submit(self.data.get_wishlist_data, user_id))
+                else:
+                    futures.append(executor.submit(lambda: []))
+                    futures.append(executor.submit(lambda: []))
+                results = executor.map(lambda x: x.result(), futures)
+                end_time = (datetime.now() - start_time).total_seconds()
+                self.logger.info('Time to get all data: %s', str(timedelta(seconds=end_time)))
+                return results
         except Exception as exc:
             self.logger.error('Failed to get data')
             self.logger.error(traceback.format_exc())
             raise RequestException('Failed to get data') from exc
 
-    def __parse_volume(self, isbn, volume_data, series_data, shop_data,
-                       collection_data, wishlist_data):
+    def __parse_volume(self, isbn: str, volume_data: dict[str, ICollection],
+                       series_data: dict[str, ISeries], shop_data: dict[str, IShop],
+                       collection_data: List[ICollection],
+                       wishlist_data: List[IWishlist]) -> IVolumeDisplay:
         '''
         Parses volume data to include additional fields
 
@@ -79,12 +94,12 @@ class Queries:
             The collection data to parse
         - wishlist_data: dict
             The wishlist data to parse
-        
+
         Returns:
         - dict: The parsed volume data
         '''
-        parsed_volume_data = volume_data[isbn] if isbn in volume_data \
-            else {
+        parsed_volume_data: ICollection = volume_data[isbn] if isbn in volume_data \
+            else ICollection({
                 'isbn': '',
                 'display_name': 'Unknown',
                 'name': 'Unknown',
@@ -95,14 +110,20 @@ class Queries:
                 'url': '',
                 'record_added_date': '',
                 'record_updated_date': ''
-            }
+            })
         primary_images = [
-            image for image in parsed_volume_data['cover_images'] if image['name'] == 'primary'
+            ICoverImage(image) for image in parsed_volume_data['cover_images']
+                if image['name'] == 'primary'
         ]
         alt_images = [
-            image for image in parsed_volume_data['cover_images'] if image['name'] != 'primary'
+            str(image) for image in parsed_volume_data['cover_images']
+                if image['name'] != 'primary'
         ]
-        return {
+        shop_item = shop_data[isbn] if isbn in shop_data else IShop({
+            'retail_price': None,
+            'shops': []
+        })
+        return IVolumeDisplay({
             **parsed_volume_data,
             'primary_cover_image_url': primary_images[0]['url'] \
                 if len(primary_images) > 0 else None,
@@ -112,16 +133,13 @@ class Queries:
                     'series_id': '',
                     'url': ''
                 },
-            'retail_price': shop_data[isbn]['retail_price'] if isbn in shop_data else None,
-            'purchase_options': shop_data[isbn]['shops'] if isbn in shop_data else {
-                'store': '',
-                'url': ''
-            },
+            'retail_price': shop_item['retail_price'],
+            'purchase_options': shop_item['shops'],
             'user_collection_data': [entry for entry in collection_data if entry['isbn'] == isbn],
             'user_wishlist_data': [entry for entry in wishlist_data if entry['isbn'] == isbn]
-        }
+        })
 
-    def __volume_sort_parse(self, volume: str):
+    def __volume_sort_parse(self, volume: str | None) -> float:
         return -1 if volume is None else (
             float(volume.split('-')[0])
             if '-' in volume
@@ -131,16 +149,16 @@ class Queries:
     def get_record_resolver(self, _obj, _info, isbn: str, user_id: str | None):
         '''
         Gets a single record by its ID from the DB
-        
+
         Parameters:
         - isbn: str
             The ID of the record to fetch
         - user_id: str
             The ID of the user to fetch the record for
-        
+
         Returns:
         - dict: The fetched record
-        
+
         Raises:
         - RequestException: If the record does not exist or could not be fetched
         '''
@@ -173,14 +191,14 @@ class Queries:
     def all_records_resolver(self, _obj, _info, user_id: str | None):
         '''
         Gets a list of all records from the DB
-        
+
         Parameters:
         - user_id: str
             The ID of the user to fetch the records for
-        
+
         Returns:
         - dict: The fetched records
-        
+
         Raises:
         - RequestException: If there was an error fetching the records
         '''
@@ -209,14 +227,14 @@ class Queries:
     def get_collection_series_resolver(self, _obj, _info, user_id: str):
         '''
         Gets a list of all series in the user's collection
-        
+
         Parameters:
         - user_id: str
             The ID of the user to fetch the collection for
-        
+
         Returns:
         - dict: The fetched series
-        
+
         Raises:
         - RequestException: If there was an error fetching the series
         '''
@@ -291,42 +309,53 @@ class Queries:
     def get_collection_volume_resolver(self, _obj, _info, user_id: str):
         '''
         Gets a list of all parsed volumes in the user's collection
-        
+
         Parameters:
         - user_id: str
             The ID of the user to fetch the collection for
-        
+
         Returns:
         - dict: The fetched volumes
         '''
         try:
+            start_time = datetime.now()
             volume_data, series_data, shop_data, \
                 collection_data, wishlist_data = self.__get_data(user_id)
 
-            # self.logger.info(json.dumps(collection_data, indent=4))
+            start_time_parse = datetime.now()
+            volumes = [
+                {
+                    **self.__parse_volume(
+                        vol['isbn'],
+                        volume_data,
+                        series_data,
+                        shop_data,
+                        collection_data,
+                        wishlist_data
+                    ),
+                    'user_collection_data': [vol] # overwrite for individual volume
+                }
+                for vol in collection_data
+            ]
+            end_time_parse = (datetime.now() - start_time_parse).total_seconds()
+            self.logger.info('Time to parse volumes: %s', str(timedelta(seconds=end_time_parse)))
+
+            start_time_sort = datetime.now()
             user_volumes = sorted(
-                [
-                    {
-                        **self.__parse_volume(
-                            vol['isbn'],
-                            volume_data,
-                            series_data,
-                            shop_data,
-                            collection_data,
-                            wishlist_data
-                        ),
-                        'user_collection_data': [vol] # overwrite for individual volume
-                    }
-                    for vol in collection_data
-                ],
+                volumes,
                 key = lambda x: (
                     x['name'],
                     x['category'],
                     self.__volume_sort_parse(x['volume'])
                 )
             )
+            end_time_sort = (datetime.now() - start_time_sort).total_seconds()
+            self.logger.info('Time to sort volumes: %s', str(timedelta(seconds=end_time_sort)))
 
             self.logger.info('Found %s total volumes in user collection', len(user_volumes))
+            end_time = (datetime.now() - start_time).total_seconds()
+            self.logger.info('Time to finish query collection volumes: %s',
+                             str(timedelta(seconds=end_time)))
             return {
                 'success': True,
                 'records': user_volumes

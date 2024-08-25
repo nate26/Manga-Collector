@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { gql, Apollo } from 'apollo-angular';
 import { Observable, catchError, filter, map, switchMap, tap, throwError } from 'rxjs';
 import { IGQLSearchVolumes } from '../../interfaces/iGQLRequests.interface';
@@ -8,7 +8,9 @@ import { IGQLSearchVolumes } from '../../interfaces/iGQLRequests.interface';
 })
 export class SearchService {
 
-    readonly SEARCH_VOLUMES_QUERY = gql`
+    private readonly _apollo = inject(Apollo);
+
+    private readonly SEARCH_VOLUMES_QUERY = gql`
         query volume_search($search: String!) {
             volume_search(search: $search) {
                 records {
@@ -23,9 +25,9 @@ export class SearchService {
         }
     `;
 
-    searchVolumes$ = (search$: Observable<string | null>) => search$.pipe(
+    readonly searchVolumes$ = (search$: Observable<string | null>) => search$.pipe(
         filter(search => Boolean(search)),
-        switchMap(search => this.apollo.watchQuery<IGQLSearchVolumes>({
+        switchMap(search => this._apollo.watchQuery<IGQLSearchVolumes>({
             query: this.SEARCH_VOLUMES_QUERY,
             variables: { search }
         }).valueChanges),
@@ -35,6 +37,4 @@ export class SearchService {
         map(response => response.data.volume_search.records),
         catchError((err) => throwError(() => new Error('Could not get search data because ', err)))
     );
-
-    constructor(private apollo: Apollo) { }
 }
