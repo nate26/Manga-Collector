@@ -8,7 +8,7 @@
 - [x] <font color="gray"> ~~Collection Editor~~ </font>
 - [x] <font color="gray"> ~~Authorization~~ </font>
 - [ ] [<font color="limegreen"> IN PROGRESS </font>] Series Viewer
-- [ ] Browse Volume Sales
+- [ ] [<font color="limegreen"> IN PROGRESS </font>] Browse Volume Sales
 - [ ] Admin Records Editor
 - [ ] Admin Add Volumes
 - [ ] Item Search
