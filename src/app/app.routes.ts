@@ -3,6 +3,7 @@ import { CollectionComponent } from './page-components/collection/collection.com
 import { SeriesComponent } from './page-components/series/series.component';
 import { loggedInGuard } from './guards/logged-in.guard';
 import { PageNotFoundComponent } from './home/page-not-found/page-not-found.component';
+import { BrowseSalesComponent } from './page-components/browse-sales/browse-sales.component';
 
 export const routes: Routes = [
     {
@@ -19,6 +20,10 @@ export const routes: Routes = [
         path: 'series',
         component: SeriesComponent,
         canActivate: [loggedInGuard]
+    },
+    {
+        path: 'sales',
+        component: BrowseSalesComponent
     },
     {
         path: '**',

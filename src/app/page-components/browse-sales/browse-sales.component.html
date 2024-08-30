@@ -1,1 +1,19 @@
-<p>browse-sales works!</p>
+<div class="mt-28">
+    <div class="flex flex-wrap mt-28 justify-center overflow-auto" style="height: calc(100vh - 112px);">
+        @for (volume of volumes(); track volume.isbn) {
+            @defer (on viewport) {
+                <div class="h-60 m-3 rounded-lg shadow-lg bg-cover"
+                    style="aspect-ratio: 1 / 1.45;"
+                    [style.background-image]="'url(' + volume.primary_cover_image_url + ')'">
+
+                </div>
+            }
+            @placeholder {
+                <div class="h-60 rounded-lg shadow-lg"
+                    style="aspect-ratio: 1 / 1.45;">
+
+                </div>
+            }
+        }
+    </div>
+</div>

@@ -365,3 +365,42 @@ class Queries:
                 'success': False,
                 'errors': ['could not fetch series data... ' + str(traceback.format_exc())]
             }
+
+    def get_on_sale_volumes_resolver(self, _obj, _info, user_id: str):
+        '''
+        Gets a list of all volumes on sale
+
+        Parameters:
+        - user_id: str
+            The ID to get user data context
+
+        Returns:
+        - dict: The fetched volumes
+        '''
+        try:
+            volume_data, series_data, shop_data, \
+                collection_data, wishlist_data = self.__get_data(user_id)
+            on_sale_volumes = [
+                {
+                    **self.__parse_volume(
+                        vol['isbn'],
+                        volume_data,
+                        series_data,
+                        shop_data,
+                        collection_data,
+                        wishlist_data
+                    )
+                }
+                for vol in shop_data.values()
+                if True in [shop['is_on_sale'] for shop in vol['shops']]
+            ]
+            self.logger.info('Found %s total volumes on sale', len(on_sale_volumes))
+            return {
+                'success': True,
+                'records': on_sale_volumes
+            }
+        except RequestException:
+            return {
+                'success': False,
+                'errors': ['could not fetch sale volume data... ' + str(traceback.format_exc())]
+            }

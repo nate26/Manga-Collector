@@ -31,6 +31,12 @@ export interface IGQLGetCollectionVolumes extends IGQLResponse {
     };
 }
 
+export interface IGQLGetSaleVolumes extends IGQLResponse {
+    get_on_sale_volumes: {
+        records: IVolume[];
+    };
+}
+
 export interface IGQLSearchVolumes extends IGQLResponse {
     volume_search: {
         records: IVolume[];
