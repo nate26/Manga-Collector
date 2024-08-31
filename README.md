@@ -54,6 +54,8 @@
 - [ ] Remove from Purchase List
 - [ ] Display Current Cost in Purchase List
 - [ ] Enable Disabling on Purchase List
+- [ ] Enhance Filtering
+- [ ] Move Model Change to Service
 
 ### Browse Series:
 - [ ] Display Series Suggestions
