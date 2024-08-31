@@ -46,10 +46,14 @@
 - [ ] Link to Series Page
 
 ### Browse Volume Sales:
-- [ ] Display Volumes With Sales
-- [ ] Display Sale Price Tag
+- [x] Display Volumes With Sales
+- [x] Display Sale Price Tag
 - [ ] Provide Link To Store
 - [ ] Display Link to Series Page
+- [ ] Add to Purchase List
+- [ ] Remove from Purchase List
+- [ ] Display Current Cost in Purchase List
+- [ ] Enable Disabling on Purchase List
 
 ### Browse Series:
 - [ ] Display Series Suggestions
