@@ -12,6 +12,7 @@
     --item-background-color-brightened: #484856;
     --item-background-color-selected: #37373d;
     --mdc-dialog-container-shape: 16px;
+    /* --tw-shadow-color: #000000; */
 }
 
 body {

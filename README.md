@@ -9,7 +9,7 @@
 - [x] <font color="gray"> ~~Authorization~~ </font>
 - [ ] [<font color="limegreen"> IN PROGRESS </font>] Series Viewer
 - [ ] [<font color="limegreen"> IN PROGRESS </font>] Browse Volume Sales
-- [ ] Admin Records Editor
+- [ ] [<font color="orange"> REQUIRED </font>] Admin Records Editor
 - [ ] Admin Add Volumes
 - [ ] Item Search
 - [ ] User Lists (Wishlists, etc...)
@@ -36,7 +36,7 @@
 - [ ] Cleanup Interfaces with GQL
 
 ### Series Viewer:
-- [ ] Fix Volume Image Display
+- [x] Fix Volume Image Display
 - [ ] Lazy Load Volume Data
 - [ ] Add Volume Tags (Owned, Unowned, Sale, Read)
 - [ ] Volume Details Window

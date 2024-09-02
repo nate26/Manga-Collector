@@ -132,6 +132,19 @@ type VolumeRecord {
     user_wishlist_data: [WishlistData]
 }
 
+type ShopVolume {
+    isbn: String
+    display_name: String
+    primary_cover_image_url: String
+    retail_price: Float
+    store: String
+    store_price: Float
+    is_on_sale: Boolean
+    stock_status: String
+    sale_price: Float
+    url: String
+}
+
 type SingleVolumeRecordResult {
     success: Boolean!
     errors: [String]
@@ -150,12 +163,18 @@ type MultipleSeriesRecordResult {
     records: [SeriesRecord]
 }
 
+type MultipleShopVolumeResult {
+    success: Boolean!
+    errors: [String]
+    records: [ShopVolume]
+}
+
 type Query {
     get_record(isbn: ID!, user_id: ID): SingleVolumeRecordResult!
     all_records(user_id: ID): MultipleVolumeRecordResult!
     get_collection_series(user_id: ID!): MultipleSeriesRecordResult!
     get_collection_volumes(user_id: ID): MultipleVolumeRecordResult!
-    get_on_sale_volumes(user_id: ID): MultipleVolumeRecordResult!
+    get_on_sale_volumes(): MultipleShopVolumeResult!
 }
 
 

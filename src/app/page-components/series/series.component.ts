@@ -5,11 +5,12 @@ import { IVolume } from '../../interfaces/iVolume.interface';
 import { NgClass, NgStyle } from '@angular/common';
 import { ISeriesRecord } from '../../interfaces/iSeries.interface';
 import { LazyImageDirective } from '../../common/directives/lazy-image/lazy-image.directive';
+import { VolumeCoverTextComponent } from '../../common/volume-cover-text/volume-cover-text.component';
 
 @Component({
     selector: 'app-series',
     standalone: true,
-    imports: [NgStyle, NgClass, LazyImageDirective],
+    imports: [NgStyle, NgClass, LazyImageDirective, VolumeCoverTextComponent],
     templateUrl: './series.component.html',
     styleUrl: './series.component.css'
 })
