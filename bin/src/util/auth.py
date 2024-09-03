@@ -130,7 +130,7 @@ class Auth:
             raise ValueError("Password must be at least 8 characters long with at least "
                              "1 capital letter, 1 number, and 1 special character")
 
-    def login(self, body):
+    def login(self, email: str, password: str):
         """
         Log in authentication for the user with the given body.
         Will not log in if the email / password was invalid or the user does not exist.
@@ -147,8 +147,8 @@ class Auth:
         - json.JSONDecodeError: If the JSON file has an error
         """
         try:
-            self.__validate_input("email", body["email"])
-            self.__validate_input("password", body["password"])
+            self.__validate_input("email", email)
+            self.__validate_input("password", password)
         except ValueError as e:
             self.logger.error("Failed to validate input %s", e)
             raise e
@@ -158,11 +158,10 @@ class Auth:
                 FilePathEnum.USERS.value[self.host.value]
             )
 
-            email = body["email"]
             if email not in all_users:
                 raise ValueError("There is no account with this email... please sign in.")
 
-            password_hash = str(bcrypt.hashpw(body["password"].encode("utf-8"), self.password_salt))
+            password_hash = str(bcrypt.hashpw(password.encode("utf-8"), self.password_salt))
             if all_users[email]["password"] != password_hash:
                 raise ValueError("Password is incorrect")
 
@@ -184,7 +183,7 @@ class Auth:
             self.logger.error("Failed to login user %s", e)
             raise e
 
-    def sign_up(self, body):
+    def sign_up(self, email: str, username: str, password: str):
         """
         Signs up a user with the given body, setting the new user into the user DB.
         Provides the user with a JWT token
@@ -201,9 +200,9 @@ class Auth:
         - json.JSONDecodeError: If the JSON file has an error
         """
         try:
-            self.__validate_input("email", body["email"])
-            self.__validate_input("username", body["username"])
-            self.__validate_input("password", body["password"])
+            self.__validate_input("email", email)
+            self.__validate_input("username", username)
+            self.__validate_input("password", password)
         except ValueError as e:
             self.logger.error("Failed to validate input %s", e)
             raise e
@@ -213,14 +212,13 @@ class Auth:
                 FilePathEnum.USERS.value[self.host.value]
             )
 
-            email = body["email"]
             if email in all_users:
                 raise ValueError("There is already an account with this email... please login.")
 
-            password_hash = str(bcrypt.hashpw(body["password"].encode("utf-8"), self.password_salt))
+            password_hash = str(bcrypt.hashpw(password.encode("utf-8"), self.password_salt))
             all_users[email] = User({
-                "email": body["email"],
-                "username": body["username"],
+                "email": email,
+                "username": username,
                 "password": password_hash,
                 "user_id": str(uuid.uuid4()),
                 "profile": {
