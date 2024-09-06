@@ -37,9 +37,9 @@
 
 ### Series Viewer:
 - [x] Fix Volume Image Display
-- [ ] Lazy Load Volume Data
 - [ ] Add Volume Tags (Owned, Unowned, Sale, Read)
 - [ ] Volume Details Window
+- [ ] Lazy Load Volume Data
 - [ ] Add Sale Data to Volume Details if Unowned
 - [ ] Add Collection Data to Volume Details if Owned
 - [ ] Create Series Page
@@ -48,14 +48,15 @@
 ### Browse Volume Sales:
 - [x] Display Volumes With Sales
 - [x] Display Sale Price Tag
+- [x] Move Model Change to Service
 - [ ] Provide Link To Store
+- [ ] Volume Details Window
 - [ ] Display Link to Series Page
+- [ ] Enhance Filtering
 - [ ] Add to Purchase List
 - [ ] Remove from Purchase List
 - [ ] Display Current Cost in Purchase List
 - [ ] Enable Disabling on Purchase List
-- [ ] Enhance Filtering
-- [ ] Move Model Change to Service
 
 ### Browse Series:
 - [ ] Display Series Suggestions

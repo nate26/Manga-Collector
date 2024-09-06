@@ -376,7 +376,7 @@ class Queries:
         try:
             volume_data, _, shop_data, _, _ = self.__get_data()
             on_sale_volumes = []
-            for _, shop_vol in enumerate(shop_data):
+            for _, shop_vol in enumerate(shop_data.values()):
                 for shop_item in shop_vol['shops']:
                     if shop_item['is_on_sale'] and \
                         round(shop_item['store_price']) < round(shop_vol['retail_price']):
@@ -395,6 +395,9 @@ class Queries:
                             'store_price': shop_item['store_price'],
                             'is_on_sale': shop_item['is_on_sale'],
                             'stock_status': shop_item['stock_status'],
+                            'condition': shop_item['condition'],
+                            'coupon': shop_item['coupon'],
+                            'last_stock_update': shop_item['last_stock_update'],
                             'sale_price': round(
                                 (1 - shop_item['store_price'] / shop_vol['retail_price']) * 100
                             ),

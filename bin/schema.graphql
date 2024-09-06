@@ -142,6 +142,9 @@ type ShopVolume {
     is_on_sale: Boolean
     stock_status: String
     sale_price: Float
+    condition: String
+    coupon: String
+    last_stock_update: String
     url: String
 }
 
@@ -174,7 +177,7 @@ type Query {
     all_records(user_id: ID): MultipleVolumeRecordResult!
     get_collection_series(user_id: ID!): MultipleSeriesRecordResult!
     get_collection_volumes(user_id: ID): MultipleVolumeRecordResult!
-    get_on_sale_volumes(): MultipleShopVolumeResult!
+    get_on_sale_volumes: MultipleShopVolumeResult!
 }
 
 

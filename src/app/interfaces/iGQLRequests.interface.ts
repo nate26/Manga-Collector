@@ -1,5 +1,6 @@
 import { ICollection } from './iCollection.interface';
 import { ISeriesRecord } from './iSeries.interface';
+import { IShopVolume } from './iShopVolume.interface';
 import { IVolume } from './iVolume.interface';
 
 export interface IGQLResponse {
@@ -33,7 +34,7 @@ export interface IGQLGetCollectionVolumes extends IGQLResponse {
 
 export interface IGQLGetSaleVolumes extends IGQLResponse {
     get_on_sale_volumes: {
-        records: IVolume[];
+        records: IShopVolume[];
     };
 }
 
