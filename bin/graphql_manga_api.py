@@ -8,12 +8,14 @@ from flask_cors import CORS
 from src.database.queries import Queries
 from src.database.mutations import Mutations
 from src.enums.host_enum import HostEnum
+from src.util.auth import Auth
 from src.util.manga_logger import MangaLogger
 
 app = Flask(__name__)
 CORS(app)
 host = HostEnum.LOCAL
 logger = MangaLogger(host).register_logger(__name__)
+auth = Auth(host)
 queries = Queries(host)
 mutations = Mutations(host, queries.data) #ugh, fix context gross-ness with better caching strategy
 
@@ -21,6 +23,8 @@ mutations = Mutations(host, queries.data) #ugh, fix context gross-ness with bett
 # Setup GQL resolvers
 
 query = ObjectType('Query')
+query.set_field('login', auth.login)
+query.set_field('get_user', auth.get_user)
 query.set_field('get_record', queries.get_record_resolver)
 query.set_field('all_records', queries.all_records_resolver)
 query.set_field('get_collection_series', queries.get_collection_series_resolver)
@@ -28,6 +32,8 @@ query.set_field('get_collection_volumes', queries.get_collection_volume_resolver
 query.set_field('get_on_sale_volumes', queries.get_on_sale_volumes_resolver)
 
 mutation = ObjectType('Mutation')
+mutation.set_field('sign_up', auth.sign_up)
+mutation.set_field('refresh_token', auth.refresh_token)
 mutation.set_field('modify_collection', mutations.update_volume_resolver)
 mutation.set_field('delete_collection_records', mutations.delete_collection_records_resolver)
 

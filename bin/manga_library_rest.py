@@ -25,7 +25,7 @@ def login():
     """
     try:
         body = json.loads(request.data)
-        user_data = auth.login(body)
+        user_data = auth.login(body["email"], body["password"])
         return jsonify(user_data)
     except (req.exceptions.RequestException, json.JSONDecodeError) as e:
         logger.error("Failed to generate a token %s", json.dumps(e))
@@ -47,7 +47,7 @@ def signup():
     """
     try:
         body = json.loads(request.data)
-        user_data = auth.sign_up(body)
+        user_data = auth.sign_up(body["email"], body["username"], body["password"])
         return jsonify(user_data)
     except (req.exceptions.RequestException, json.JSONDecodeError) as e:
         logger.error("Failed to create user %s", json.dumps(e))
