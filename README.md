@@ -25,6 +25,7 @@
 - None 😎
 
 ### Tech Debt:
+- [ ] Move Login to GQL
 - [ ] [<font color="orange"> REQUIRED </font>] Unit Testing
 - [ ] Functional Testing
 - [ ] Improve Filtering Performance

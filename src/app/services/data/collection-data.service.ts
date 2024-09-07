@@ -80,7 +80,7 @@ export class CollectionDataService {
     `;
 
     readonly collectionVolumes$: Observable<IVolume[]> = this._userService.userIdFromRoute$.pipe(
-        switchMap(({ user_id }) =>
+        switchMap(user_id =>
             this._apollo.watchQuery<IGQLGetCollectionVolumes>({
                 query: this.COLLECTION_VOLUMES_QUERY,
                 variables: { user_id }

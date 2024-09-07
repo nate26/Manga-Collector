@@ -1,50 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { filter, Observable, pipe, shareReplay, switchMap, tap, throwError } from 'rxjs';
-import { REST_SERVER_URL } from '../../app.config';
-
-export type AuthenticationData = {
-    token: string;
-    expiration: string;
-    refresh_token: string;
-};
-
-export type UserData = {
-    username: string;
-    email: string;
-    user_id: string;
-    profile: {
-        picture: string | null;
-        banner: string | null;
-        color: string | null;
-        theme: string | null;
-    };
-    personal_stores: string[];
-    authentication: AuthenticationData;
-}
-
-//TODO better way to do this in typescript without duplicating the type
-export type AuthenticationDataPartial = {
-    token: string | null;
-    expiration: string | null;
-    refresh_token: string | null;
-};
-
-export type UserDataPartial = {
-    username: string | null;
-    email: string | null;
-    user_id: string | null;
-    profile: {
-        picture: string | null;
-        banner: string | null;
-        color: string | null;
-        theme: string | null;
-    };
-    personal_stores: string[] | null;
-    authentication: AuthenticationDataPartial;
-};
+import { catchError, EMPTY, filter, map, Observable, pipe, shareReplay, switchMap, tap, throwError } from 'rxjs';
+import { Apollo, gql } from 'apollo-angular';
+import { UserDataPartial, UserData } from '../../interfaces/iUserData.type';
 
 export const LOGIN_PATH_CONTEXT = {
     path: '/login',
@@ -61,7 +20,7 @@ export const SIGNUP_PATH_CONTEXT = {
 })
 export class UserService {
 
-    private readonly http = inject(HttpClient);
+    private readonly _apollo = inject(Apollo);
     private readonly _activatedRoute = inject(ActivatedRoute);
 
     readonly userData = signal<UserDataPartial>({
@@ -97,17 +56,34 @@ export class UserService {
 
     readonly userIdFromRoute$ = this._activatedRoute.queryParams.pipe(
         filter(params => Boolean(params['username'])),
-        switchMap(params => this.http.get<UserData>(
-            REST_SERVER_URL + '/get-user-by-username?username=' + params['username']
-        )),
+        switchMap(params => this._apollo.query<{ get_user: { user_id: string } }>({
+            query: gql`
+                query get_user($username: String!) {
+                    get_user(username: $username) {
+                        user_id
+                    }
+                }
+            `,
+            variables: {
+                username: params['username']
+            }
+        })),
+        tap(({ error }) => {
+            if (error) throw error;
+        }),
+        map(result => result.data.get_user.user_id),
+        catchError((err: Error) => {
+            console.error('Could not get user data because ', err);
+            return EMPTY;
+        }),
         shareReplay(1)
     );
 
-    private readonly _userDataOnRoute = toSignal<UserDataPartial, UserDataPartial>(
+    private readonly _userIdOnRoute = toSignal<string, string>(
         this.userIdFromRoute$,
-        { initialValue: { authentication: {} } as UserDataPartial }
+        { initialValue: '' }
     );
-    readonly canUserEdit = computed(() => this.userData().user_id === this._userDataOnRoute().user_id);
+    readonly canUserEdit = computed(() => this.userData().user_id === this._userIdOnRoute());
 
     readonly saveUserData = pipe(
         tap((data: UserData) => {
@@ -139,8 +115,42 @@ export class UserService {
         if (!email || !password) {
             return throwError(() => Error('Email and password are required to login.'));
         }
-        return this.http.post<UserData>(REST_SERVER_URL + LOGIN_PATH_CONTEXT.path, { email, password }).pipe(
-            this.saveUserData
+        return this._apollo.query<{ login: UserData }>({
+            query: gql`
+                query login($username: String!, $password: String!) {
+                    get_user(username: $username, password: $password) {
+                        email
+                        username
+                        user_id
+                        profile {
+                            picture
+                            banner
+                            color
+                            theme
+                        }
+                        personal_stores
+                        authentication {
+                            token
+                            expiration
+                            refresh_token
+                        }
+                    }
+                }
+            `,
+            variables: {
+                email,
+                password
+            }
+        }).pipe(
+            tap(({ error }) => {
+                if (error) throw error;
+            }),
+            map(result => result.data.login),
+            this.saveUserData,
+            catchError((err: Error) => {
+                console.error('Could not login because ', err);
+                return EMPTY;
+            })
         );
     }
 
@@ -159,8 +169,43 @@ export class UserService {
         if (!email || !username || !password) {
             return throwError(() => Error('Email, username, and password are required to sign up for an account.'));
         }
-        return this.http.post<UserData>(REST_SERVER_URL + SIGNUP_PATH_CONTEXT.path, { email, username, password }).pipe(
-            this.saveUserData
+        return this._apollo.query<{ sign_up: UserData }>({
+            query: gql`
+                query sign_up($email: String!, $username: String!, $password: String!) {
+                    sign_up(email: $email, username: $username, password: $password) {
+                        email
+                        username
+                        user_id
+                        profile {
+                            picture
+                            banner
+                            color
+                            theme
+                        }
+                        personal_stores
+                        authentication {
+                            token
+                            expiration
+                            refresh_token
+                        }
+                    }
+                }
+            `,
+            variables: {
+                email,
+                username,
+                password
+            }
+        }).pipe(
+            tap(({ error }) => {
+                if (error) throw error;
+            }),
+            map(result => result.data.sign_up),
+            this.saveUserData,
+            catchError((err: Error) => {
+                console.error('Could not sign up because ', err);
+                return EMPTY;
+            })
         );
     }
 
@@ -170,7 +215,25 @@ export class UserService {
      * @returns an observable of whether the username is available
      */
     checkUsername(username: string): Observable<boolean> {
-        return this.http.post<boolean>(REST_SERVER_URL + '/check-username', { username });
+        return this._apollo.query<{ check_username: boolean }>({
+            query: gql`
+                query check_username($username: String!) {
+                    check_username(username: $username)
+                }
+            `,
+            variables: {
+                username
+            }
+        }).pipe(
+            tap(({ error }) => {
+                if (error) throw error;
+            }),
+            map(result => result.data.check_username),
+            catchError((err: Error) => {
+                console.error('Could not check username because ', err);
+                return EMPTY;
+            })
+        );
     }
 
     /**

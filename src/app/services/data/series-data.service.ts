@@ -80,7 +80,7 @@ export class SeriesDataService {
     `;
 
     readonly collectionSeries$: Observable<ISeriesRecord[]> = this._userService.userIdFromRoute$.pipe(
-        switchMap(({ user_id }) =>
+        switchMap(user_id =>
             this._apollo.watchQuery<IGQLGetCollectionSeries>({
                 query: this.SERIES_VOLUMES_QUERY,
                 variables: { user_id }

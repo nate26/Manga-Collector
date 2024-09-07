@@ -1,8 +1,10 @@
-import { HttpClient, HttpHandlerFn, HttpRequest } from '@angular/common/http';
+import { HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AuthenticationData, UserData, UserService } from '../data/user.service';
-import { switchMap, of, iif, map } from 'rxjs';
-import { GQL_SERVER_URL, REST_SERVER_URL } from '../../app.config';
+import { switchMap, of, iif, map, tap } from 'rxjs';
+import { GQL_SERVER_URL } from '../../app.config';
+import { UserService } from '../data/user.service';
+import { AuthenticationData, UserData } from '../../interfaces/iUserData.type';
+import { Apollo, gql } from 'apollo-angular';
 
 export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) {
     if (!req.url.startsWith(GQL_SERVER_URL)) {
@@ -21,10 +23,21 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) 
         () => parseFloat(expiration!) > (Date.now() / 1000)
             && Boolean(token),
         of(token),
-        inject(HttpClient).post<AuthenticationData>(
-            REST_SERVER_URL + '/refreshToken',
-            { username, refresh_token }
-        ).pipe(
+        inject(Apollo).mutate<{ refresh_token: AuthenticationData }>({
+            mutation: gql`
+                mutation refreshToken($username: String!, $refresh_token: String!) {
+                    refresh_token(username: $username, refresh_token: $refresh_token) {
+                        token
+                        expiration
+                        refresh_token
+                    }
+                }
+            `,
+            variables: { username, refresh_token }
+        }).pipe(
+            tap(({ errors }) => {
+                if (errors) throw errors;
+            }),
             map(authentication => ({ ...userService.userData(), authentication } as UserData)),
             userService.saveUserData,
             map(({ authentication }) => authentication.token)
