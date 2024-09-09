@@ -196,7 +196,7 @@ type MultipleShopVolumeResult {
 
 type Query {
     login(email: String!, password: String!): User!
-    get_user(user_name: String!): User!
+    get_user(username: String!): User!
     get_record(isbn: ID!, user_id: ID): SingleVolumeRecordResult!
     all_records(user_id: ID): MultipleVolumeRecordResult!
     get_collection_series(user_id: ID!): MultipleSeriesRecordResult!

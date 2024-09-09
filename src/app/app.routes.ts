@@ -8,13 +8,12 @@ import { BrowseSalesComponent } from './page-components/browse-sales/browse-sale
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: '/collection',
+        redirectTo: '/sales',
         pathMatch: 'full'
     },
     {
-        path: 'collection',
-        component: CollectionComponent,
-        canActivate: [loggedInGuard]
+        path: 'sales',
+        component: BrowseSalesComponent
     },
     {
         path: 'series',
@@ -22,8 +21,9 @@ export const routes: Routes = [
         canActivate: [loggedInGuard]
     },
     {
-        path: 'sales',
-        component: BrowseSalesComponent
+        path: 'collection',
+        component: CollectionComponent,
+        canActivate: [loggedInGuard]
     },
     {
         path: '**',

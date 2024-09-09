@@ -130,7 +130,7 @@ class Auth:
             raise ValueError("Password must be at least 8 characters long with at least "
                              "1 capital letter, 1 number, and 1 special character")
 
-    def login(self, email: str, password: str):
+    def login(self, _obj, _info, email: str, password: str):
         """
         Log in authentication for the user with the given body.
         Will not log in if the email / password was invalid or the user does not exist.
@@ -183,7 +183,7 @@ class Auth:
             self.logger.error("Failed to login user %s", e)
             raise e
 
-    def sign_up(self, email: str, username: str, password: str):
+    def sign_up(self, _obj, _info, email: str, username: str, password: str):
         """
         Signs up a user with the given body, setting the new user into the user DB.
         Provides the user with a JWT token
@@ -249,7 +249,7 @@ class Auth:
             self.logger.error("Failed to sign up user %s", e)
             raise e
 
-    def get_user(self, username: str):
+    def get_user(self, _obj, _info, username: str):
         """
         Gets the user with the given username
 
@@ -289,7 +289,7 @@ class Auth:
             self.logger.error("Failed to get user %s", e)
             raise e
 
-    def refresh_token(self, username: str, refresh_token: str):
+    def refresh_token(self, _obj, _info, username: str, refresh_token: str):
         """
         Refreshes the user's token using the refresh token, and sends back the new
         authentication data.

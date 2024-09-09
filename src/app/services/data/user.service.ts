@@ -117,8 +117,8 @@ export class UserService {
         }
         return this._apollo.query<{ login: UserData }>({
             query: gql`
-                query login($username: String!, $password: String!) {
-                    get_user(username: $username, password: $password) {
+                query login($email: String!, $password: String!) {
+                    login(email: $email, password: $password) {
                         email
                         username
                         user_id
@@ -204,33 +204,6 @@ export class UserService {
             this.saveUserData,
             catchError((err: Error) => {
                 console.error('Could not sign up because ', err);
-                return EMPTY;
-            })
-        );
-    }
-
-    /**
-     * Check if a username is available.
-     * @param username the username to check
-     * @returns an observable of whether the username is available
-     */
-    checkUsername(username: string): Observable<boolean> {
-        return this._apollo.query<{ check_username: boolean }>({
-            query: gql`
-                query check_username($username: String!) {
-                    check_username(username: $username)
-                }
-            `,
-            variables: {
-                username
-            }
-        }).pipe(
-            tap(({ error }) => {
-                if (error) throw error;
-            }),
-            map(result => result.data.check_username),
-            catchError((err: Error) => {
-                console.error('Could not check username because ', err);
                 return EMPTY;
             })
         );
