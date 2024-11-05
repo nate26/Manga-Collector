@@ -1,5 +1,5 @@
 defmodule MangaServiceWeb.VolumesJSON do
-  alias MangaService.Volumes.Volume
+  alias MangaService.VolumesDB.Volume
 
   def index(%{volumes: volumes}) do
     %{data: for(volume <- volumes, do: data(volume))}

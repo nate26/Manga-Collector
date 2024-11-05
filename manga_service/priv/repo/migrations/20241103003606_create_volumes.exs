@@ -22,7 +22,7 @@ defmodule MangaService.Repo.Migrations.CreateVolumes do
       add :isbn_10, :string
       add :primary_cover_image, :string, size: 500
       add :cover_images, {:array, :map}
-      add :description, :string, size: 2047
+      add :description, :string, size: 4095
 
       timestamps(type: :utc_datetime)
     end
