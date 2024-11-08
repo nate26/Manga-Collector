@@ -96,10 +96,10 @@ defmodule MangaService.VolumesDB do
 
   ## Examples
 
-      iex> get_volume_by_isbn!(9781427816702)
+      iex> get_volume_by_isbn!("9781427816702")
       %Volume{}
 
-      iex> get_volume_by_isbn!(9781427816702)
+      iex> get_volume_by_isbn!("9781427816702")
       ** (Ecto.NoResultsError)
 
   """

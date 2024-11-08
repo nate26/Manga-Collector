@@ -38,6 +38,27 @@ defmodule MangaService.SeriesDB do
   def get_series!(id), do: Repo.get!(Series, id)
 
   @doc """
+  Gets a single series by series_id.
+
+  Raises `Ecto.NoResultsError` if the Series does not exist.
+
+  ## Examples
+
+      iex> get_series_by_id!("id")
+      %Series{}
+
+      iex> get_series_by_id!("")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_series_by_id!(series_id) do
+    query = from v in Series,
+      where: v.series_id == ^series_id,
+      select: v
+    Repo.one(query)
+  end
+
+  @doc """
   Creates a series.
 
   ## Examples

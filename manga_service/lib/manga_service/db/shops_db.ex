@@ -38,6 +38,27 @@ defmodule MangaService.ShopsDB do
   def get_shop!(id), do: Repo.get!(Shop, id)
 
   @doc """
+  Gets a single volume shop data by isbn.
+
+  Raises `Ecto.NoResultsError` if the Shop does not exist.
+
+  ## Examples
+
+      iex> get_shop_by_isbn!("9781427816702")
+      %Shop{}
+
+      iex> get_shop_by_isbn!("9781427816702")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_shops_by_isbn!(isbn) do
+    query = from v in Shop,
+      where: v.isbn == ^isbn,
+      select: v
+    Repo.all(query)
+  end
+
+  @doc """
   Creates a shop.
 
   ## Examples

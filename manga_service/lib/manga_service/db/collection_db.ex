@@ -38,6 +38,27 @@ defmodule MangaService.CollectionDB do
   def get_collection!(id), do: Repo.get!(Collection, id)
 
   @doc """
+  Gets collection data for a volume by isbn.
+
+  Raises `Ecto.NoResultsError` if the Collection does not exist.
+
+  ## Examples
+
+      iex> get_collection_by_user_id!("9781427816702", "user_id")
+      %Collection{}
+
+      iex> get_collection_by_user_id!("", "user_id")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_collections_by_user_id!(isbn, user_id) do
+    query = from v in Collection,
+      where: v.isbn == ^isbn and v.user_id == ^user_id,
+      select: v
+    Repo.all(query)
+  end
+
+  @doc """
   Creates a collection.
 
   ## Examples

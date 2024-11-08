@@ -38,6 +38,27 @@ defmodule MangaService.MarketDB do
   def get_market!(id), do: Repo.get!(Market, id)
 
   @doc """
+  Gets a single volume market data by isbn.
+
+  Raises `Ecto.NoResultsError` if the Market does not exist.
+
+  ## Examples
+
+      iex> get_market_by_isbn!("9781427816702")
+      %Market{}
+
+      iex> get_market_by_isbn!("9781427816702")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_market_by_isbn!(isbn) do
+    query = from v in Market,
+      where: v.isbn == ^isbn,
+      select: v
+    Repo.one(query)
+  end
+
+  @doc """
   Creates a market.
 
   ## Examples

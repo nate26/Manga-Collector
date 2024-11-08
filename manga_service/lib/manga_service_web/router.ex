@@ -9,6 +9,7 @@ defmodule MangaServiceWeb.Router do
     pipe_through :api
     get "/volumes", VolumesController, :index
     get "/volume/:isbn", VolumesController, :show
+    get "/v", VolumesController, :get
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
