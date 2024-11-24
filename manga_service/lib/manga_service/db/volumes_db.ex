@@ -38,37 +38,42 @@ defmodule MangaService.VolumesDB do
 
   """
   def list_volumes_in_series(series_id, limit, offset) do
-
-    limit = case parse_integer!(limit) do
-      l when not is_number(l) or l <= 0 or l > 100 -> 100
-      l -> l
-    end
+    limit =
+      case parse_integer!(limit) do
+        l when not is_number(l) or l <= 0 or l > 100 -> 100
+        l -> l
+      end
 
     offset = parse_integer!(offset)
 
-    query = case series_id do
+    query =
+      case series_id do
+        "none" ->
+          from(v in Volume,
+            where: is_nil(v.series_id),
+            order_by: [asc: v.release_date],
+            limit: ^limit,
+            offset: ^offset,
+            select: v
+          )
 
-      "none" -> from v in Volume,
-        where: is_nil(v.series_id),
-        order_by: [asc: v.release_date],
-        limit: ^limit,
-        offset: ^offset,
-        select: v
+        "" ->
+          from(v in Volume,
+            order_by: [asc: v.release_date],
+            limit: ^limit,
+            offset: ^offset,
+            select: v
+          )
 
-      "" -> from v in Volume,
-        order_by: [asc: v.release_date],
-        limit: ^limit,
-        offset: ^offset,
-        select: v
-
-      _ -> from v in Volume,
-        where: v.series_id == ^series_id,
-        order_by: [asc: v.release_date],
-        limit: ^limit,
-        offset: ^offset,
-        select: v
-
-    end
+        _ ->
+          from(v in Volume,
+            where: v.series_id == ^series_id,
+            order_by: [asc: v.release_date],
+            limit: ^limit,
+            offset: ^offset,
+            select: v
+          )
+      end
 
     Repo.all(query)
   end
@@ -104,9 +109,12 @@ defmodule MangaService.VolumesDB do
 
   """
   def get_volume_by_isbn!(isbn) do
-    query = from v in Volume,
-      where: v.isbn == ^isbn,
-      select: v
+    query =
+      from(v in Volume,
+        where: v.isbn == ^isbn,
+        select: v
+      )
+
     Repo.one(query)
   end
 

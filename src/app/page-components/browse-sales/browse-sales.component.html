@@ -1,33 +1,55 @@
 <div class="mt-28 flex justify-between">
     <div class="grid grid-cols-[min-content_auto] gap-3 h-fit w-36 m-8">
         <div class="text text-sm text-nowrap">In Stock</div>
-        <input type="checkbox" class="green-checkbox ml-3" [checked]="filterInStock()"
-            (change)="filterInStock.set(!filterInStock())">
+        <input
+            type="checkbox"
+            class="green-checkbox ml-3"
+            [checked]="filterInStock()"
+            (change)="filterInStock.set(!filterInStock())"
+        />
         <div class="text text-sm text-nowrap">Hide Clearance</div>
-        <input type="checkbox" class="green-checkbox ml-3" [checked]="filterNoClearance()"
-            (change)="filterNoClearance.set(!filterNoClearance())">
+        <input
+            type="checkbox"
+            class="green-checkbox ml-3"
+            [checked]="filterNoClearance()"
+            (change)="filterNoClearance.set(!filterNoClearance())"
+        />
         <div class="text text-sm text-nowrap">Only Clearance</div>
-        <input type="checkbox" class="green-checkbox ml-3" [checked]="filterClearance()"
-            (change)="filterClearance.set(!filterClearance())">
+        <input
+            type="checkbox"
+            class="green-checkbox ml-3"
+            [checked]="filterClearance()"
+            (change)="filterClearance.set(!filterClearance())"
+        />
     </div>
-    <div class="flex flex-wrap justify-center w-fit overflow-auto" style="height: calc(100vh - 112px);">
+    <div
+        class="flex flex-wrap justify-center w-fit overflow-auto"
+        style="height: calc(100vh - 112px)"
+    >
         @for (volume of filteredVolumes(); track volume.isbn; let i = $index) {
-            @defer (on viewport) {
-                <div class="relative h-60 m-3 rounded-lg shadow-lg bg-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
-                    style="aspect-ratio: 1 / 1.45;"
-                    [style.background-image]="'url(' + volume.primary_cover_image_url + ')'">
-                    <span class="absolute top-1 right-1 pl-1 pr-1 bg-[#2f4f4fd4] border-2 border-green-500 rounded-md text-green-300 font-semibold shadow-lg">
-                        {{ volume.sale_price }}% off
-                    </span>
-                    <app-volume-cover-text [title]="volume.display_name" />
-                </div>
-            }
-            @placeholder {
-                <div class="h-60 rounded-lg shadow-lg"
-                    style="aspect-ratio: 1 / 1.45;">
-
-                </div>
-            }
-        }
+        @defer (on viewport) {
+        <div
+            class="relative h-60 m-3 rounded-lg shadow-lg bg-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
+            style="aspect-ratio: 1 / 1.45"
+            [style.background-image]="
+                'url(' + volume.primary_cover_image_url + ')'
+            "
+            (click)="openVolumeDetails(volume.isbn)"
+            (keypress)="openVolumeDetails(volume.isbn)"
+            tabindex="{$index}"
+        >
+            <span
+                class="absolute top-1 right-1 pl-1 pr-1 bg-[#2f4f4fd4] border-2 border-green-500 rounded-md text-green-300 font-semibold shadow-lg"
+            >
+                {{ volume.sale_price }}% off
+            </span>
+            <app-volume-cover-text [title]="volume.display_name" />
+        </div>
+        } @placeholder {
+        <div
+            class="h-60 rounded-lg shadow-lg"
+            style="aspect-ratio: 1 / 1.45"
+        ></div>
+        } }
     </div>
 </div>

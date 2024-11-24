@@ -23,6 +23,7 @@ defmodule MangaService.Repo.Migrations.CreateVolumes do
       add :primary_cover_image, :string, size: 500
       add :cover_images, {:array, :map}
       add :description, :string, size: 4095
+      add :is_bundle, :boolean, default: false, null: false
 
       timestamps(type: :utc_datetime)
     end

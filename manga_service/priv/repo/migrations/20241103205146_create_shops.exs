@@ -13,6 +13,12 @@ defmodule MangaService.Repo.Migrations.CreateShops do
       add :last_stock_update, :utc_datetime
       add :coupon, :string
       add :is_on_sale, :boolean, default: false, null: false
+      add :promotion, :string
+      add :promotion_percentage, :float
+      add :backorder_details, :string
+      add :exclusive, :boolean, default: false, null: false
+      add :is_bundle, :boolean, default: false, null: false
+      add :dropped_check, :boolean, default: false, null: false
 
       timestamps(type: :utc_datetime)
     end

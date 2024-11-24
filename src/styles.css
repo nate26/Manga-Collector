@@ -3,8 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* TODO replace default colors with tw colors */
 :root {
-    --manga-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    --manga-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     --background-color: rgb(12, 17, 24);
     --background-color-contrast: #19212d;
     --item-background-color: #252529;
@@ -12,6 +14,7 @@
     --item-background-color-brightened: #484856;
     --item-background-color-selected: #37373d;
     --mdc-dialog-container-shape: 16px;
+    --mat-dialog-container-max-width: 80vw;
     /* --tw-shadow-color: #000000; */
 }
 
@@ -21,12 +24,8 @@ body {
     margin: 0;
 }
 
-.flex,
 .flex-wrap {
     display: flex;
-}
-
-.flex-wrap {
     flex-wrap: wrap;
 }
 
@@ -148,14 +147,14 @@ input:focus-visible {
     outline: 2px solid white;
 }
 
-input[type='checkbox'] {
+input[type="checkbox"] {
     width: 0;
     height: 30px;
 }
 
 .green-checkbox::after,
 .blue-checkbox::after {
-    content: url('./assets/img/checkbox-blank-sm.png');
+    content: url("./assets/img/checkbox-blank-sm.png");
     display: inline-block;
     scale: 0.7;
     margin-left: -15px;
@@ -167,11 +166,11 @@ input[type='checkbox'] {
 }
 
 .green-checkbox:checked:after {
-    content: url('./assets/img/checkbox-green-sm.png');
+    content: url("./assets/img/checkbox-green-sm.png");
 }
 
 .blue-checkbox:checked:after {
-    content: url('./assets/img/checkbox-blue-sm.png');
+    content: url("./assets/img/checkbox-blue-sm.png");
 }
 
 .al_center {
@@ -189,7 +188,6 @@ input[type='checkbox'] {
     min-height: 60px;
     aspect-ratio: 1 / 1.45;
     object-fit: cover;
-    cursor: pointer;
 }
 
 .text-g {

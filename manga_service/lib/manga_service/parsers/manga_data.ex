@@ -14,12 +14,12 @@ defmodule MangaService.Parsers.MangaData do
 
     shops = ShopsDB.get_shops_by_isbn!(isbn)
 
-    collection = case user_id do
+    collections = case user_id do
       nil -> nil
       _ -> CollectionDB.get_collections_by_user_id!(isbn, user_id)
     end
 
-    %{ volume: volume, series: series, market: market, shops: shops, collection: collection }
+    %{ volume: volume, series: series, market: market, shops: shops, collections: collections }
   end
 
   def get_volume_by_isbn_async(isbn, user_id) do
@@ -39,8 +39,8 @@ defmodule MangaService.Parsers.MangaData do
       end)
     ]
 
-    [ volume_data, market, shops, collection ] = Task.await_many(tasks)
-    %{ volume: volume_data.volume, series: volume_data.series, market: market, shops: shops, collection: collection }
+    [ volume_data, market, shops, collections ] = Task.await_many(tasks)
+    %VolumeDetails{ volume: volume_data.volume, series: volume_data.series, market: market, shops: shops, collections: collections }
   end
 
 end

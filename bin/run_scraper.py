@@ -1,6 +1,3 @@
-
-
-
 from src.util.manga_logger import MangaLogger
 from src.manga.scrape_crunchyroll import ScrapeCrunchyroll
 from src.enums.host_enum import HostEnum

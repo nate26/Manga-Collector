@@ -2,16 +2,24 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import {
+    provideHttpClient,
+    withFetch,
+    withInterceptors,
+} from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { ApolloClientOptions, ApolloLink, InMemoryCache } from '@apollo/client/core';
+import {
+    ApolloClientOptions,
+    ApolloLink,
+    InMemoryCache,
+} from '@apollo/client/core';
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
 import { APOLLO_OPTIONS, Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { authInterceptor } from './services/interceptors/auth-interceptor';
 
 export const REST_SERVER_URL = 'http://localhost:8050';
-export const GQL_SERVER_URL = 'http://localhost:4000/graphql';
+export const GQL_SERVER_URL = 'http://localhost:4001/graphql';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -31,5 +39,5 @@ export const appConfig: ApplicationConfig = {
             deps: [HttpLink],
         },
         Apollo,
-    ]
+    ],
 };
