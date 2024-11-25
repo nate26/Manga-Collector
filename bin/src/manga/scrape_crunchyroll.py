@@ -11,7 +11,6 @@ the data into a JSON format.
 and updates the given data structures with the results.
 '''
 
-from calendar import c
 import json
 import math
 import re
@@ -20,17 +19,11 @@ import traceback
 from typing import Any
 import requests
 from bs4 import BeautifulSoup
-import websockets
 
-from run_websocket import CONNECTIONS
 from src.database.manga_server import MangaServer
-from src.enums.file_path_enum import FilePathEnum
 from src.enums.host_enum import HostEnum
-from src.util.local_dao import LocalDAO
-from src.manga.scrape_barnes_and_noble import ScrapeBarnesAndNoble
 from src.manga.scrape_isbn import ScrapeISBN
 from src.manga.series_search import SeriesSearch
-from src.data import Data
 from src.util.manga_logger import MangaLogger
 
 # fix:
@@ -143,6 +136,81 @@ class ScrapeCrunchyroll:
             if inner_any:
                 return inner_any.group(0)
         
+        return None
+    
+    
+    def get_volume_data(self, curr_volume, curr_series, cr_attr, volume_number, cover_image,
+                        series_id, isbn_results, is_bundle):
+        title = self.get_attr(curr_series, 'title')
+        volume = {
+            'isbn': cr_attr['id'],
+            'brand': cr_attr['brand'],
+            'series': title,
+            'series_id': series_id,
+            'display_name': cr_attr['name'],
+            'name': title or cr_attr['brand'], #fix?
+            'category': cr_attr['category'],
+            'volume': volume_number,
+            'url': cr_attr['url'],
+            'is_bundle': is_bundle,
+            **(isbn_results or { 'details': {} })['details']
+        }
+
+        # remove description check later?
+        fetch_cr_data = (curr_volume == None or \
+                         (curr_volume != None and 'description' not in curr_volume))
+        force_cr_fetch = self.refresh_volume_details and \
+            (self.query_cr_for_details or self.force_cr_for_details)
+        
+        if fetch_cr_data or force_cr_fetch:
+            volume['cover_images'] = [{ 'name': 'primary', 'url': cover_image }]
+            # fetch data for description and more images
+            self.logger.info('Scraping CR page for description and more cover images: %s', cr_attr['id'])
+            soup_volume = BeautifulSoup(
+                requests.get(volume['url'], timeout=30).text,
+                'html.parser'
+            )
+            # get the release date
+            preorder_soup = soup_volume.find('div', {'class': 'pre-order-street-date'})
+            if preorder_soup is not None:
+                preorder_text = preorder_soup.text
+                if 'Release date:' in preorder_text:
+                    parsed_preorder_date = preorder_text.replace('Release date:', '').strip()
+                    volume['release_date'] = str(datetime.strptime(
+                        parsed_preorder_date, '%m/%d/%Y').date())
+                else:
+                    parsed_preorder_date = preorder_text.replace('ESTIMATED TO SHIP', '') \
+                        .replace('Ship date is an estimate and not guaranteed', '') \
+                            .replace('Pre-order FAQ', '') \
+                                .strip()
+                    volume['release_date'] = str(datetime.strptime(
+                        parsed_preorder_date, '%B %d, %Y').date())
+            # get the description
+            descriptions = soup_volume.find('div', {'class': 'product-description'}) \
+                .find('div', {'class': 'short-description'}) \
+                    .find_all('p')
+            volume['description'] = '\n'.join([desc.text for desc in descriptions])
+            # get the thumbnail carousel images
+            carousel = soup_volume.find_all('div', {'class': 'slick-paging-image-container'})
+            all_images = [
+                img.find('img', {'class': 'img-fluid'}).attrs['src'] for img in carousel
+            ]
+            self.logger.info('All images: %s for %s', json.dumps(all_images), cr_attr['name'])
+            volume['cover_images'].extend(
+                [
+                    { 'name': 'thumbnail', 'url': img } for img in all_images
+                    if img is not cover_image # will not catch because they are thumbnails now
+                ]
+            )
+            return volume
+        # override existing volume details with new volume details
+        elif self.refresh_volume_details:
+            self.logger.info('Volume details refreshed: %s', json.dumps(volume))
+            return volume
+        # only update series_id if it is different
+        elif series_id != self.get_attr(curr_volume, 'series_id'):
+            self.logger.info('Series ID updated on volume: %s | %s', cr_attr['id'], series_id)
+            return { 'series_id': series_id }
         return None
     
 
@@ -269,15 +337,14 @@ class ScrapeCrunchyroll:
 
         # isbn search
         isbn_results = None
-        is_new_volume = curr_volume != None
-        if (self.query_isbn_db and not is_new_volume) or is_new_volume:
+        if (self.query_isbn_db and curr_volume != None) or curr_volume == None:
             isbn_results = self.scrape_isbn.isbn_search(isbn)
         else:
             self.logger.info('Volume exists, ISBN search skipped...')
 
         is_bundle = 'BUNDLE' in isbn or 'Box Set' in cr_attr['name']
         cover_image = item.find('img', {'class': 'tile-image'}).attrs['src']
-        brand_name = cr_attr['brand']
+        volume_number = self.parse_volume(cr_attr['name'], cr_attr['category'])
 
         #* SET market data
         self.set_market_data(item, isbn)
@@ -285,93 +352,31 @@ class ScrapeCrunchyroll:
         #* SET shop data
         self.set_shops_data(item, cr_attr, isbn, isbn_results, is_bundle)
 
+        # get the series
         curr_series = self.get_series(curr_volume, cr_attr)
         self.logger.info('Series details: %s', json.dumps(curr_series))
         series_id = self.get_attr(curr_series, 'series_id')
 
-        # get the volume
-        title = self.get_attr(curr_series, 'title')
-        volume = {
-            'isbn': isbn,
-            'brand': brand_name,
-            'series': title,
-            'series_id': series_id,
-            'display_name': cr_attr['name'],
-            'name': title or brand_name, #fix?
-            'category': cr_attr['category'],
-            'volume': self.parse_volume(cr_attr['name'], cr_attr['category']),
-            'url': cr_attr['url'],
-            **(isbn_results or {
-                'details': {
-                    'release_date': self.get_attr(curr_volume, 'release_date'),
-                    'publisher': self.get_attr(curr_volume, 'publisher'),
-                    'format': self.get_attr(curr_volume, 'format'),
-                    'pages': self.get_attr(curr_volume, 'pages'),
-                    'authors': self.get_attr(curr_volume, 'authors'),
-                    'isbn_10': self.get_attr(curr_volume, 'isbn_10')
-                }
-            })['details']
-        }
+        # get volume changes
+        volume_update = self.get_volume_data(curr_volume, curr_series, cr_attr, volume_number,
+                                             cover_image, series_id, isbn_results, is_bundle)
 
-        # remove description check later?
-        fetch_cr_data = (is_new_volume or 'description' not in all_volumes[isbn])
-        if fetch_cr_data \
-            or (self.refresh_volume_details \
-                and (self.query_cr_for_details or self.force_cr_for_details)):
-            volume['cover_images'] = [{ 'name': 'primary', 'url': cover_image }]
-            # fetch data for description and more images
-            self.logger.info('Scraping CR page for description and more cover images: %s', isbn)
-            soup_volume = BeautifulSoup(
-                requests.get(volume['url'], timeout=30).text,
-                'html.parser'
-            )
-            # get the release date
-            preorder_soup = soup_volume.find('div', {'class': 'pre-order-street-date'})
-            if preorder_soup is not None:
-                preorder_text = soup_volume.find('div', {'class': 'pre-order-street-date'}).text
-                if 'Release date:' in preorder_text:
-                    parsed_preorder_date = preorder_text.replace('Release date:', '').strip()
-                    volume['release_date'] = str(datetime.strptime(
-                        parsed_preorder_date, '%m/%d/%Y').date())
-                else:
-                    parsed_preorder_date = preorder_text.replace('ESTIMATED TO SHIP', '') \
-                        .replace('Ship date is an estimate and not guaranteed', '') \
-                            .replace('Pre-order FAQ', '') \
-                                .strip()
-                    volume['release_date'] = str(datetime.strptime(
-                        parsed_preorder_date, '%B %d, %Y').date())
-            # get the description
-            descriptions = soup_volume.find('div', {'class': 'product-description'}) \
-                .find('div', {'class': 'short-description'}) \
-                    .find_all('p')
-            volume['description'] = '\n'.join([desc.text for desc in descriptions])
-            # get the thumbnail carousel images
-            carousel = soup_volume.find_all('div', {'class': 'slick-paging-image-container'})
-            all_images = [
-                img.find('img', {'class': 'img-fluid'}).attrs['src'] for img in carousel
-            ]
-            self.logger.info('All images: %s for %s', json.dumps(all_images), cr_attr['name'])
-            volume['cover_images'].extend(
-                [
-                    { 'name': 'thumbnail', 'url': img } for img in all_images
-                    if img is not cover_image # will not catch because they are thumbnails now
-                ]
-            )
-            all_volumes[isbn] = volume
-        # override existing volume details with new volume details
-        elif self.refresh_volume_details:
-            volume['series_id'] = all_volumes[isbn]['series_id']
-            all_volumes[isbn] = volume
-            self.logger.info('Volume details refreshed: %s', json.dumps(volume))
+        #* SET volume data
+        if volume_update != None:
+            if curr_volume != None:
+                self.manga_server.update_item('volume', isbn, volume_update)
+                self.logger.info('Volume updated: %s', json.dumps(volume_update))
+            else:
+                self.manga_server.create_item('volume', volume_update)
+                self.logger.info('Volume created: %s', json.dumps(volume_update))
         else:
             self.logger.info('Volume exists, not refreshing volume details...')
-        self.logger.info('Volume details added: %s', json.dumps(volume))
 
         # update the series
         series_volume = {
-            'isbn': volume['isbn'],
-            'volume': volume['volume'],
-            'category': volume['category']
+            'isbn': cr_attr['id'],
+            'volume': volume_number,
+            'category': cr_attr['category']
         }
         if series_id is not None:
             if series_id not in all_series:
@@ -413,13 +418,6 @@ class ScrapeCrunchyroll:
                     all_series[series_id] = { **all_series[series_id], **series_details }
                     self.logger.info('Series details forcefully updated: %s',
                                 json.dumps(all_series[series_id]))
-
-        # broadcast the new data
-        # websockets.broadcast(CONNECTIONS, json.dumps({
-        #     'volume': all_volumes[isbn],
-        #     'series': all_series[series_id],
-        #     'shop': all_shop[isbn]
-        # }))
 
 
     def run_scraper(self):
