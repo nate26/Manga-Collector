@@ -6,7 +6,6 @@ defmodule MangaService.Parsers.MangaData do
   alias MangaService.CollectionDB
 
   def get_volume_by_isbn(isbn, user_id) do
-
     volume = VolumesDB.get_volume_by_isbn!(isbn)
     series = SeriesDB.get_series_by_id!(volume.series_id)
 
@@ -14,12 +13,13 @@ defmodule MangaService.Parsers.MangaData do
 
     shops = ShopsDB.get_shops_by_isbn!(isbn)
 
-    collections = case user_id do
-      nil -> nil
-      _ -> CollectionDB.get_collections_by_user_id!(isbn, user_id)
-    end
+    collections =
+      case user_id do
+        nil -> nil
+        _ -> CollectionDB.get_collections_by_user_id!(isbn, user_id)
+      end
 
-    %{ volume: volume, series: series, market: market, shops: shops, collections: collections }
+    %{volume: volume, series: series, market: market, shops: shops, collections: collections}
   end
 
   def get_volume_by_isbn_async(isbn, user_id) do
@@ -27,7 +27,7 @@ defmodule MangaService.Parsers.MangaData do
       Task.async(fn ->
         volume = VolumesDB.get_volume_by_isbn!(isbn)
         series = SeriesDB.get_series_by_id!(volume.series_id)
-        %{ volume: volume, series: series }
+        %{volume: volume, series: series}
       end),
       Task.async(fn -> MarketDB.get_market_by_isbn!(isbn) end),
       Task.async(fn -> ShopsDB.get_shops_by_isbn!(isbn) end),
@@ -39,8 +39,14 @@ defmodule MangaService.Parsers.MangaData do
       end)
     ]
 
-    [ volume_data, market, shops, collections ] = Task.await_many(tasks)
-    %VolumeDetails{ volume: volume_data.volume, series: volume_data.series, market: market, shops: shops, collections: collections }
-  end
+    [volume_data, market, shops, collections] = Task.await_many(tasks)
 
+    %{
+      volume: volume_data.volume,
+      series: volume_data.series,
+      market: market,
+      shops: shops,
+      collections: collections
+    }
+  end
 end

@@ -11,16 +11,19 @@ the data into a JSON format.
 and updates the given data structures with the results.
 '''
 
+from calendar import c
 import json
 import math
 import re
 from datetime import datetime
 import traceback
+from typing import Any
 import requests
 from bs4 import BeautifulSoup
 import websockets
 
 from run_websocket import CONNECTIONS
+from src.database.manga_server import MangaServer
 from src.enums.file_path_enum import FilePathEnum
 from src.enums.host_enum import HostEnum
 from src.util.local_dao import LocalDAO
@@ -79,12 +82,9 @@ class ScrapeCrunchyroll:
         self.host = host
         self.scrape_isbn = ScrapeISBN(host)
         self.series_search = SeriesSearch(host)
-        self.scrape_barnes_and_noble = ScrapeBarnesAndNoble(host)
-        self.data = Data(host)
-        self.local_dao = LocalDAO(host)
+        self.manga_server = MangaServer(host)
 
         self.enable_scrape = True
-        self.scrape_all_pages = True
 
         self.query_isbn_db = False
         self.query_cr_for_details = False
@@ -94,6 +94,7 @@ class ScrapeCrunchyroll:
         self.force_cr_for_details = False
         self.refresh_volume_details = False
         self.refresh_series_data = False
+
 
     def parse_volume(self, display_name: str, category: str):
         '''
@@ -106,53 +107,154 @@ class ScrapeCrunchyroll:
         Returns:
         - str: The volume number from the given display name. Or None if no volume number is found.
         '''
-        if re.search(r' [()]?Volume[a-z]?[()]? \d+\.?\-?\d*', display_name):
-            return re.search(
-                r'\d+\.?\-?\d*',
-                re.search(r' [()]?Volume[a-z]?[()]? \d+\.?\-?\d*', display_name).group(0)
-            ).group(0)
-        if re.search(r' [()]?Vol[a-z]?[()]? \d+\.?\d*', display_name):
-            return re.search(
-                r'\d+\.?\-?\d*',
-                re.search(r' [()]?Vol[a-z]?[()]? \d+\.?\-?\d*', display_name).group(0)
-            ).group(0)
-        if re.search(r' [()]?Vol.[a-z]?[()]? \d+\.?\d*', display_name):
-            return re.search(
-                r'\d+\.?\-?\d*',
-                re.search(r' [()]?Vol.[a-z]?[()]? \d+\.?\-?\d*', display_name).group(0)
-            ).group(0)
-        if re.search(r' [()]?Graphic Novel[a-z]?[()]? \d+\.?\-?\d*', display_name):
-            return re.search(
-                r'\d+\.?\-?\d*',
-                re.search(r' [()]?Graphic Novel[a-z]?[()]? \d+\.?\-?\d*', display_name).group(0)
-            ).group(0)
-        if re.search(r' [()]?Box Set[()]? \d+\.?\-?\d*', display_name):
-            return re.search(
-                r'\d+\.?\-?\d*',
-                re.search(r' [()]?Box Set[()]? \d+\.?\-?\d*', display_name).group(0)
-            ).group(0)
-        if re.search(r' [()]?' + category + r'[a-z]?[()]? \d+\.?\-?\d*', display_name):
-            return re.search(
-                r'\d+\.?\-?\d*',
-                re.search(r' [()]?' + category + r'[a-z]?[()]? \d+\.?\-?\d*', display_name).group(0)
-            ).group(0)
+        search_volume = re.search(r' [()]?Volume[a-z]?[()]? \d+\.?\-?\d*', display_name)
+        if search_volume:
+            inner_volume = re.search(r'\d+\.?\-?\d*', search_volume.group(0))
+            if inner_volume:
+                return inner_volume.group(0)
+        
+        search_vol = re.search(r' [()]?Vol[a-z]?[()]? \d+\.?\-?\d*', display_name)
+        if search_vol:
+            inner_vol = re.search(r'\d+\.?\-?\d*', search_vol.group(0))
+            if inner_vol:
+                return inner_vol.group(0)
+        
+        search_vol_dot = re.search(r' [()]?Vol.[a-z]?[()]? \d+\.?\-?\d*', display_name)
+        if search_vol_dot:
+            inner_vol_dot = re.search(r'\d+\.?\-?\d*', search_vol_dot.group(0))
+            if inner_vol_dot:
+                return inner_vol_dot.group(0)
+        
+        search_gn = re.search(r' [()]?Graphic Novel[a-z]?[()]? \d+\.?\-?\d*', display_name)
+        if search_gn:
+            inner_gn = re.search(r'\d+\.?\-?\d*', search_gn.group(0))
+            if inner_gn:
+                return inner_gn.group(0)
+        
+        search_box = re.search(r' [()]?Box Set[()]? \d+\.?\-?\d*', display_name)
+        if search_box:
+            inner_box = re.search(r'\d+\.?\-?\d*', search_box.group(0))
+            if inner_box:
+                return inner_box.group(0)
+        
+        search_any = re.search(r' [()]?' + category + r'[a-z]?[()]? \d+\.?\-?\d*', display_name)
+        if search_any:
+            inner_any = re.search(r'\d+\.?\-?\d*', search_any.group(0))
+            if inner_any:
+                return inner_any.group(0)
+        
+        return None
+    
+
+    def get_series(self, curr_volume, cr_attr) -> dict[str, Any] | None:
+        curr_series = None
+        if curr_volume != None and curr_volume['series_id'] != None:
+            curr_series = self.manga_server.get_item('series', curr_volume['series_id'])
+
+        if curr_series != None:
+            self.logger.info('Series found in data...: %s %s',
+                             curr_series['title'], curr_series['series_id'])
+            return curr_series
+        elif curr_volume == None or self.refresh_series_data:
+            self.logger.info('Series not found in data or forcefully updating series...' +
+                             ' searching for series ID: %s', cr_attr['brand'])
+            return self.series_search.search_series(cr_attr['brand'],
+                                                    cr_attr['category'],
+                                                    cr_attr['name'])
+        self.logger.info('Skipping series search on existing volume: %s', cr_attr['id'])
         return None
 
-    def scrape_page(self, item, all_volumes, all_series, all_shop):
+
+    def set_market_data(self, item, isbn: str):
+        '''
+        Sets the market data for the given item.
+
+        Parameters:
+        - item (dict): The Beautiful soup object for an item in the Crunchyroll store website.
+        - isbn (str): The ISBN of the item.
+        '''
+        retail_price = max([
+            price.attrs['content']
+            for price in
+            item.find('div', {'class': 'price'}) \
+                .find_all('span', {'class': 'value'})
+        ])
+        market = {
+            'isbn': isbn,
+            'retail_price': float(retail_price)
+        }
+        curr_market = self.manga_server.get_item('market', isbn)        
+        if curr_market != None:
+            self.manga_server.update_item('market', isbn, market)
+        else:
+            self.manga_server.create_item('market', market)
+        self.logger.info('market details set: %s', json.dumps(market))
+
+    
+    def set_shops_data(self, item, cr_attr, isbn: str, isbn_results, is_bundle: bool):
+        '''
+        Sets the shop data for the given item.
+
+        Parameters:
+        - item (dict): The Beautiful soup object for an item in the Crunchyroll store website.
+        - cr_attr (dict): The attributes of the item from Crunchyroll.
+        - isbn (str): The ISBN of the item.
+        - isbn_results (dict): The results of the ISBN search.
+        '''
+        promotion_text = item.find('div', {'class': 'plp-promotion'}).text
+        shops = [
+            {
+                'item_id': isbn + 'CrunchyrollNew',
+                'isbn': isbn,
+                'store': 'Crunchyroll',
+                'condition': 'New',
+                'url': cr_attr['url'],
+                'price': float(cr_attr['price']),
+                'stock_status': cr_attr['Inventory_Status'],
+                'coupon': cr_attr['coupon'],
+                'is_on_sale': item.find('div', {'class': 'sale'}) is not None,
+                #! monitor this, may hide if is_on_sale
+                'exclusive': item.find('div', {'class': 'exclusive'}) is not None,
+                'promotion': promotion_text.split('| ')[1] if promotion_text != None else '',
+                'promotion_percentage': float(promotion_text.split('%')[0]) \
+                    if promotion_text != None else None,
+                'backorder_details': item.find('div', {'class': 'back-order-instock-date'}).text,
+                'is_bundle': is_bundle,
+                'dropped_check': False
+            },
+            *[
+                {
+                    **shop,
+                    'is_bundle': is_bundle
+                }
+                for shop in isbn_results['shops']
+            ]
+        ]
+        for shop in shops:
+            curr_shop = self.manga_server.get_item('shop', shop['item_id'])
+            stock_status = cr_attr['Inventory_Status']
+            shop['last_stock_update'] = curr_shop['last_stock_update'] \
+                if curr_shop != None and stock_status != curr_shop['stock_status'] \
+                else str(datetime.now()) #! TODO update all datetime to correct date format...
+            #* save to DB
+            if curr_shop != None:
+                self.manga_server.update_item('shop', shop['item_id'], shop)
+            else:
+                self.manga_server.create_item('shop', shop)
+        self.logger.info('shop details set: %s', json.dumps(shops))
+
+
+    def get_attr(self, item: Any | None, attr):
+        return item[attr] if item != None else None
+
+
+    def scrape_page(self, item):
         '''
         Scrapes the given URL for manga volumes and series,
         and updates the given data structures with the results.
 
         Parameters:
         - item (dict): The Beautiful soup object for an item in the Crunchyroll store website.
-        - all_volumes (dict): A dictionary containing manga volumes information.
-        - all_series (dict): A dictionary containing manga series information.
-        - all_shop (dict): A dictionary containing manga shop information.
-
-        Returns:
-        - all_volumes (dict): Updated dictionary of manga volumes information.
-        - all_series (dict): Updated dictionary of manga series information.
-        - all_shop (dict): Updated dictionary of manga shop information.
         '''
         # bs4 object to dict
         cr_attr = {
@@ -162,109 +264,53 @@ class ScrapeCrunchyroll:
         isbn = cr_attr['id']
         self.logger.info('---------- Scraping item... %s | %s ----------', isbn, cr_attr['name'])
 
-        is_new_volume = isbn not in all_volumes
+        # current DB data
+        curr_volume = self.manga_server.get_item('volume', isbn)
+
+        # isbn search
+        isbn_results = None
+        is_new_volume = curr_volume != None
         if (self.query_isbn_db and not is_new_volume) or is_new_volume:
             isbn_results = self.scrape_isbn.isbn_search(isbn)
         else:
-            vol_for_isbn = all_volumes[isbn]
-            isbn_results = {
-                'details': {
-                    'release_date': vol_for_isbn['release_date'],
-                    'publisher': vol_for_isbn['publisher'],
-                    'format': vol_for_isbn['format'],
-                    'pages': vol_for_isbn['pages'],
-                    'authors': vol_for_isbn['authors'],
-                    'isbn_10': vol_for_isbn['isbn_10']
-                },
-                'shops': all_shop[isbn]['shops'][1:]
-            }
-            self.logger.info('Volume exists, ISBN search skipped... %s', isbn_results)
+            self.logger.info('Volume exists, ISBN search skipped...')
 
-        retail_price = max([
-            price.attrs['content']
-            for price in
-            item.find('div', {'class': 'price'}) \
-                .find_all('span', {'class': 'value'})
-        ])
+        is_bundle = 'BUNDLE' in isbn or 'Box Set' in cr_attr['name']
         cover_image = item.find('img', {'class': 'tile-image'}).attrs['src']
-
-        volume_number = self.parse_volume(cr_attr['name'], cr_attr['category'])
-
-        # get the product
-        stock_status = cr_attr['Inventory_Status']
-        # update if stock status is different or new volume
-        last_stock_update = str(datetime.now()) \
-            if is_new_volume or stock_status != all_shop[isbn]['shops'][0]['stock_status'] \
-                else all_shop[isbn]['shops'][0]['last_stock_update']
-        product = {
-            'isbn': isbn,
-            'retail_price': float(retail_price),
-            'shops': [
-                {
-                    # split into mega fans (10% off) and ultamate fans (15% off)
-                    'store': 'Crunchyroll',
-                    'condition': 'New',
-                    'url': cr_attr['url'],
-                    'store_price': float(cr_attr['price']),
-                    'stock_status': cr_attr['Inventory_Status'],
-                    'last_stock_update': last_stock_update,
-                    'record_updated_date': str(datetime.now()),
-                    'coupon': cr_attr['coupon'],
-                    'is_on_sale': item.find('div', {'class': 'sale'}) is not None
-                },
-                *isbn_results['shops']
-            ]
-        }
-        # get barnes and noble data
-        if self.query_barnes_and_noble:
-            try:
-                bn_data = self.scrape_barnes_and_noble.get_barnes_and_noble_data(isbn,
-                    [] if is_new_volume else all_shop[isbn]['shops'])
-                self.logger.info('Barnes & Noble data: %s', json.dumps(bn_data))
-                product['shops'].append(bn_data)
-            except (requests.exceptions.RequestException, IndexError):
-                self.logger.error('Could not get Barnes & Noble data for %s... ending process',
-                                  isbn)
-                self.logger.error(traceback.format_exc())
-        all_shop[isbn] = product
-        self.logger.info('All shop details added: %s', json.dumps(product))
-
-        # get the series data
         brand_name = cr_attr['brand']
-        # query series if volume is new ----------- or series is not in data
-        if not self.refresh_series_data and isbn in all_volumes \
-            and all_volumes[isbn]['series_id'] in all_series:
-            #  \
-            # and all_volumes[isbn]['series_id'] in all_series:
-            self.logger.info('Series found in data... using that instead: %s %s',
-                        brand_name, all_volumes[isbn]['series_id'])
-            series_details = all_series[all_volumes[isbn]['series_id']]
-        elif is_new_volume or self.refresh_series_data:
-            self.logger.info('Series not found in data or forcefully updating series...' +
-                        ' searching for series ID: %s', brand_name)
-            series_details = self.series_search.search_series(brand_name, cr_attr['category'],
-                                                              cr_attr['name'])
-        else:
-            self.logger.info('Skipping series search on existing volume: %s', isbn)
-            series_details = { 'series_id': None, 'title': cr_attr['brand'] }
-        self.logger.info('Series details: %s', json.dumps(series_details))
-        series_id = series_details['series_id']
+
+        #* SET market data
+        self.set_market_data(item, isbn)
+
+        #* SET shop data
+        self.set_shops_data(item, cr_attr, isbn, isbn_results, is_bundle)
+
+        curr_series = self.get_series(curr_volume, cr_attr)
+        self.logger.info('Series details: %s', json.dumps(curr_series))
+        series_id = self.get_attr(curr_series, 'series_id')
 
         # get the volume
+        title = self.get_attr(curr_series, 'title')
         volume = {
             'isbn': isbn,
             'brand': brand_name,
-            'series': series_details['title'],
+            'series': title,
             'series_id': series_id,
             'display_name': cr_attr['name'],
-            'name': series_details['title'] or brand_name, #fix?
+            'name': title or brand_name, #fix?
             'category': cr_attr['category'],
-            'volume': volume_number,
+            'volume': self.parse_volume(cr_attr['name'], cr_attr['category']),
             'url': cr_attr['url'],
-            'record_added_date': str(datetime.now()) if is_new_volume \
-                else all_volumes[isbn]['record_added_date'],
-            'record_updated_date': str(datetime.now()),
-            **isbn_results['details']
+            **(isbn_results or {
+                'details': {
+                    'release_date': self.get_attr(curr_volume, 'release_date'),
+                    'publisher': self.get_attr(curr_volume, 'publisher'),
+                    'format': self.get_attr(curr_volume, 'format'),
+                    'pages': self.get_attr(curr_volume, 'pages'),
+                    'authors': self.get_attr(curr_volume, 'authors'),
+                    'isbn_10': self.get_attr(curr_volume, 'isbn_10')
+                }
+            })['details']
         }
 
         # remove description check later?
@@ -363,19 +409,18 @@ class ScrapeCrunchyroll:
                     all_series[series_id]['volumes'][idx] = series_volume
                     self.logger.info('Series exists, updated volume: %s to %s', isbn,
                                 json.dumps(all_series[series_id]['volumes']))
-                if self.refresh_series_data:
+                if self.refresh_series_data: # TODO check this before refreshing series data (except for additional volumes)
                     all_series[series_id] = { **all_series[series_id], **series_details }
                     self.logger.info('Series details forcefully updated: %s',
                                 json.dumps(all_series[series_id]))
 
         # broadcast the new data
-        websockets.broadcast(CONNECTIONS, json.dumps({
-            'volume': all_volumes[isbn],
-            'series': all_series[series_id],
-            'shop': all_shop[isbn]
-        }))
+        # websockets.broadcast(CONNECTIONS, json.dumps({
+        #     'volume': all_volumes[isbn],
+        #     'series': all_series[series_id],
+        #     'shop': all_shop[isbn]
+        # }))
 
-        return all_volumes, all_series, all_shop
 
     def run_scraper(self):
         '''
@@ -383,81 +428,73 @@ class ScrapeCrunchyroll:
         and series information.
         '''
 
-        start = 11000
-        end = 100000000000
+        if not self.enable_scrape:
+            self.logger.info('Scraping is disabled... exiting...')
+            return
 
-        if self.enable_scrape:
-            volumes_data = self.data.get_volumes_data()
-            series_data = self.data.get_series_data()
-            shop_data = self.data.get_shop_data()
+        start = 0
+        end = 1
 
-            page_base_url = 'https://store.crunchyroll.com/collections/manga-books/' + \
-                '?cgid=manga-books&srule=New-to-Old'
-            category_query = '&prefn1=subcategory&prefv1=Novels|Manhwa|Manhua|Light%20Novels|Manga'
-            page_url = page_base_url + category_query
+        # volumes_data = self.data.get_volumes_data()
+        # series_data = self.data.get_series_data()
+        # shop_data = self.data.get_shop_data()
 
-            self.logger.info('Calling: %s&start=%s&sz=100', page_url, start)
-            first_soup = BeautifulSoup(
-                requests.get(page_url + f'&start={start}&sz=100', timeout=30).text,
-                'html.parser'
-            )
-            cr_total_count = int(first_soup.find('div', {'class': 'pagination-text'})
-                              .attrs['data-totalcount'])
-            total_count = min(cr_total_count, end) - start
-            total_pages = math.ceil(total_count / 100)
-            start_page = math.floor(start / 100)
-            end_page = math.ceil(min(cr_total_count, end) / 100)
-            completed = 0
-            self.logger.info('pages to scrape: %s', str(total_pages))
+        page_base_url = 'https://store.crunchyroll.com/collections/manga-books/' + \
+            '?cgid=manga-books&srule=New-to-Old'
+        category_query = '&prefn1=subcategory&prefv1=Novels|Manhwa|Manhua|Light%20Novels|Manga'
+        page_url = page_base_url + category_query
 
-            if self.scrape_all_pages:
+        self.logger.info('Calling: %s&start=%s&sz=100', page_url, start)
+        first_soup = BeautifulSoup(
+            requests.get(page_url + f'&start={start}&sz=100', timeout=30).text,
+            'html.parser'
+        )
+        cr_total_count = int(first_soup.find('div', {'class': 'pagination-text'})
+                            .attrs['data-totalcount'])
+        total_count = min(cr_total_count, end) - start
+        total_pages = math.ceil(total_count / 100)
+        start_page = math.floor(start / 100)
+        end_page = math.ceil(min(cr_total_count, end) / 100)
+        completed = 0
+        self.logger.info('pages to scrape: %s', str(total_pages))
 
-                for i in range(start_page, end_page):
+        for i in range(start_page, end_page):
 
-                    cancel_scraping = not self.local_dao \
-                        .open_file(FilePathEnum.EDITING.value[self.host.value]).get('editing')
-                    if start > end or cancel_scraping:
-                        self.logger.info('Reached end of pages... %s', str(start - 100))
-                        self.local_dao.save_file(FilePathEnum.EDITING.value[self.host.value],
-                                                 {"editing": True})
-                        break
+            if start > end:
+                self.logger.info('Reached end of pages... %s', str(start - 100))
+                break
 
-                    if completed == 0:
-                        next_soup = first_soup
-                    else:
-                        self.logger.info('Calling: %s&start=%s&sz=100', page_url, start)
-                        next_soup = BeautifulSoup(
-                            requests.get(page_url + f'&start={start}&sz=100', timeout=30).text,
-                            'html.parser'
-                        )
+            if completed == 0:
+                next_soup = first_soup
+            else:
+                self.logger.info('Calling: %s&start=%s&sz=100', page_url, start)
+                next_soup = BeautifulSoup(
+                    requests.get(page_url + f'&start={start}&sz=100', timeout=30).text,
+                    'html.parser'
+                )
 
-                    for item in next_soup.find_all('div', {'class': 'product'}):
-                        self.logger.info('Starting item %s from page %s of %s',
-                                    json.loads(item.attrs['data-gtmdata'])['id'], i, end_page)
+            for item in next_soup.find_all('div', {'class': 'product'}):
+                self.logger.info('Starting item %s from page %s of %s',
+                            json.loads(item.attrs['data-gtmdata'])['id'], i, end_page)
 
-                        try:
-                            volumes_data, series_data, shop_data \
-                                = self.scrape_page(item, volumes_data, series_data, shop_data)
+                try:
+                    self.scrape_page(item)
+                except Exception:
+                    self.logger.error('Error scraping item... skipping...')
+                    self.logger.error(traceback.format_exc())
+                    continue
 
-                            # save each volume to file
-                            self.data.save_all_files(volumes_data, series_data, shop_data)
-                        except Exception:
-                            self.logger.error('Error scraping item... skipping...')
-                            self.logger.error(traceback.format_exc())
-                            continue
+                # update progress bar
+                completed += 1
+                progress = round((completed / total_count) * 50)
+                remaining = 50 - progress
+                percentage = round((completed / total_count) * 100, ndigits=2)
+                print('progress: |' + ''
+                        .join(['=' for _ in range(progress)]) + ''
+                        .join(['-' for _ in range(remaining)]) +
+                        '| ' + str(percentage) + '%',
+                        end='\r')
 
-                        # update progress bar
-                        completed += 1
-                        progress = round((completed / total_count) * 50)
-                        remaining = 50 - progress
-                        percentage = round((completed / total_count) * 100, ndigits=2)
-                        print('progress: |' + ''
-                                .join(['=' for _ in range(progress)]) + ''
-                                .join(['-' for _ in range(remaining)]) +
-                                '| ' + str(percentage) + '%',
-                                end='\r')
-
-                    start += 100
+            start += 100
 
         self.logger.info('Finished scraping...')
-        print()

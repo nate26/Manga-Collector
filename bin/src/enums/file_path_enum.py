@@ -4,6 +4,11 @@ from enum import Enum
 class FilePathEnum(Enum):
     '''Enum for file paths for different hosts.'''
 
+    MANGA_SERVER = {
+        'local': 'http://localhost:4000/api',
+        'server': 'http://localhost:4000/api',
+        'mock': 'http://localhost:4000/api'
+    }
     VOLUMES = {
         'local': './db/volumes.json',
         'server': 'MangaTracker/Manga-Tracker-UI/bin/db/volumes.json',
