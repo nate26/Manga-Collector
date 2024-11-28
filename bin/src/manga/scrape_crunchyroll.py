@@ -16,7 +16,7 @@ import math
 import re
 from datetime import datetime
 import traceback
-from typing import Any
+from typing import Any, List
 import requests
 from bs4 import BeautifulSoup
 
@@ -139,8 +139,8 @@ class ScrapeCrunchyroll:
         return None
     
     
-    def get_volume_data(self, curr_volume, curr_series, cr_attr, volume_number, cover_image,
-                        series_id, isbn_results, is_bundle):
+    def get_volume_data(self, curr_volume, curr_series, cr_attr, soup_volume, volume_number,
+                        cover_image, series_id, isbn_results, is_bundle):
         title = self.get_attr(curr_series, 'title')
         volume = {
             'isbn': cr_attr['id'],
@@ -155,21 +155,9 @@ class ScrapeCrunchyroll:
             'is_bundle': is_bundle,
             **(isbn_results or { 'details': {} })['details']
         }
-
-        # remove description check later?
-        fetch_cr_data = (curr_volume == None or \
-                         (curr_volume != None and 'description' not in curr_volume))
-        force_cr_fetch = self.refresh_volume_details and \
-            (self.query_cr_for_details or self.force_cr_for_details)
         
-        if fetch_cr_data or force_cr_fetch:
-            volume['cover_images'] = [{ 'name': 'primary', 'url': cover_image }]
-            # fetch data for description and more images
-            self.logger.info('Scraping CR page for description and more cover images: %s', cr_attr['id'])
-            soup_volume = BeautifulSoup(
-                requests.get(volume['url'], timeout=30).text,
-                'html.parser'
-            )
+        if soup_volume is not None:
+            volume['primary_cover_image'] = cover_image
             # get the release date
             preorder_soup = soup_volume.find('div', {'class': 'pre-order-street-date'})
             if preorder_soup is not None:
@@ -214,21 +202,61 @@ class ScrapeCrunchyroll:
         return None
     
 
-    def get_series(self, curr_volume, cr_attr) -> dict[str, Any] | None:
+    def update_series_volumes(self, curr_series, series_volume) -> List[dict[str, str]]:
+        if series_volume['isbn'] not in curr_series['volumes']:
+            # ? maybe do this sorting someday, but for now we can do it in elixir
+            # series_volumes = sorted(
+            #     [
+            #         *curr_series['volumes'],
+            #         series_volume
+            #     ],
+            #     key = lambda x: (
+            #         x['category'],
+            #         -1
+            #         if x['volume'] is None
+            #         else (
+            #             float(x['volume'].split('-')[0])
+            #             if '-' in x['volume']
+            #             else float(x['volume'])
+            #         )
+            #     )
+            # )
+            self.logger.info('Volume added in series: %s to %s',
+                             series_volume['isbn'],
+                             json.dumps(curr_series['volumes']))
+            return [ *curr_series['volumes'], series_volume ]
+        return curr_series['volumes']
+    
+
+    def set_series(self, curr_volume, cr_attr) -> dict[str, Any] | None:
         curr_series = None
-        if curr_volume != None and curr_volume['series_id'] != None:
+        if curr_volume is not None and curr_volume['series_id'] is not None:
             curr_series = self.manga_server.get_item('series', curr_volume['series_id'])
 
-        if curr_series != None:
+        if curr_series is not None:
+            curr_series['volumes'] = self.update_series_volumes(curr_series, cr_attr['id'])
             self.logger.info('Series found in data...: %s %s',
                              curr_series['title'], curr_series['series_id'])
+            self.manga_server.update_item('series', curr_volume['series_id'], curr_series)
+            self.logger.info('series details updated in DB: %s', json.dumps(curr_series))
             return curr_series
-        elif curr_volume == None or self.refresh_series_data:
+        elif curr_volume is None or self.refresh_series_data:
             self.logger.info('Series not found in data or forcefully updating series...' +
                              ' searching for series ID: %s', cr_attr['brand'])
-            return self.series_search.search_series(cr_attr['brand'],
-                                                    cr_attr['category'],
-                                                    cr_attr['name'])
+            new_series = {
+                **self.series_search.search_series(cr_attr['brand'],
+                                                   cr_attr['category'],
+                                                   cr_attr['name']),
+                'volumes': [cr_attr['id']]
+            }
+            if curr_series is not None:
+                new_series['volumes'] = self.update_series_volumes(curr_series, cr_attr['id'])
+                self.manga_server.update_item('series', curr_volume['series_id'], new_series)
+                self.logger.info('series getting refreshed, but maintaining volumes: %s',
+                                 json.dumps(new_series))
+            self.manga_server.create_item('series', new_series)
+            self.logger.info('series details added to DB: %s', json.dumps(new_series))
+            return new_series
         self.logger.info('Skipping series search on existing volume: %s', cr_attr['id'])
         return None
 
@@ -252,11 +280,12 @@ class ScrapeCrunchyroll:
             'retail_price': float(retail_price)
         }
         curr_market = self.manga_server.get_item('market', isbn)        
-        if curr_market != None:
+        if curr_market is not None:
             self.manga_server.update_item('market', isbn, market)
+            self.logger.info('market details updated in DB: %s', json.dumps(market))
         else:
             self.manga_server.create_item('market', market)
-        self.logger.info('market details set: %s', json.dumps(market))
+            self.logger.info('market details added to DB: %s', json.dumps(market))
 
     
     def set_shops_data(self, item, cr_attr, isbn: str, isbn_results, is_bundle: bool):
@@ -269,7 +298,14 @@ class ScrapeCrunchyroll:
         - isbn (str): The ISBN of the item.
         - isbn_results (dict): The results of the ISBN search.
         '''
-        promotion_text = item.find('div', {'class': 'plp-promotion'}).text
+        promotion_text: str = item.find('div', {'class': 'plp-promotion'}).text
+        promotion = promotion_text.split('| ')[1] \
+            if promotion_text is not None and '| ' in promotion_text \
+                else promotion_text or ''
+        promotion_percentage = float(promotion_text.split('%')[0]) \
+            if promotion_text is not None and '%' in promotion_text \
+                else None
+            
         shops = [
             {
                 'item_id': isbn + 'CrunchyrollNew',
@@ -283,9 +319,8 @@ class ScrapeCrunchyroll:
                 'is_on_sale': item.find('div', {'class': 'sale'}) is not None,
                 #! monitor this, may hide if is_on_sale
                 'exclusive': item.find('div', {'class': 'exclusive'}) is not None,
-                'promotion': promotion_text.split('| ')[1] if promotion_text != None else '',
-                'promotion_percentage': float(promotion_text.split('%')[0]) \
-                    if promotion_text != None else None,
+                'promotion': promotion,
+                'promotion_percentage': promotion_percentage,
                 'backorder_details': item.find('div', {'class': 'back-order-instock-date'}).text,
                 'is_bundle': is_bundle,
                 'dropped_check': False
@@ -302,18 +337,81 @@ class ScrapeCrunchyroll:
             curr_shop = self.manga_server.get_item('shop', shop['item_id'])
             stock_status = cr_attr['Inventory_Status']
             shop['last_stock_update'] = curr_shop['last_stock_update'] \
-                if curr_shop != None and stock_status != curr_shop['stock_status'] \
+                if curr_shop is not None and stock_status != curr_shop['stock_status'] \
                 else str(datetime.now()) #! TODO update all datetime to correct date format...
             #* save to DB
-            if curr_shop != None:
+            if curr_shop is not None:
                 self.manga_server.update_item('shop', shop['item_id'], shop)
+                self.logger.info('shop details updated in DB: %s', json.dumps(shops))
             else:
                 self.manga_server.create_item('shop', shop)
-        self.logger.info('shop details set: %s', json.dumps(shops))
+                self.logger.info('shop details added to DB: %s', json.dumps(shops))
+
+
+    def set_bundle_data(self, curr_bundle, isbn, series_id, cover_image,
+                        soup_volume: BeautifulSoup | None):
+        if curr_bundle is not None and not self.refresh_volume_details:
+            self.logger.info('Bundle exists, not refreshing bundle details...')
+            return
+        else:
+            bundle_type = 'Bundle' if 'BUNDLE' in isbn else 'Box Set'
+            bundle = {
+                'item_id': isbn,
+                'series_id': series_id,
+                'shop_id': isbn + 'CrunchyrollNew',
+                'cover_image': cover_image,
+                'volumes': [],
+                'volume_start': None,
+                'volume_end': None,
+                'type': bundle_type
+            }
+            if bundle_type == 'Bundle' and soup_volume is not None:
+                vols = soup_volume.find('div', {'class': 'short-description'}).find_all('a')
+                volumes_partial = [
+                    {
+                        'isbn': vol.attrs['href'].split('-')[-1][:-5],
+                        'display_name': vol.text,
+                        'url': vol.attrs['href']
+                    }
+                    for vol in vols
+                ]
+                bundle['volumes'] = [
+                    {
+                        **vol,
+                        'primary_cover_image': soup_volume.find(
+                            'div',
+                            { 'id': f'pdpCarousel-{vol['isbn']}' }
+                        ).find('img').attrs['src']
+                    }
+                    for vol in volumes_partial
+                ]
+                volume_numbers = [
+                    v for v in [
+                        self.parse_volume(vol['display_name'], '')
+                        for vol in bundle['volumes']
+                    ]
+                    if v is not None
+                ]
+                bundle['volume_start'] = min(volume_numbers)
+                bundle['volume_end'] = max(volume_numbers)
+            elif soup_volume is not None:
+                description = soup_volume.find('div', {'class': 'short-description'}).text
+                vol_range = description.split('box set contains volumes ')[1].split(' ')[0] \
+                    .split('-')
+                bundle['volume_start'] = vol_range[0]
+                bundle['volume_end'] = vol_range[1]
+                # TODO once we have a way to query volume by number, we can auto populate volumes
+
+            if curr_bundle is None:
+                self.manga_server.create_item('bundle', bundle)
+                self.logger.info('Bundle details added to DB: %s', json.dumps(bundle))
+            else:
+                self.manga_server.update_item('bundle', isbn, bundle)
+                self.logger.info('Bundle details updated in DB: %s', json.dumps(bundle))
 
 
     def get_attr(self, item: Any | None, attr):
-        return item[attr] if item != None else None
+        return item[attr] if item is not None else None
 
 
     def scrape_page(self, item):
@@ -334,10 +432,11 @@ class ScrapeCrunchyroll:
 
         # current DB data
         curr_volume = self.manga_server.get_item('volume', isbn)
+        curr_bundle = self.manga_server.get_item('bundle', isbn)
 
         # isbn search
         isbn_results = None
-        if (self.query_isbn_db and curr_volume != None) or curr_volume == None:
+        if (self.query_isbn_db and curr_volume is not None) or curr_volume is None:
             isbn_results = self.scrape_isbn.isbn_search(isbn)
         else:
             self.logger.info('Volume exists, ISBN search skipped...')
@@ -352,18 +451,34 @@ class ScrapeCrunchyroll:
         #* SET shop data
         self.set_shops_data(item, cr_attr, isbn, isbn_results, is_bundle)
 
-        # get the series
-        curr_series = self.get_series(curr_volume, cr_attr)
+        #* SET series data
+        curr_series = self.set_series(curr_volume, cr_attr)
         self.logger.info('Series details: %s', json.dumps(curr_series))
         series_id = self.get_attr(curr_series, 'series_id')
 
+        # remove description check later?
+        soup_volume = None
+        fetch_cr_data_for_vol = (curr_volume is None or \
+                         (curr_volume is not None and 'description' not in curr_volume))
+        fetch_cr_data_for_bundle = curr_bundle is None
+        force_cr_fetch = self.refresh_volume_details and \
+            (self.query_cr_for_details or self.force_cr_for_details)
+        if fetch_cr_data_for_vol or fetch_cr_data_for_bundle or force_cr_fetch:
+            # fetch data for description and more images
+            self.logger.info('Scraping CR page for description and more cover images: %s', cr_attr['id'])
+            soup_volume = BeautifulSoup(
+                requests.get(cr_attr['url'], timeout=30).text,
+                'html.parser'
+            )
+
         # get volume changes
-        volume_update = self.get_volume_data(curr_volume, curr_series, cr_attr, volume_number,
-                                             cover_image, series_id, isbn_results, is_bundle)
+        volume_update = self.get_volume_data(curr_volume, curr_series, cr_attr, soup_volume,
+                                             volume_number, cover_image, series_id, isbn_results,
+                                             is_bundle)
 
         #* SET volume data
-        if volume_update != None:
-            if curr_volume != None:
+        if volume_update is not None:
+            if curr_volume is not None:
                 self.manga_server.update_item('volume', isbn, volume_update)
                 self.logger.info('Volume updated: %s', json.dumps(volume_update))
             else:
@@ -372,52 +487,11 @@ class ScrapeCrunchyroll:
         else:
             self.logger.info('Volume exists, not refreshing volume details...')
 
-        # update the series
-        series_volume = {
-            'isbn': cr_attr['id'],
-            'volume': volume_number,
-            'category': cr_attr['category']
-        }
-        if series_id is not None:
-            if series_id not in all_series:
-                all_series[series_id] = {
-                    **series_details,
-                    'volumes': [series_volume]
-                }
-                self.logger.info('Added series to data: %s', series_id)
-            else:
-                existing_volumes = [
-                    vol['isbn'] for vol in all_series[series_id]['volumes']
-                ]
-                if series_volume['isbn'] not in existing_volumes:
-                    series_volumes = sorted(
-                        [
-                            *all_series[series_id]['volumes'],
-                            series_volume
-                        ],
-                        key = lambda x: (
-                            x['category'],
-                            -1
-                            if x['volume'] is None
-                            else (
-                                float(x['volume'].split('-')[0])
-                                if '-' in x['volume']
-                                else float(x['volume'])
-                            )
-                        )
-                    )
-                    all_series[series_id]['volumes'] = series_volumes
-                    self.logger.info('Series exists, added volume: %s to %s', isbn,
-                                json.dumps(all_series[series_id]['volumes']))
-                else:
-                    idx = existing_volumes.index(series_volume['isbn'])
-                    all_series[series_id]['volumes'][idx] = series_volume
-                    self.logger.info('Series exists, updated volume: %s to %s', isbn,
-                                json.dumps(all_series[series_id]['volumes']))
-                if self.refresh_series_data: # TODO check this before refreshing series data (except for additional volumes)
-                    all_series[series_id] = { **all_series[series_id], **series_details }
-                    self.logger.info('Series details forcefully updated: %s',
-                                json.dumps(all_series[series_id]))
+        if is_bundle:
+            self.set_bundle_data(curr_bundle, isbn, series_id, cover_image, soup_volume)
+
+        self.logger.info('---------- Finished scraping item... %s ----------', isbn)
+        self.logger.info('END')
 
 
     def run_scraper(self):
