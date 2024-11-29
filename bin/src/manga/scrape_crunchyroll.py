@@ -43,9 +43,9 @@ from src.util.manga_logger import MangaLogger
 class ScrapeCrunchyroll:
     '''
     A class used to scrape manga volumes and series information from the Crunchyroll store website.
-    
+
     ...
-    
+
     Attributes
     ----------
     logger : MangaLogger
@@ -58,7 +58,7 @@ class ScrapeCrunchyroll:
         a utility to scrape Barnes & Noble data
     data : Data
         a utility to access book data
-    
+
     Methods
     -------
     parse_volume(display_name, category)
@@ -105,40 +105,40 @@ class ScrapeCrunchyroll:
             inner_volume = re.search(r'\d+\.?\-?\d*', search_volume.group(0))
             if inner_volume:
                 return inner_volume.group(0)
-        
+
         search_vol = re.search(r' [()]?Vol[a-z]?[()]? \d+\.?\-?\d*', display_name)
         if search_vol:
             inner_vol = re.search(r'\d+\.?\-?\d*', search_vol.group(0))
             if inner_vol:
                 return inner_vol.group(0)
-        
+
         search_vol_dot = re.search(r' [()]?Vol.[a-z]?[()]? \d+\.?\-?\d*', display_name)
         if search_vol_dot:
             inner_vol_dot = re.search(r'\d+\.?\-?\d*', search_vol_dot.group(0))
             if inner_vol_dot:
                 return inner_vol_dot.group(0)
-        
+
         search_gn = re.search(r' [()]?Graphic Novel[a-z]?[()]? \d+\.?\-?\d*', display_name)
         if search_gn:
             inner_gn = re.search(r'\d+\.?\-?\d*', search_gn.group(0))
             if inner_gn:
                 return inner_gn.group(0)
-        
+
         search_box = re.search(r' [()]?Box Set[()]? \d+\.?\-?\d*', display_name)
         if search_box:
             inner_box = re.search(r'\d+\.?\-?\d*', search_box.group(0))
             if inner_box:
                 return inner_box.group(0)
-        
+
         search_any = re.search(r' [()]?' + category + r'[a-z]?[()]? \d+\.?\-?\d*', display_name)
         if search_any:
             inner_any = re.search(r'\d+\.?\-?\d*', search_any.group(0))
             if inner_any:
                 return inner_any.group(0)
-        
+
         return None
-    
-    
+
+
     def get_volume_data(self, curr_volume, curr_series, cr_attr, soup_volume, volume_number,
                         cover_image, series_id, isbn_results, is_bundle):
         title = self.get_attr(curr_series, 'title')
@@ -153,9 +153,10 @@ class ScrapeCrunchyroll:
             'volume': volume_number,
             'url': cr_attr['url'],
             'is_bundle': is_bundle,
+            'cover_images': [],
             **(isbn_results or { 'details': {} })['details']
         }
-        
+
         if soup_volume is not None:
             volume['primary_cover_image'] = cover_image
             # get the release date
@@ -200,10 +201,10 @@ class ScrapeCrunchyroll:
             self.logger.info('Series ID updated on volume: %s | %s', cr_attr['id'], series_id)
             return { 'series_id': series_id }
         return None
-    
 
-    def update_series_volumes(self, curr_series, series_volume) -> List[dict[str, str]]:
-        if series_volume['isbn'] not in curr_series['volumes']:
+
+    def update_series_volumes(self, curr_series, isbn) -> List[dict[str, str]]:
+        if isbn not in curr_series['volumes']:
             # ? maybe do this sorting someday, but for now we can do it in elixir
             # series_volumes = sorted(
             #     [
@@ -222,11 +223,11 @@ class ScrapeCrunchyroll:
             #     )
             # )
             self.logger.info('Volume added in series: %s to %s',
-                             series_volume['isbn'],
+                             isbn,
                              json.dumps(curr_series['volumes']))
-            return [ *curr_series['volumes'], series_volume ]
+            return [ *curr_series['volumes'], isbn ]
         return curr_series['volumes']
-    
+
 
     def set_series(self, curr_volume, cr_attr) -> dict[str, Any] | None:
         curr_series = None
@@ -249,13 +250,16 @@ class ScrapeCrunchyroll:
                                                    cr_attr['name']),
                 'volumes': [cr_attr['id']]
             }
+            if curr_volume is None or curr_volume['series_id'] is None:
+                curr_series = self.manga_server.get_item('series', new_series['series_id'])
             if curr_series is not None:
                 new_series['volumes'] = self.update_series_volumes(curr_series, cr_attr['id'])
-                self.manga_server.update_item('series', curr_volume['series_id'], new_series)
+                self.manga_server.update_item('series', new_series['series_id'], new_series)
                 self.logger.info('series getting refreshed, but maintaining volumes: %s',
                                  json.dumps(new_series))
-            self.manga_server.create_item('series', new_series)
-            self.logger.info('series details added to DB: %s', json.dumps(new_series))
+            else:
+                self.manga_server.create_item('series', new_series)
+                self.logger.info('series details added to DB: %s', json.dumps(new_series))
             return new_series
         self.logger.info('Skipping series search on existing volume: %s', cr_attr['id'])
         return None
@@ -279,7 +283,7 @@ class ScrapeCrunchyroll:
             'isbn': isbn,
             'retail_price': float(retail_price)
         }
-        curr_market = self.manga_server.get_item('market', isbn)        
+        curr_market = self.manga_server.get_item('market', isbn)
         if curr_market is not None:
             self.manga_server.update_item('market', isbn, market)
             self.logger.info('market details updated in DB: %s', json.dumps(market))
@@ -287,7 +291,7 @@ class ScrapeCrunchyroll:
             self.manga_server.create_item('market', market)
             self.logger.info('market details added to DB: %s', json.dumps(market))
 
-    
+
     def set_shops_data(self, item, cr_attr, isbn: str, isbn_results, is_bundle: bool):
         '''
         Sets the shop data for the given item.
@@ -299,13 +303,17 @@ class ScrapeCrunchyroll:
         - isbn_results (dict): The results of the ISBN search.
         '''
         promotion_text: str = item.find('div', {'class': 'plp-promotion'}).text
-        promotion = promotion_text.split('| ')[1] \
-            if promotion_text is not None and '| ' in promotion_text \
-                else promotion_text or ''
-        promotion_percentage = float(promotion_text.split('%')[0]) \
-            if promotion_text is not None and '%' in promotion_text \
-                else None
-            
+        promotion = ''
+        promotion_percentage = None
+        if promotion_text is not None:
+            fpromotion_text = promotion_text.replace('\n', '').strip()
+            promotion = fpromotion_text.split('| ')[1] \
+                if '| ' in fpromotion_text \
+                    else fpromotion_text or ''
+            promotion_percentage = float(fpromotion_text.split('%')[0]) \
+                if '%' in fpromotion_text \
+                    else None
+
         shops = [
             {
                 'item_id': isbn + 'CrunchyrollNew',
@@ -321,7 +329,7 @@ class ScrapeCrunchyroll:
                 'exclusive': item.find('div', {'class': 'exclusive'}) is not None,
                 'promotion': promotion,
                 'promotion_percentage': promotion_percentage,
-                'backorder_details': item.find('div', {'class': 'back-order-instock-date'}).text,
+                'backorder_details': item.find('div', {'class': 'back-order'}).text,
                 'is_bundle': is_bundle,
                 'dropped_check': False
             },
@@ -330,7 +338,7 @@ class ScrapeCrunchyroll:
                     **shop,
                     'is_bundle': is_bundle
                 }
-                for shop in isbn_results['shops']
+                for shop in (isbn_results['shops'] if isbn_results is not None else [])
             ]
         ]
         for shop in shops:
@@ -380,7 +388,7 @@ class ScrapeCrunchyroll:
                         **vol,
                         'primary_cover_image': soup_volume.find(
                             'div',
-                            { 'id': f'pdpCarousel-{vol['isbn']}' }
+                            { 'id': 'pdpCarousel-' + vol["isbn"] }
                         ).find('img').attrs['src']
                     }
                     for vol in volumes_partial
@@ -521,7 +529,7 @@ class ScrapeCrunchyroll:
             requests.get(page_url + f'&start={start}&sz=100', timeout=30).text,
             'html.parser'
         )
-        cr_total_count = int(first_soup.find('div', {'class': 'pagination-text'})
+        cr_total_count = float(first_soup.find('div', {'class': 'pagination-text'})
                             .attrs['data-totalcount'])
         total_count = min(cr_total_count, end) - start
         total_pages = math.ceil(total_count / 100)

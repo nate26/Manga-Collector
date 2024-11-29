@@ -71,7 +71,7 @@ class ScrapeISBN:
                         if date != today:
                             details['release_date'] = date
                         else:
-                            self.logger.error(
+                            self.logger.warning(
                                 'Release date is today for future releases (incorrect): %s',
                                 details['release_date']
                             )
@@ -103,8 +103,15 @@ class ScrapeISBN:
                     break
             if None in details.values():
                 raise NotFoundErr
-        except (AttributeError, NotFoundErr) as err:
+        except AttributeError as err:
             self.logger.error(traceback.format_exc())
+            self.logger.warning(
+                'Could not find all book details from isbn... ending process because %s',
+                err
+            )
+            self.logger.warning('Details found: %s', json.dumps(details))
+        except NotFoundErr as err:
+            self.logger.warning(traceback.format_exc())
             self.logger.warning(
                 'Could not find all book details from isbn... ending process because %s',
                 err
@@ -115,7 +122,7 @@ class ScrapeISBN:
     def get_shop_data(self, soup_isbn_data, isbn_10: str, isbn: str):
         '''
         Gets all the valid shop details from the given isbn soup object.
-        
+
         Parameters:
         - soup_isbn_data: The soup object containing the ISBN data.
         - isbn_10 (str): The ISBN-10 number to search for.

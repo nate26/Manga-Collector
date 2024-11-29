@@ -10,10 +10,10 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-
-#region Volumes
+# region Volumes
 # alias MangaService.VolumesDB
 # volumes_path = "priv/repo/volumes.json"
+
 # volumes_path
 # |> File.read!()
 # |> Jason.decode!()
@@ -40,18 +40,22 @@
 #     cover_images: tl(volume["cover_images"]),
 #     description: volume["description"]
 #   }
+
 #   IO.puts("Inserting volume: #{new_vol[:isbn]}")
 #   IO.puts("#{byte_size(new_vol[:description])}")
+
 #   case VolumesDB.create_volume(new_vol) do
 #     {:ok, _volume} -> :ok
 #     {:error, _changeset} -> :duplicate
 #   end
 # end)
-#endregion Volumes
 
-#region Series
+# endregion Volumes
+
+# region Series
 # alias MangaService.SeriesDB
 # series_path = "priv/repo/series.json"
+
 # series_path
 # |> File.read!()
 # |> Jason.decode!()
@@ -59,6 +63,7 @@
 # |> Enum.filter(fn {_key, series} -> !is_nil(series["recommendations"]) end)
 # |> Enum.each(fn {_key, series} ->
 #   IO.puts("Inserting series: #{series["title"]}")
+
 #   new_series = %{
 #     series_id: series["series_id"],
 #     title: series["title"],
@@ -81,42 +86,52 @@
 #     rank: series["rank"],
 #     recommendations: Enum.map(series["recommendations"], &Integer.to_string/1)
 #   }
+
 #   case SeriesDB.create_series(new_series) do
 #     {:ok, _series} -> :ok
 #     {:error, _changeset} -> :duplicate
 #   end
 # end)
-#endregion Series
 
-#region Market
+# endregion Series
+
+# region Market
 # alias MangaService.MarketDB
 # shop_path = "priv/repo/shop.json"
+
 # shop_path
 # |> File.read!()
 # |> Jason.decode!()
 # |> Enum.each(fn {_key, shop} ->
 #   IO.puts("Inserting market: #{shop["isbn"]}")
+
 #   new_shop = %{
 #     isbn: shop["isbn"],
 #     retail_price: shop["retail_price"]
 #   }
-#   res = case MarketDB.create_market(new_shop) do
-#     {:ok, _market} -> :ok
-#     {:error, _changeset} -> :duplicate
-#   end
+
+#   res =
+#     case MarketDB.create_market(new_shop) do
+#       {:ok, _market} -> :ok
+#       {:error, _changeset} -> :duplicate
+#     end
+
 #   IO.puts(res)
 # end)
-#endregion Market
 
-#region Shops
+# endregion Market
+
+# region Shops
 # alias MangaService.ShopsDB
 # shop_path = "priv/repo/shop.json"
+
 # shop_path
 # |> File.read!()
 # |> Jason.decode!()
 # |> Map.to_list()
 # |> Enum.each(fn {_key, item} ->
 #   IO.puts("Inserting market: #{item["isbn"]}")
+
 #   for shop <- item["shops"] do
 #     new_shop = %{
 #       item_id: item["isbn"] <> shop["store"] <> shop["condition"],
@@ -130,72 +145,88 @@
 #       coupon: shop["coupon"],
 #       is_on_sale: shop["is_on_sale"]
 #     }
-#     res = case ShopsDB.create_shop(new_shop) do
-#       {:ok, _shop} -> :ok
-#       {:error, changeset} -> changeset
-#     end
+
+#     res =
+#       case ShopsDB.create_shop(new_shop) do
+#         {:ok, _shop} -> :ok
+#         {:error, changeset} -> changeset
+#       end
+
 #     IO.puts(res)
 #   end
 # end)
-#endregion Shops
 
-#region Users
-alias MangaService.UsersDB
-new_user = %{
-  email: "",
-  username: "natevin",
-  password: "",
-  user_id: "",
-  picture: nil,
-  banner: nil,
-  color: nil,
-  theme: nil,
-  personal_stores: []
-}
-res = case UsersDB.create_user(new_user) do
-  {:ok, _user} -> :ok
-  {:error, changeset} -> changeset
-end
-IO.puts(res)
-#endregion Users
+# endregion Shops
 
-#region Collections
+# region Users
+# alias MangaService.UsersDB
+# new_user = %{
+#   email: "",
+#   username: "natevin",
+#   password: "",
+#   user_id: "",
+#   picture: nil,
+#   banner: nil,
+#   color: nil,
+#   theme: nil,
+#   personal_stores: []
+# }
+# res = case UsersDB.create_user(new_user) do
+#   {:ok, _user} -> :ok
+#   {:error, changeset} -> changeset
+# end
+# IO.puts(res)
+# endregion Users
+
+# region Collections
 # alias MangaService.CollectionDB
 # collection_path = "priv/repo/collections.json"
+
 # collection_path
 # |> File.read!()
 # |> Jason.decode!()
 # |> Enum.each(fn item ->
 #   IO.puts("Inserting collection: #{item["isbn"]}")
 #   uc = hd(item["user_collection_data"])
+
 #   new_collection = %{
 #     collection_id: uc["id"],
 #     read: uc["read"],
 #     store: uc["merchant"],
-#     collection: case uc["state"] do
-#       "Gift" -> "Gift"
-#       _ -> "Collection"
-#     end,
+#     collection:
+#       case uc["state"] do
+#         "Gift" -> "Gift"
+#         _ -> "Collection"
+#       end,
 #     user_id: uc["user_id"],
 #     isbn: uc["isbn"],
 #     cost: uc["cost"],
-#     purchase_date: case String.split(uc["purchaseDate"] || "", "/") do
-#       [m,d,y] -> Date.new(String.to_integer(y), String.to_integer(m), String.to_integer(d))
-#         |> elem(1)
-#         |> Date.to_string()
-#       e -> nil
-#     end,
-#     tags: case uc["giftToMe"] do
-#       true -> ["gift" | (uc["tags"] || [])]
-#       _ -> uc["tags"] || []
-#     end,
+#     purchase_date:
+#       case String.split(uc["purchaseDate"] || "", "/") do
+#         [m, d, y] ->
+#           Date.new(String.to_integer(y), String.to_integer(m), String.to_integer(d))
+#           |> elem(1)
+#           |> Date.to_string()
+
+#         _ ->
+#           nil
+#       end,
+#     tags:
+#       case uc["giftToMe"] do
+#         true -> ["gift" | uc["tags"] || []]
+#         _ -> uc["tags"] || []
+#       end,
 #     rating: nil
 #   }
+
 #   # IO.inspect(new_collection)
-#   res = case CollectionDB.create_collection(new_collection) do
-#     {:ok, _collection} -> :ok
-#     {:error, changeset} -> changeset
-#   end
+#   res =
+#     case CollectionDB.create_collection(new_collection) do
+#       {:ok, _collection} -> :ok
+#       {:error, changeset} -> changeset
+#     end
+
 #   IO.puts(res)
 # end)
-#endregion Collections
+
+# endregion Collections

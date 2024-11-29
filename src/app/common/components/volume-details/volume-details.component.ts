@@ -4,7 +4,6 @@ import { Volume } from '../../../interfaces/iVolume.interface';
 import { LazyImageDirective } from '../../directives/lazy-image/lazy-image.directive';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs';
 
 @Component({
     selector: 'app-volume-details',
@@ -17,9 +16,8 @@ export class VolumeDetailsComponent {
     private readonly _http = inject(HttpClient);
 
     volume$ = this._http
-        .get<{ data: Volume }>(
+        .get<Volume>(
             'http://localhost:4000/api/volume/' +
-                inject<string>(MAT_DIALOG_DATA)
-        )
-        .pipe(map(({ data }) => data));
+            inject<string>(MAT_DIALOG_DATA)
+        );
 }
