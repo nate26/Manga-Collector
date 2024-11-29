@@ -358,16 +358,24 @@ class ScrapeCrunchyroll:
 
     def set_bundle_data(self, curr_bundle, isbn, series_id, cover_image,
                         soup_volume: BeautifulSoup | None):
+        bundle_type = 'Bundle' if 'BUNDLE' in isbn else 'Box Set'
         if curr_bundle is not None and not self.refresh_volume_details:
-            self.logger.info('Bundle exists, not refreshing bundle details...')
-            return
-        else:
-            bundle_type = 'Bundle' if 'BUNDLE' in isbn else 'Box Set'
+            self.logger.info('Bundle exists, refreshing basic bundle details...')
             bundle = {
                 'item_id': isbn,
                 'series_id': series_id,
                 'shop_id': isbn + 'CrunchyrollNew',
-                'cover_image': cover_image,
+                'primary_cover_image': cover_image,
+                'type': bundle_type
+            }
+            self.manga_server.update_item('bundle', isbn, bundle)
+            self.logger.info('Bundle details updated in DB: %s', json.dumps(bundle))
+        else:
+            bundle = {
+                'item_id': isbn,
+                'series_id': series_id,
+                'shop_id': isbn + 'CrunchyrollNew',
+                'primary_cover_image': cover_image,
                 'volumes': [],
                 'volume_start': None,
                 'volume_end': None,
@@ -404,7 +412,7 @@ class ScrapeCrunchyroll:
                 bundle['volume_end'] = max(volume_numbers)
             elif soup_volume is not None:
                 description = soup_volume.find('div', {'class': 'short-description'}).text
-                vol_range = description.split('box set contains volumes ')[1].split(' ')[0] \
+                vol_range = description.split('contains volumes ')[1].split(' ')[0] \
                     .split('-')
                 bundle['volume_start'] = vol_range[0]
                 bundle['volume_end'] = vol_range[1]

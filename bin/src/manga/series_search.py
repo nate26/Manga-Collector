@@ -44,10 +44,10 @@ class SeriesSearch:
     def get_top_themes(self, series_resp):
         '''
         Parsing the top themes from the MangaUpdates API response.
-        
+
         Parameters:
         - series_resp (dict): The response from the MangaUpdates API.
-        
+
         Returns:
         - list: The top themes from the given response.
         '''
@@ -68,10 +68,10 @@ class SeriesSearch:
     def get_status(self, series_resp):
         '''
         Parsing the status from the MangaUpdates API response.
-        
+
         Parameters:
         - series_resp (dict): The response from the MangaUpdates API.
-        
+
         Returns:
         - str: The status from the given response.
         '''
@@ -91,7 +91,7 @@ class SeriesSearch:
     def get_series_by_id(self, series_id: str):
         '''
         Gets the series information from the given series ID.
-        
+
         Parameters:
         - series_id (str): The ID of the series to search for.
 
@@ -135,7 +135,7 @@ class SeriesSearch:
                     ],
                     'bayesian_rating': series_resp['bayesian_rating'],
                     'rank': series_resp['rank']['position']['year'],
-                    'recommendations': [rec['series_id'] for rec in series_resp['recommendations']]
+                    'recommendations': [str(rec['series_id']) for rec in series_resp['recommendations']]
                 }
             return parsed_series_data
         except requests.exceptions.RequestException:
@@ -170,7 +170,7 @@ class SeriesSearch:
     def search_series(self, series_name: str, category: str, volume_name: str):
         '''
         Gets the series ID from the given series name and format.
-        
+
         Parameters:
         - series_name (str): The name of the series to search for.
         - category (str): The category of the series to search for.
@@ -185,7 +185,8 @@ class SeriesSearch:
             'manhwa': 'manhwa',
             'manhua': 'manhua',
             'novels': 'novel',
-            'manga': 'manga'
+            'manga': 'manga',
+            'manga-bundles': 'manga'
         }
         series_category = category_conversion[category]
         self.logger.info('Searching for series ID for ["%s", "%s" ]...',
