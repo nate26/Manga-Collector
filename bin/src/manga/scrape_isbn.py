@@ -102,7 +102,8 @@ class ScrapeISBN:
                 if None not in details.values():
                     break
             if None in details.values():
-                raise NotFoundErr
+                self.logger.warning('Some ISBN detail attributes returned None: %s',
+                                    json.dumps(details))
         except AttributeError as err:
             self.logger.error(traceback.format_exc())
             self.logger.warning(
@@ -111,7 +112,6 @@ class ScrapeISBN:
             )
             self.logger.warning('Details found: %s', json.dumps(details))
         except NotFoundErr as err:
-            self.logger.warning(traceback.format_exc())
             self.logger.warning(
                 'Could not find all book details from isbn... ending process because %s',
                 err
@@ -132,7 +132,11 @@ class ScrapeISBN:
         '''
         shops = []
         try:
-            stores = soup_isbn_data.find('div', {'class': 'standard-offers'}).find_all('tr')
+            offers = soup_isbn_data.find('div', {'class': 'standard-offers'})
+            if offers is None:
+                return []
+
+            stores = offers.find_all('tr')
             for store in stores:
                 try:
                     if store.find('td', {'class': 'logo'}).find('span').attrs['title'].strip() \

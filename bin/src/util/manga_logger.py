@@ -2,6 +2,7 @@
 
 import logging
 import logging.config
+from logging.handlers import RotatingFileHandler
 
 from src.enums.file_path_enum import FilePathEnum
 from src.enums.host_enum import HostEnum
@@ -33,7 +34,7 @@ class MangaLogger:
     def __init__(self, host: HostEnum):
         '''
         Initializes the MangaLogger class.
-        
+
         Parameters:
         - host (HostEnum): The host to set up logging for.
         '''
@@ -47,14 +48,24 @@ class MangaLogger:
             encoding='utf-8',
             level=logging.DEBUG
         )
+        # my_handler = RotatingFileHandler(file_path, mode='a', maxBytes=5*1024*1024,
+        #                                  backupCount=2, encoding='utf-8', delay=False)
+        # my_handler.setFormatter(logging.Formatter(
+        #     '%(asctime)s,%(msecs)03d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s'
+        # ))
+        # my_handler.setLevel(logging.DEBUG)
+        # app_log = logging.getLogger('root')
+        # app_log.setLevel(logging.DEBUG)
+        # app_log.addHandler(my_handler)
+
 
     def register_logger(self, file_name: str):
         '''
         Registers the logger for the given file name.
-        
+
         Parameters:
         - file_name (str): The name of the file to register the logger for.
-        
+
         Returns:
         - logging.Logger: The logger for the given file name.
         '''

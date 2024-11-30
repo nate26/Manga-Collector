@@ -11,6 +11,7 @@ the data into a JSON format.
 and updates the given data structures with the results.
 '''
 
+from concurrent.futures import ThreadPoolExecutor
 import json
 import math
 import re
@@ -203,6 +204,24 @@ class ScrapeCrunchyroll:
         return None
 
 
+    def set_volume(self, curr_volume, curr_series, cr_attr, soup_volume, volume_number,
+                   cover_image, series_id, isbn_results, is_bundle):
+        # get volume changes
+        volume_update = self.get_volume_data(curr_volume, curr_series, cr_attr, soup_volume,
+                                             volume_number, cover_image, series_id, isbn_results,
+                                             is_bundle)
+        #* SET volume data
+        if volume_update is not None:
+            if curr_volume is not None:
+                self.manga_server.update_item('volume', cr_attr['id'], volume_update)
+                self.logger.info('Volume updated: %s', json.dumps(volume_update))
+            else:
+                self.manga_server.create_item('volume', volume_update)
+                self.logger.info('Volume created: %s', json.dumps(volume_update))
+        else:
+            self.logger.info('Volume exists, not refreshing volume details...')
+
+
     def update_series_volumes(self, curr_series, isbn) -> List[dict[str, str]]:
         if isbn not in curr_series['volumes']:
             # ? maybe do this sorting someday, but for now we can do it in elixir
@@ -241,7 +260,8 @@ class ScrapeCrunchyroll:
             self.manga_server.update_item('series', curr_volume['series_id'], curr_series)
             self.logger.info('series details updated in DB: %s', json.dumps(curr_series))
             return curr_series
-        elif curr_volume is None or self.refresh_series_data:
+
+        if curr_volume is None or self.refresh_series_data:
             self.logger.info('Series not found in data or forcefully updating series...' +
                              ' searching for series ID: %s', cr_attr['brand'])
             new_series = {
@@ -252,15 +272,19 @@ class ScrapeCrunchyroll:
             }
             if curr_volume is None or curr_volume['series_id'] is None:
                 curr_series = self.manga_server.get_item('series', new_series['series_id'])
+
             if curr_series is not None:
                 new_series['volumes'] = self.update_series_volumes(curr_series, cr_attr['id'])
                 self.manga_server.update_item('series', new_series['series_id'], new_series)
                 self.logger.info('series getting refreshed, but maintaining volumes: %s',
                                  json.dumps(new_series))
-            else:
+                return new_series
+
+            if new_series['series_id'] is not None:
                 self.manga_server.create_item('series', new_series)
                 self.logger.info('series details added to DB: %s', json.dumps(new_series))
-            return new_series
+                return new_series
+
         self.logger.info('Skipping series search on existing volume: %s', cr_attr['id'])
         return None
 
@@ -356,8 +380,10 @@ class ScrapeCrunchyroll:
                 self.logger.info('shop details added to DB: %s', json.dumps(shops))
 
 
-    def set_bundle_data(self, curr_bundle, isbn, series_id, cover_image,
+    def set_bundle_data(self, is_bundle, curr_bundle, isbn, series_id, cover_image,
                         soup_volume: BeautifulSoup | None):
+        if not is_bundle:
+            return
         bundle_type = 'Bundle' if 'BUNDLE' in isbn else 'Box Set'
         if curr_bundle is not None and not self.refresh_volume_details:
             self.logger.info('Bundle exists, refreshing basic bundle details...')
@@ -426,6 +452,31 @@ class ScrapeCrunchyroll:
                 self.logger.info('Bundle details updated in DB: %s', json.dumps(bundle))
 
 
+    def get_isbn_results(self, isbn: str, curr_volume):
+        if (self.query_isbn_db and curr_volume is not None) or curr_volume is None:
+            return self.scrape_isbn.isbn_search(isbn)
+        else:
+            self.logger.info('Volume exists, ISBN search skipped...')
+            return None
+
+
+    def get_volume_detail_soup(self, cr_attr, curr_volume, curr_bundle):
+        # remove description check later?
+        fetch_cr_data_for_vol = (curr_volume is None or \
+                         (curr_volume is not None and 'description' not in curr_volume))
+        fetch_cr_data_for_bundle = curr_bundle is None
+        force_cr_fetch = self.refresh_volume_details and \
+            (self.query_cr_for_details or self.force_cr_for_details)
+        if fetch_cr_data_for_vol or fetch_cr_data_for_bundle or force_cr_fetch:
+            # fetch data for description and more images
+            self.logger.info('Scraping CR page for description and more cover images: %s', cr_attr['id'])
+            return BeautifulSoup(
+                requests.get(cr_attr['url'], timeout=30).text,
+                'html.parser'
+            )
+        return None
+
+
     def get_attr(self, item: Any | None, attr):
         return item[attr] if item is not None else None
 
@@ -446,68 +497,49 @@ class ScrapeCrunchyroll:
         isbn = cr_attr['id']
         self.logger.info('---------- Scraping item... %s | %s ----------', isbn, cr_attr['name'])
 
-        # current DB data
-        curr_volume = self.manga_server.get_item('volume', isbn)
-        curr_bundle = self.manga_server.get_item('bundle', isbn)
+        # ? batch 1: get vol / bundle data
+        with ThreadPoolExecutor() as executor1:
+            curr_volume, curr_bundle = executor1.map(lambda x: x.result(), [
+                executor1.submit(self.manga_server.get_item, 'volume', isbn),
+                executor1.submit(self.manga_server.get_item, 'bundle', isbn)
+            ])
 
-        # isbn search
-        isbn_results = None
-        if (self.query_isbn_db and curr_volume is not None) or curr_volume is None:
-            isbn_results = self.scrape_isbn.isbn_search(isbn)
-        else:
-            self.logger.info('Volume exists, ISBN search skipped...')
+        # ? batch 2: set market / series, isbn results, volume details
+        with ThreadPoolExecutor() as executor2:
+            _, curr_series, isbn_results, soup_volume = executor2.map(lambda x: x.result(), [
+                executor2.submit(self.set_market_data, item, isbn),
+                executor2.submit(self.set_series, curr_volume, cr_attr),
+                executor2.submit(self.get_isbn_results, isbn, curr_volume),
+                executor2.submit(self.get_volume_detail_soup, cr_attr, curr_volume, curr_bundle)
+            ])
 
+        series_id = self.get_attr(curr_series, 'series_id')
         is_bundle = 'BUNDLE' in isbn or 'Box Set' in cr_attr['name']
         cover_image = item.find('img', {'class': 'tile-image'}).attrs['src']
         volume_number = self.parse_volume(cr_attr['name'], cr_attr['category'])
 
-        #* SET market data
-        self.set_market_data(item, isbn)
-
-        #* SET shop data
-        self.set_shops_data(item, cr_attr, isbn, isbn_results, is_bundle)
-
-        #* SET series data
-        curr_series = self.set_series(curr_volume, cr_attr)
-        self.logger.info('Series details: %s', json.dumps(curr_series))
-        series_id = self.get_attr(curr_series, 'series_id')
-
-        # remove description check later?
-        soup_volume = None
-        fetch_cr_data_for_vol = (curr_volume is None or \
-                         (curr_volume is not None and 'description' not in curr_volume))
-        fetch_cr_data_for_bundle = curr_bundle is None
-        force_cr_fetch = self.refresh_volume_details and \
-            (self.query_cr_for_details or self.force_cr_for_details)
-        if fetch_cr_data_for_vol or fetch_cr_data_for_bundle or force_cr_fetch:
-            # fetch data for description and more images
-            self.logger.info('Scraping CR page for description and more cover images: %s', cr_attr['id'])
-            soup_volume = BeautifulSoup(
-                requests.get(cr_attr['url'], timeout=30).text,
-                'html.parser'
-            )
-
-        # get volume changes
-        volume_update = self.get_volume_data(curr_volume, curr_series, cr_attr, soup_volume,
-                                             volume_number, cover_image, series_id, isbn_results,
-                                             is_bundle)
-
-        #* SET volume data
-        if volume_update is not None:
-            if curr_volume is not None:
-                self.manga_server.update_item('volume', isbn, volume_update)
-                self.logger.info('Volume updated: %s', json.dumps(volume_update))
-            else:
-                self.manga_server.create_item('volume', volume_update)
-                self.logger.info('Volume created: %s', json.dumps(volume_update))
-        else:
-            self.logger.info('Volume exists, not refreshing volume details...')
-
-        if is_bundle:
-            self.set_bundle_data(curr_bundle, isbn, series_id, cover_image, soup_volume)
+        # ? batch 3: set bundle / shops / volume
+        with ThreadPoolExecutor() as executor3:
+            executor3.map(lambda x: x.result(), [
+                executor3.submit(self.set_bundle_data, is_bundle, curr_bundle, isbn, series_id,
+                                 cover_image, soup_volume),
+                executor3.submit(self.set_shops_data, item, cr_attr, isbn, isbn_results, is_bundle),
+                executor3.submit(self.set_volume, curr_volume, curr_series, cr_attr, soup_volume,
+                                 volume_number, cover_image, series_id, isbn_results, is_bundle)
+            ])
 
         self.logger.info('---------- Finished scraping item... %s ----------', isbn)
-        self.logger.info('END')
+
+
+    def process_item(self, item, page_num, end_page):
+        self.logger.info('Starting item %s from page %s of %s',
+                         json.loads(item.attrs['data-gtmdata'])['id'],
+                         page_num, end_page)
+        try:
+            self.scrape_page(item)
+        except Exception:
+            self.logger.error('Error scraping item... skipping...')
+            self.logger.error(traceback.format_exc())
 
 
     def run_scraper(self):
@@ -521,7 +553,7 @@ class ScrapeCrunchyroll:
             return
 
         start = 0
-        end = 1
+        end = 10000000000
 
         # volumes_data = self.data.get_volumes_data()
         # series_data = self.data.get_series_data()
@@ -529,7 +561,7 @@ class ScrapeCrunchyroll:
 
         page_base_url = 'https://store.crunchyroll.com/collections/manga-books/' + \
             '?cgid=manga-books&srule=New-to-Old'
-        category_query = '&prefn1=subcategory&prefv1=Novels|Manhwa|Manhua|Light%20Novels|Manga'
+        category_query = '&prefn1=subcategory&prefv1=Novels|Manhwa|Manhua|Light%20Novels|Manga|Bundles'
         page_url = page_base_url + category_query
 
         self.logger.info('Calling: %s&start=%s&sz=100', page_url, start)
@@ -561,27 +593,25 @@ class ScrapeCrunchyroll:
                     'html.parser'
                 )
 
-            for item in next_soup.find_all('div', {'class': 'product'}):
-                self.logger.info('Starting item %s from page %s of %s',
-                            json.loads(item.attrs['data-gtmdata'])['id'], i, end_page)
-
-                try:
-                    self.scrape_page(item)
-                except Exception:
-                    self.logger.error('Error scraping item... skipping...')
-                    self.logger.error(traceback.format_exc())
-                    continue
+            items = next_soup.find_all('div', {'class': 'product'})
+            thread_count = 3 if i == 0 else 20
+            with ThreadPoolExecutor(thread_count) as executor3:
+                res = executor3.map(lambda x: x.result(), [
+                    executor3.submit(self.process_item, item, i, end_page)
+                    for item in items
+                ])
+                completed += len(*res)
+                print('completed: ' + str(completed) + ' | total: ' + str(total_count), end='\r')
 
                 # update progress bar
-                completed += 1
-                progress = round((completed / total_count) * 50)
-                remaining = 50 - progress
-                percentage = round((completed / total_count) * 100, ndigits=2)
-                print('progress: |' + ''
-                        .join(['=' for _ in range(progress)]) + ''
-                        .join(['-' for _ in range(remaining)]) +
-                        '| ' + str(percentage) + '%',
-                        end='\r')
+                # progress = round((completed / total_count) * 50)
+                # remaining = 50 - progress
+                # percentage = round((completed / total_count) * 100, ndigits=2)
+                # print('progress: |' + ''
+                #         .join(['=' for _ in range(progress)]) + ''
+                #         .join(['-' for _ in range(remaining)]) +
+                #         '| ' + str(percentage) + '%',
+                #         end='\r')
 
             start += 100
 
