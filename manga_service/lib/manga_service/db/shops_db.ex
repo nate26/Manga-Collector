@@ -7,6 +7,7 @@ defmodule MangaService.ShopsDB do
   alias MangaService.Repo
 
   alias MangaService.ShopsDB.Shop
+  alias MangaService.VolumesDB.Volume
 
   @doc """
   Returns the list of shops.
@@ -17,8 +18,88 @@ defmodule MangaService.ShopsDB do
       [%Shop{}, ...]
 
   """
-  def list_shops do
-    Repo.all(Shop)
+  def list_shops(params) do
+    Shop
+    |> order_by(^filter_order_by(params["order_by"]))
+    |> where(^filter_where(params))
+    |> limit(^(params["limit"] || 100))
+    |> offset(^(params["offset"] || 0))
+    # |> join(:full, [s], v in Volume, on: s.isbn == v.isbn)
+    # |> join(:full, [s], assoc(s, :volume), as: :volume)
+    |> Repo.all()
+  end
+
+  defp filter_order_by("price_desc"),
+    do: [desc: dynamic([p], p.price)]
+
+  defp filter_order_by("price"),
+    do: [asc: dynamic([p], p.price)]
+
+  defp filter_order_by("promotion_percentage_desc"),
+    do: [desc: dynamic([p], p.promotion_percentage)]
+
+  defp filter_order_by("promotion_percentage"),
+    do: [asc: dynamic([p], p.promotion_percentage)]
+
+  defp filter_order_by(_),
+    do: []
+
+  defp filter_where(params) do
+    Enum.reduce(params, dynamic(true), fn
+      {"store", value}, dynamic ->
+        dynamic([p], ^dynamic and p.store == ^value)
+
+      {"condition", value}, dynamic ->
+        dynamic([p], ^dynamic and p.condition == ^value)
+
+      {"stock", value}, dynamic ->
+        dynamic([p], ^dynamic and p.stock_status == ^value)
+
+      {"promo", value}, dynamic ->
+        dynamic([p], ^dynamic and p.promotion == ^value)
+
+      {"on_sale", value}, dynamic ->
+        dynamic([p], ^dynamic and p.is_on_sale == ^value)
+
+      {"exclusive", value}, dynamic ->
+        dynamic([p], ^dynamic and p.exclusive == ^value)
+
+      {"bundle", value}, dynamic ->
+        dynamic([p], ^dynamic and p.is_bundle == ^value)
+
+      {"price", value}, dynamic ->
+        dynamic([p], ^dynamic and p.price == ^value)
+
+      {"price_le", value}, dynamic ->
+        dynamic([p], ^dynamic and p.price <= ^value)
+
+      {"price_lt", value}, dynamic ->
+        dynamic([p], ^dynamic and p.price < ^value)
+
+      {"price_ge", value}, dynamic ->
+        dynamic([p], ^dynamic and p.price >= ^value)
+
+      {"price_gt", value}, dynamic ->
+        dynamic([p], ^dynamic and p.price > ^value)
+
+      {"promo_perc", value}, dynamic ->
+        dynamic([p], ^dynamic and p.promotion_percentage == ^value)
+
+      {"promo_perc_le", value}, dynamic ->
+        dynamic([p], ^dynamic and p.promotion_percentage <= ^value)
+
+      {"promo_perc_lt", value}, dynamic ->
+        dynamic([p], ^dynamic and p.promotion_percentage < ^value)
+
+      {"promo_perc_ge", value}, dynamic ->
+        dynamic([p], ^dynamic and p.promotion_percentage >= ^value)
+
+      {"promo_perc_gt", value}, dynamic ->
+        dynamic([p], ^dynamic and p.promotion_percentage > ^value)
+
+      {_, _}, dynamic ->
+        dynamic
+    end)
   end
 
   @doc """

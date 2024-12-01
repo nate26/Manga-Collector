@@ -2,8 +2,9 @@ defmodule MangaServiceWeb.ShopController do
   use Phoenix.Controller, formats: [:json]
   alias MangaService.ShopsDB
 
-  def index(conn, _params) do
-    shops = ShopsDB.list_shops()
+  def index(conn, params) do
+    shops = ShopsDB.list_shops(params)
+    IO.inspect(shops)
 
     json(
       conn,

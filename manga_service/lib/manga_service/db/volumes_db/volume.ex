@@ -25,6 +25,12 @@ defmodule MangaService.VolumesDB.Volume do
     field(:cover_images, {:array, :map})
     field(:is_bundle, :boolean, default: false)
 
+    # TODO fix this?
+    has_many(:shops, MangaServie.ShopsDB.Shop,
+      references: :isbn,
+      foreign_key: :isbn
+    )
+
     timestamps(type: :utc_datetime)
   end
 

@@ -20,6 +20,12 @@ defmodule MangaService.ShopsDB.Shop do
     field(:is_bundle, :boolean, default: false)
     field(:dropped_check, :boolean, default: false)
 
+    # TODO fix this?
+    has_one(:volume, MangaServie.VolumesDB.Volume,
+      references: :isbn,
+      foreign_key: :isbn
+    )
+
     timestamps(type: :utc_datetime)
   end
 

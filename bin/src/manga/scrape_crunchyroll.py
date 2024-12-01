@@ -600,8 +600,8 @@ class ScrapeCrunchyroll:
                     executor3.submit(self.process_item, item, i, end_page)
                     for item in items
                 ])
-                completed += len(*res)
-                print('completed: ' + str(completed) + ' | total: ' + str(total_count), end='\r')
+            completed += 1
+            print('completed: ' + str(completed) + ' | total: ' + str(end_page), end='\r')
 
                 # update progress bar
                 # progress = round((completed / total_count) * 50)

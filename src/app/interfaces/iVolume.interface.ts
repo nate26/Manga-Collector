@@ -1,6 +1,6 @@
 import { ICollection } from './iCollection.interface';
 import { ISeries } from './iSeries.interface';
-import { IShop } from './iShop.interface';
+import { Shop } from './iShop.interface';
 import { IWishlist } from './iWishlist.interface';
 
 export interface ICoverImage {
@@ -31,7 +31,7 @@ export interface IVolume {
     description: string;
     series_data: ISeries;
     retail_price: number;
-    purchase_options: IShop[];
+    purchase_options: Shop[];
     user_collection_data: ICollection[];
     user_wishlist_data: IWishlist[];
 }

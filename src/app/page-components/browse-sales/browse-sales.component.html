@@ -1,13 +1,62 @@
 <div class="mt-28 flex justify-between">
-    <div class="grid grid-cols-[min-content_auto] gap-3 h-fit w-36 m-8">
-        <div class="text text-sm text-nowrap">In Stock</div>
-        <input
-            type="checkbox"
-            class="green-checkbox ml-3"
-            [checked]="filterInStock()"
-            (change)="filterInStock.set(!filterInStock())"
-        />
-        <div class="text text-sm text-nowrap">Hide Clearance</div>
+    <div class="h-fit w-36 m-8 text-white text-sm text-nowrap">
+        <div class="text-xs italic">Store</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterStore">
+            <option value="">All</option>
+            <option value="Crunchyroll">Crunchyroll</option>
+            <option value="Amazon">Amazon</option>
+        </select>
+        <div class="text-xs italic">Condition</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterCondition">
+            <option value="">All</option>
+            <option value="New">New</option>
+            <option value="Used">Used</option>
+        </select>
+        <div class="text-xs italic">In Stock</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterInStock">
+            <option value="">All</option>
+            <option value="In Stock">In Stock</option>
+            <option value="Backorder">Backorder</option>
+            <option value="Pre-Order">Pre-Order</option>
+            <option value="Out of Stock">Out of Stock</option>
+        </select>
+        <div class="text-xs italic">Promotion</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterPromo">
+            @for (option of promoOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+            }
+        </select>
+        <div class="text-xs italic">Type</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterBundle">
+            <option [value]="undefined">All</option>
+            <option [value]="false">Single Manga</option>
+            <option [value]="true">Bundle</option>
+        </select>
+        <div class="text-xs italic">On Sale</div>
+        <div class="w-full">
+            <input
+                type="checkbox"
+                class="green-checkbox ml-3 mb-2"
+                [checked]="filterOnSale()"
+                [(ngModel)]="filterOnSale"
+            />
+        </div>
+        <div class="text-xs italic">Crunchyroll Exclusive</div>
+        <div class="w-full">
+            <input
+                type="checkbox"
+                class="green-checkbox ml-3 mb-2"
+                [checked]="filterExclusive()"
+                [(ngModel)]="filterExclusive"
+            />
+        </div>
+        <button
+            class="inactive-button mt-5 mr-auto border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
+            (click)="submitFilter()"
+        >
+            Search
+        </button>
+        <!-- <div class="text text-sm text-nowrap">Hide Clearance</div>
         <input
             type="checkbox"
             class="green-checkbox ml-3"
@@ -20,36 +69,52 @@
             class="green-checkbox ml-3"
             [checked]="filterClearance()"
             (change)="filterClearance.set(!filterClearance())"
-        />
+        /> -->
     </div>
-    <div
-        class="flex flex-wrap justify-center w-fit overflow-auto"
-        style="height: calc(100vh - 112px)"
-    >
-        @for (volume of filteredVolumes(); track volume.isbn; let i = $index) {
-        @defer (on viewport) {
-        <div
-            class="relative h-60 m-3 rounded-lg shadow-lg bg-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
-            style="aspect-ratio: 1 / 1.45"
-            [style.background-image]="
-                'url(' + volume.primary_cover_image_url + ')'
-            "
-            (click)="openVolumeDetails(volume.isbn)"
-            (keypress)="openVolumeDetails(volume.isbn)"
-            tabindex="{$index}"
-        >
-            <span
-                class="absolute top-1 right-1 pl-1 pr-1 bg-[#2f4f4fd4] border-2 border-green-500 rounded-md text-green-300 font-semibold shadow-lg"
+    <div class="w-full overflow-auto" style="max-height: calc(100vh - 112px)">
+        <div class="grid grid-cols-5 w-fit m-auto">
+            @for (item of items$ | async; track item.item_id; let i = $index) {
+            @defer (on viewport) {
+            <div
+                class="relative w-[12vw] m-3 rounded-lg shadow-lg bg-cover bg-center hover:scale-105 transition-transform duration-300 cursor-pointer"
+                style="aspect-ratio: 1 / 1.45"
+                [style.background-image]="
+                    'url(' + item.primary_cover_image + ')'
+                "
+                (click)="openVolumeDetails(item.isbn)"
+                (keypress)="openVolumeDetails(item.isbn)"
+                tabindex="{$index}"
             >
-                {{ volume.sale_price }}% off
-            </span>
-            <app-volume-cover-text [title]="volume.display_name" />
+                @if (item.promotion_percentage) {
+                <span
+                    class="absolute top-1 right-1 pl-1 pr-1 bg-[#2f4f4fd4] border-2 border-green-500 rounded-md text-green-300 font-semibold shadow-lg"
+                >
+                    {{ item.promotion_percentage }}% off
+                </span>
+                }
+                <app-volume-cover-text [title]="item.display_name" />
+            </div>
+            } @placeholder {
+            <div
+                class="h-60 rounded-lg shadow-lg"
+                style="aspect-ratio: 1 / 1.45"
+            ></div>
+            } }
         </div>
-        } @placeholder {
-        <div
-            class="h-60 rounded-lg shadow-lg"
-            style="aspect-ratio: 1 / 1.45"
-        ></div>
-        } }
+        <div class="flex justify-center gap-3 m-8">
+            <button
+                class="active-button mr-1 border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
+                (click)="previous()"
+                [disabled]="disablePrevious()"
+            >
+                Previous
+            </button>
+            <button
+                class="active-button ml-1 border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
+                (click)="next()"
+            >
+                Next
+            </button>
+        </div>
     </div>
 </div>
