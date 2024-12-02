@@ -21,7 +21,7 @@ defmodule MangaServiceWeb.MarketController do
   end
 
   def show(conn, %{"id" => isbn}) do
-    market = MarketDB.get_market_by_isbn!(isbn)
+    market = MarketDB.get_market_by_isbn(isbn)
 
     case market do
       nil ->
@@ -59,7 +59,7 @@ defmodule MangaServiceWeb.MarketController do
   end
 
   def update(conn, %{"id" => isbn, "market" => market_params}) do
-    curr_market = MarketDB.get_market_by_isbn!(isbn)
+    curr_market = MarketDB.get_market_by_isbn(isbn)
 
     case MarketDB.update_market(curr_market, market_params) do
       {:ok, market} ->
@@ -81,7 +81,7 @@ defmodule MangaServiceWeb.MarketController do
   end
 
   def delete(conn, %{"id" => isbn}) do
-    market = MarketDB.get_market_by_isbn!(isbn)
+    market = MarketDB.get_market_by_isbn(isbn)
 
     case MarketDB.delete_market(market) do
       {:ok, _} ->

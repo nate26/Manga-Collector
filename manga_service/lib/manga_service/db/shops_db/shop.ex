@@ -1,6 +1,7 @@
 defmodule MangaService.ShopsDB.Shop do
   use Ecto.Schema
   import Ecto.Changeset
+  alias MangaService.{VolumesDB.Volume, MarketDB.Market}
 
   schema "shops" do
     field(:item_id, :string)
@@ -20,11 +21,8 @@ defmodule MangaService.ShopsDB.Shop do
     field(:is_bundle, :boolean, default: false)
     field(:dropped_check, :boolean, default: false)
 
-    # TODO fix this?
-    has_one(:volume, MangaServie.VolumesDB.Volume,
-      references: :isbn,
-      foreign_key: :isbn
-    )
+    belongs_to(:volume, Volume, references: :isbn, foreign_key: :isbn, define_field: false)
+    belongs_to(:market, Market, references: :isbn, foreign_key: :isbn, define_field: false)
 
     timestamps(type: :utc_datetime)
   end

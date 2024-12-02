@@ -1,6 +1,7 @@
 defmodule MangaService.VolumesDB.Volume do
   use Ecto.Schema
   import Ecto.Changeset
+  alias MangaService.{MarketDB.Market, SeriesDB.Series}
 
   schema "volumes" do
     field(:isbn, :string)
@@ -25,11 +26,19 @@ defmodule MangaService.VolumesDB.Volume do
     field(:cover_images, {:array, :map})
     field(:is_bundle, :boolean, default: false)
 
-    # TODO fix this?
-    has_many(:shops, MangaServie.ShopsDB.Shop,
-      references: :isbn,
-      foreign_key: :isbn
+    belongs_to(:market_data, Market, references: :isbn, foreign_key: :isbn, define_field: false)
+
+    belongs_to(:series_data, Series,
+      references: :series_id,
+      foreign_key: :series_id,
+      define_field: false
     )
+
+    # # TODO fix this?
+    # has_many(:shops, MangaServie.ShopsDB.Shop,
+    #   references: :isbn,
+    #   foreign_key: :isbn
+    # )
 
     timestamps(type: :utc_datetime)
   end

@@ -28,7 +28,7 @@
         </select>
         <div class="text-xs italic">Type</div>
         <select class="mc-input mb-2" [(ngModel)]="filterBundle">
-            <option [value]="undefined">All</option>
+            <option value="">All</option>
             <option [value]="false">Single Manga</option>
             <option [value]="true">Bundle</option>
         </select>
@@ -56,20 +56,6 @@
         >
             Search
         </button>
-        <!-- <div class="text text-sm text-nowrap">Hide Clearance</div>
-        <input
-            type="checkbox"
-            class="green-checkbox ml-3"
-            [checked]="filterNoClearance()"
-            (change)="filterNoClearance.set(!filterNoClearance())"
-        />
-        <div class="text text-sm text-nowrap">Only Clearance</div>
-        <input
-            type="checkbox"
-            class="green-checkbox ml-3"
-            [checked]="filterClearance()"
-            (change)="filterClearance.set(!filterClearance())"
-        /> -->
     </div>
     <div class="w-full overflow-auto" style="max-height: calc(100vh - 112px)">
         <div class="grid grid-cols-5 w-fit m-auto">
@@ -79,7 +65,7 @@
                 class="relative w-[12vw] m-3 rounded-lg shadow-lg bg-cover bg-center hover:scale-105 transition-transform duration-300 cursor-pointer"
                 style="aspect-ratio: 1 / 1.45"
                 [style.background-image]="
-                    'url(' + item.primary_cover_image + ')'
+                    'url(' + item.volume.primary_cover_image + ')'
                 "
                 (click)="openVolumeDetails(item.isbn)"
                 (keypress)="openVolumeDetails(item.isbn)"
@@ -92,7 +78,7 @@
                     {{ item.promotion_percentage }}% off
                 </span>
                 }
-                <app-volume-cover-text [title]="item.display_name" />
+                <app-volume-cover-text [title]="item.volume.display_name" />
             </div>
             } @placeholder {
             <div

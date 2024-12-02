@@ -2,17 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import {
     Observable,
     catchError,
-    EMPTY,
-    switchMap,
-    from,
-    map,
-    mergeMap,
-    scan,
+    EMPTY
 } from 'rxjs';
 import { UserService } from './user.service';
 import { HttpClient } from '@angular/common/http';
-import { Shop } from '../../interfaces/iShop.interface';
-import { Volume } from '../../interfaces/iVolume.interface';
+import { ShopVolume } from '../../interfaces/iShop.interface';
 
 export type ShopQuery = {
     order_by?: string;
@@ -44,21 +38,12 @@ export class SaleDataService {
     private readonly _http = inject(HttpClient);
     private readonly _userService = inject(UserService);
 
-    getSaleVolumes$(query: ShopQuery): Observable<(Shop & Volume)[]> {
+    getSaleVolumes$(query: ShopQuery): Observable<(ShopVolume)[]> {
         return this._http
-            .get<Shop[]>(
+            .get<ShopVolume[]>(
                 'http://localhost:4000/api/shop?' + this._parseQuery(query)
             )
             .pipe(
-                switchMap((shops) => from(shops)),
-                mergeMap((shop) =>
-                    this._http
-                        .get<Volume>(
-                            'http://localhost:4000/api/volume/' + shop.isbn
-                        )
-                        .pipe(map((volume) => ({ ...shop, ...volume })))
-                ),
-                scan((acc, value) => [...acc, value].sort((a, b) => a.display_name.localeCompare(b.display_name)), [] as (Shop & Volume)[]),
                 catchError((err: Error) => {
                     console.error(
                         'Could not get sale volume data because ',
@@ -75,6 +60,6 @@ export class SaleDataService {
                 return acc;
             }
             return acc + key + '=' + value + '&';
-        }, (!query.limit ? 'limit=2&' : '') + (!query.offset ? 'offset=0&' : ''));
+        }, (!query.limit ? 'limit=100&' : '') + (!query.offset ? 'offset=0&' : ''));
     }
 }

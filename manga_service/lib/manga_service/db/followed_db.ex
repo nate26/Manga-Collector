@@ -35,7 +35,7 @@ defmodule MangaService.FollowedDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_followed!(id), do: Repo.get!(Followed, id)
+  def get_followed(id), do: Repo.get(Followed, id)
 
   @doc """
   Creates a followed.

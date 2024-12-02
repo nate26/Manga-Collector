@@ -7,7 +7,6 @@ defmodule MangaService.ShopsDB do
   alias MangaService.Repo
 
   alias MangaService.ShopsDB.Shop
-  alias MangaService.VolumesDB.Volume
 
   @doc """
   Returns the list of shops.
@@ -20,14 +19,20 @@ defmodule MangaService.ShopsDB do
   """
   def list_shops(params) do
     Shop
+    |> join(:inner, [p], v in assoc(p, :volume))
     |> order_by(^filter_order_by(params["order_by"]))
     |> where(^filter_where(params))
     |> limit(^(params["limit"] || 100))
     |> offset(^(params["offset"] || 0))
-    # |> join(:full, [s], v in Volume, on: s.isbn == v.isbn)
-    # |> join(:full, [s], assoc(s, :volume), as: :volume)
     |> Repo.all()
+    |> Repo.preload([:volume, :market])
   end
+
+  defp filter_order_by("name_desc"),
+    do: [desc: dynamic([_, v], v.display_name)]
+
+  defp filter_order_by("name"),
+    do: [asc: dynamic([_, v], v.display_name)]
 
   defp filter_order_by("price_desc"),
     do: [desc: dynamic([p], p.price)]
@@ -46,6 +51,12 @@ defmodule MangaService.ShopsDB do
 
   defp filter_where(params) do
     Enum.reduce(params, dynamic(true), fn
+      # {"name", value}, dynamic ->
+      #   dynamic(
+      #     [_, v],
+      #     ^dynamic and fragment("lower(?) = ?", v.display_name, ^value)
+      #   )
+
       {"store", value}, dynamic ->
         dynamic([p], ^dynamic and p.store == ^value)
 
@@ -116,7 +127,7 @@ defmodule MangaService.ShopsDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_shop!(id), do: Repo.get!(Shop, id)
+  def get_shop(id), do: Repo.get(Shop, id)
 
   @doc """
   Gets a single volume shop data by isbn.
@@ -132,15 +143,7 @@ defmodule MangaService.ShopsDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_shop_by_id!(item_id) do
-    query =
-      from(v in Shop,
-        where: v.item_id == ^item_id,
-        select: v
-      )
-
-    Repo.one(query)
-  end
+  def get_shop_by_id(item_id), do: Repo.get_by(Shop, %{item_id: item_id})
 
   @doc """
   Gets a single volume shop data by isbn.
@@ -156,7 +159,7 @@ defmodule MangaService.ShopsDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_shops_by_isbn!(isbn) do
+  def get_shops_by_isbn(isbn) do
     query =
       from(v in Shop,
         where: v.isbn == ^isbn,

@@ -39,7 +39,7 @@ defmodule MangaServiceWeb.SeriesController do
   end
 
   def show(conn, %{"id" => series_id}) do
-    series = SeriesDB.get_series_by_id!(series_id)
+    series = SeriesDB.get_series_by_id(series_id)
 
     case series do
       nil ->
@@ -113,7 +113,7 @@ defmodule MangaServiceWeb.SeriesController do
   end
 
   def update(conn, %{"id" => isbn, "series" => series_params}) do
-    curr_series = SeriesDB.get_series_by_id!(isbn)
+    curr_series = SeriesDB.get_series_by_id(isbn)
 
     case SeriesDB.update_series(curr_series, series_params) do
       {:ok, series} ->
@@ -153,7 +153,7 @@ defmodule MangaServiceWeb.SeriesController do
   end
 
   def delete(conn, %{"id" => series_id}) do
-    series = SeriesDB.get_series_by_id!(series_id)
+    series = SeriesDB.get_series_by_id(series_id)
 
     case SeriesDB.delete_series(series) do
       {:ok, _} ->

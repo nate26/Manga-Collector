@@ -29,14 +29,30 @@ defmodule MangaServiceWeb.ShopController do
           is_bundle: shop.is_bundle,
           dropped_check: shop.dropped_check,
           inserted_at: shop.inserted_at,
-          updated_at: shop.updated_at
+          updated_at: shop.updated_at,
+          volume: %{
+            name: shop.volume.name,
+            display_name: shop.volume.display_name,
+            category: shop.volume.category,
+            volume: shop.volume.volume,
+            brand: shop.volume.brand,
+            series: shop.volume.series,
+            series_id: shop.volume.series_id,
+            edition: shop.volume.edition,
+            edition_id: shop.volume.edition_id,
+            release_date: shop.volume.release_date,
+            primary_cover_image: shop.volume.primary_cover_image
+          },
+          market: %{
+            retail_price: shop.market.retail_price
+          }
         }
       end)
     )
   end
 
   def show(conn, %{"id" => item_id}) do
-    shop = ShopsDB.get_shop_by_id!(item_id)
+    shop = ShopsDB.get_shop_by_id(item_id)
 
     case shop do
       nil ->
@@ -102,7 +118,7 @@ defmodule MangaServiceWeb.ShopController do
   end
 
   def update(conn, %{"id" => item_id, "shop" => shop_params}) do
-    curr_shop = ShopsDB.get_shop_by_id!(item_id)
+    curr_shop = ShopsDB.get_shop_by_id(item_id)
 
     case ShopsDB.update_shop(curr_shop, shop_params) do
       {:ok, shop} ->
@@ -138,7 +154,7 @@ defmodule MangaServiceWeb.ShopController do
   end
 
   def delete(conn, %{"id" => item_id}) do
-    shop = ShopsDB.get_shop_by_id!(item_id)
+    shop = ShopsDB.get_shop_by_id(item_id)
 
     case ShopsDB.delete_shop(shop) do
       {:ok, _} ->

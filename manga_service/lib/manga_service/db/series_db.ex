@@ -35,7 +35,7 @@ defmodule MangaService.SeriesDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_series!(id), do: Repo.get!(Series, id)
+  def get_series(id), do: Repo.get(Series, id)
 
   @doc """
   Gets a single series by series_id.
@@ -51,12 +51,7 @@ defmodule MangaService.SeriesDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_series_by_id!(series_id) do
-    query = from v in Series,
-      where: v.series_id == ^series_id,
-      select: v
-    Repo.one(query)
-  end
+  def get_series_by_id(series_id), do: Repo.get_by(Series, %{series_id: series_id})
 
   @doc """
   Creates a series.

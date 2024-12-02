@@ -27,7 +27,7 @@ defmodule MangaServiceWeb.BundleController do
   end
 
   def show(conn, %{"id" => item_id}) do
-    bundle = BundlesDB.get_bundle_by_id!(item_id)
+    bundle = BundlesDB.get_bundle_by_id(item_id)
 
     case bundle do
       nil ->
@@ -77,7 +77,7 @@ defmodule MangaServiceWeb.BundleController do
   end
 
   def update(conn, %{"id" => item_id, "bundle" => bundle_params}) do
-    curr_bundle = BundlesDB.get_bundle_by_id!(item_id)
+    curr_bundle = BundlesDB.get_bundle_by_id(item_id)
 
     case BundlesDB.update_bundle(curr_bundle, bundle_params) do
       {:ok, bundle} ->
@@ -105,7 +105,7 @@ defmodule MangaServiceWeb.BundleController do
   end
 
   def delete(conn, %{"id" => item_id}) do
-    bundle = BundlesDB.get_bundle_by_id!(item_id)
+    bundle = BundlesDB.get_bundle_by_id(item_id)
 
     case BundlesDB.delete_bundle(bundle) do
       {:ok, _} ->

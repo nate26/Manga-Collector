@@ -35,7 +35,7 @@ defmodule MangaService.CollectionDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_collection!(id), do: Repo.get!(Collection, id)
+  def get_collection(id), do: Repo.get(Collection, id)
 
   @doc """
   Gets collection data for a volume by isbn.
@@ -51,11 +51,12 @@ defmodule MangaService.CollectionDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_collections_by_user_id!(isbn, user_id) do
-    query = from v in Collection,
-      where: v.isbn == ^isbn and v.user_id == ^user_id,
-      select: v
-    Repo.all(query)
+  def get_collections_by_user_id(isbn, user_id) do
+    # TODO offset and limit and filters
+    Collection
+    |> where([c], c.isbn == ^isbn and c.user_id == ^user_id)
+    |> Repo.all()
+    |> Repo.preload([:volume, :market])
   end
 
   @doc """

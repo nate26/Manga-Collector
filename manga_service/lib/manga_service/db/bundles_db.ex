@@ -35,7 +35,7 @@ defmodule MangaService.BundlesDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_bundle!(id), do: Repo.get!(Bundle, id)
+  def get_bundle(id), do: Repo.get(Bundle, id)
 
   @doc """
   Gets a single bundle by item_id.
@@ -51,15 +51,7 @@ defmodule MangaService.BundlesDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_bundle_by_id!(item_id) do
-    query =
-      from(v in Bundle,
-        where: v.item_id == ^item_id,
-        select: v
-      )
-
-    Repo.one(query)
-  end
+  def get_bundle_by_id(item_id), do: Repo.get_by(Bundle, %{item_id: item_id})
 
   @doc """
   Creates a bundle.

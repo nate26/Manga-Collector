@@ -40,7 +40,7 @@ defmodule MangaServiceWeb.VolumeController do
   end
 
   def show(conn, %{"id" => isbn}) do
-    volume = VolumesDB.get_volume_by_isbn!(isbn)
+    volume = VolumesDB.get_volume_by_isbn(isbn)
 
     case volume do
       nil ->
@@ -71,7 +71,17 @@ defmodule MangaServiceWeb.VolumeController do
           cover_images: volume.cover_images,
           is_bundle: volume.is_bundle,
           inserted_at: volume.inserted_at,
-          updated_at: volume.updated_at
+          updated_at: volume.updated_at,
+          market_data: %{
+            retail_price: volume.market_data.retail_price
+          },
+          series_data: %{
+            status: volume.series_data.status,
+            category: volume.series_data.category,
+            url: volume.series_data.url,
+            genres: volume.series_data.genres,
+            themes: volume.series_data.themes
+          }
         })
     end
   end
@@ -116,7 +126,7 @@ defmodule MangaServiceWeb.VolumeController do
   end
 
   def update(conn, %{"id" => isbn, "volume" => volume_params}) do
-    volume = VolumesDB.get_volume_by_isbn!(isbn)
+    volume = VolumesDB.get_volume_by_isbn(isbn)
 
     case VolumesDB.update_volume(volume, volume_params) do
       {:ok, volume} ->
@@ -157,7 +167,7 @@ defmodule MangaServiceWeb.VolumeController do
   end
 
   def delete(conn, %{"id" => isbn}) do
-    volume = VolumesDB.get_volume_by_isbn!(isbn)
+    volume = VolumesDB.get_volume_by_isbn(isbn)
 
     case VolumesDB.delete_volume(volume) do
       {:ok, _} ->

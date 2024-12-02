@@ -92,7 +92,7 @@ defmodule MangaService.VolumesDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_volume!(id), do: Repo.get!(Volume, id)
+  def get_volume(id), do: Repo.get(Volume, id)
 
   @doc """
   Gets a single volume by isbn.
@@ -108,14 +108,10 @@ defmodule MangaService.VolumesDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_volume_by_isbn!(isbn) do
-    query =
-      from(v in Volume,
-        where: v.isbn == ^isbn,
-        select: v
-      )
-
-    Repo.one(query)
+  def get_volume_by_isbn(isbn) do
+    Volume
+    |> Repo.get_by(%{isbn: isbn})
+    |> Repo.preload([:market_data, :series_data])
   end
 
   @doc """

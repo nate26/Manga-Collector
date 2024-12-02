@@ -2,7 +2,6 @@ import { Component, computed, inject, model, signal } from '@angular/core';
 import { SaleDataService, ShopQuery } from '../../services/data/sale-data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { VolumeCoverTextComponent } from '../../common/volume-cover-text/volume-cover-text.component';
-import { IShopVolume } from '../../interfaces/iShopVolume.interface';
 import { VolumeDetailsComponent } from '../../common/components/volume-details/volume-details.component';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
@@ -18,9 +17,9 @@ export class BrowseSalesComponent {
     private readonly _dialog = inject(MatDialog);
     private readonly _saleDataService = inject(SaleDataService);
 
-    promoOptions = [undefined, 'Black Friday', 'Clearance - Final Sale', 'Crunchyroll\'s Price'];
+    promoOptions = ['', 'Black Friday', 'Clearance - Final Sale', 'Crunchyroll\'s Price'];
 
-    orderBy = model();
+    orderBy = model('name');
     offset = signal(0);
     disablePrevious = computed(() => this.offset() === 0);
 
@@ -47,37 +46,25 @@ export class BrowseSalesComponent {
 
     items$ = this._saleDataService.getSaleVolumes$(this.filter());
 
-    // filterNoClearance = signal(true);
-    // filterClearance = signal(false);
-    // filteredVolumes = computed(() =>
-    //     this.volumes().filter(
-    //         (vol) =>
-    //             (vol.stock_status === 'In Stock' || !this.filterInStock()) &&
-    //             (!this.filterNoClearance() ||
-    //                 !this.isCrunchyrollClearance(vol)) &&
-    //             (!this.filterClearance() || this.isCrunchyrollClearance(vol))
-    //     )
-    // );
+    updateData() {
+        this.items$ = this._saleDataService.getSaleVolumes$(this.filter());
+    }
 
     submitFilter() {
-        this.items$ = this._saleDataService.getSaleVolumes$(this.filter());
+        this.offset.set(0);
+        this.updateData();
     }
 
     next() {
         // TODO check if over max
         this.offset.update((offset) => offset + 100);
-        this.submitFilter();
+        this.updateData();
     }
 
     previous() {
         this.offset.update((offset) => Math.max(0, offset - 100));
-        this.submitFilter();
+        this.updateData();
     }
-
-    isCrunchyrollClearance = (vol: IShopVolume) =>
-        vol.store === 'Crunchyroll' &&
-        vol.is_on_sale &&
-        vol.store_price < vol.retail_price * 0.5;
 
     openVolumeDetails(isbn: string) {
         this._dialog.open(VolumeDetailsComponent, { data: isbn });
