@@ -1,26 +1,29 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
-import { CollectionDataService } from '../../services/data/collection-data.service';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, computed, inject, model, signal } from '@angular/core';
+import { AsyncPipe, CurrencyPipe, NgClass, TitleCasePipe } from '@angular/common';
+import { Collection, CollectionDataService, CollectionQuery } from '../../services/data/collection-data.service';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ICollection } from '../../interfaces/iCollection.interface';
 import { SearchVolumesComponent } from '../../common/search-volumes/search-volumes.component';
 import { IVolume } from '../../interfaces/iVolume.interface';
 import { VolumeService } from '../../services/data/volume.service';
-import { forkJoin, tap } from 'rxjs';
+import { forkJoin, switchMap, tap } from 'rxjs';
 import { ITheme } from '../../interfaces/iSeries.interface';
 import { UserService } from '../../services/data/user.service';
 import { TagListComponent } from '../../common/tag-list/tag-list.component';
 import { LazyImageDirective } from '../../common/directives/lazy-image/lazy-image.directive';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { VolumeDetailsComponent } from '../../common/components/volume-details/volume-details.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-collection',
     standalone: true,
     imports: [
         NgClass,
+        AsyncPipe,
         TitleCasePipe,
         CurrencyPipe,
+        FormsModule,
         MatDialogModule,
         SearchVolumesComponent,
         TagListComponent,
@@ -36,53 +39,56 @@ export class CollectionComponent {
     private readonly _destroy = inject(DestroyRef);
     protected readonly userService = inject(UserService);
 
-    // this._collectionDataService.collectionVolumes$
-    volumes = toSignal(this._collectionDataService.collectionVolumes$, {
-        initialValue: [],
-    });
-    volumeIDs = computed(() =>
-        this.volumes().map((vol) => vol.user_collection_data[0].id)
-    );
-    newVolumes = signal<IVolume[]>([]);
-    availableCategories = computed(() =>
-        this.volumes()
-            .map((vol) => vol.category)
-            .filter((v, i, a) => a.indexOf(v) === i)
-    );
-    availableMerchants = computed(() =>
-        this.volumes()
-            .map((vol) => vol.user_collection_data[0].merchant)
-            .filter((v, i, a) => a.indexOf(v) === i)
-    );
-    availableTags = computed(() =>
-        this.volumes()
-            .map((vol) => vol.user_collection_data[0].tags)
-            .flat()
-            .filter((v, i, a) => a.indexOf(v) === i)
-    );
+    availableCategories = ['light-novels', 'novels', 'manga', 'manga-bundles', 'manhwa', 'manhua'];
+    // TODO change B&N to BarnesAndNoble
+    availableStores = ['Amazon', 'Barnes And Noble', 'Crunchyroll', 'RightStuf', 'Kinokuniya', 'In Stock Trades', 'Other'];
 
     protected editSwitch = signal(false);
     protected isEditing = computed(
         () => this.editSwitch() && this.userService.userDataIsValid()
     );
 
+    // TODO change this to immediate saves? and add batch save later
+    newVolumes = signal<IVolume[]>([]);
     saveBatch = signal<ICollection[]>([]); // temp cache of save changes
     saved = signal<ICollection[]>([]); // cache of all prior saved records
-
     deleteBatch = signal<string[]>([]); // temp cache of delete changes
     deleted = signal<string[]>([]); // cache of all prior deleted records
 
-    // consider reactive forms instead of template forms
-    filterName = signal<string>('');
-    filterCategory = signal<string>('');
-    filterVolume = signal<string>('');
-    filterCost = signal<string>('');
-    filterMerchant = signal<string>('');
-    filterPurchaseDate = signal<string>('');
-    filterRead = signal<string>('');
-    filterGiftToMe = signal<string>('');
-    filterTags = signal<string[]>([]);
 
+    orderBy = model('name');
+    offset = signal(0);
+
+    // consider reactive forms instead of template forms
+    filterCollection = model<string>('Collection');
+    filterName = model<string>();
+    filterCategory = model<string>(); // ? options
+    filterVolume = model<string>();
+    filterCost = model<number>(); // ? slider
+    filterStore = model<string>(); // ? options
+    filterPurchaseDate = model<string>(); // ? slider
+    filterRead = model<boolean>(false);
+    filterTags = model<string[]>([]); // ? autocomplete?
+
+    filter = computed(
+        () =>
+        ({
+            order_by: this.orderBy(),
+            limit: 100,
+            offset: this.offset(),
+            collection: this.filterCollection(),
+            name: this.filterName(),
+            category: this.filterCategory(),
+            volume: this.filterVolume(),
+            cost_ge: this.filterCost(),
+            store: this.filterStore(),
+            purchase_date_le: this.filterPurchaseDate(),
+            read: this.filterRead(),
+            // TODO tags: this.filterTags()
+        } as CollectionQuery)
+    );
+
+    /*
     // separate filter and saved states for performance
     editedVolumes = computed(() => {
         const vols = this.volumes();
@@ -184,6 +190,26 @@ export class CollectionComponent {
             );
         });
     });
+    */
+
+    collections$ = toObservable(this.filter).pipe(
+        switchMap(query => this._collectionDataService.getCollectionVolumes$(query))
+    );
+
+    submitFilter() {
+        this.offset.set(0);
+    }
+
+    next() {
+        // TODO check if over max
+        this.offset.update((offset) => offset + 100);
+    }
+
+    previous() {
+        this.offset.update((offset) => Math.max(0, offset - 100));
+    }
+
+    // TODO check below for what can be removed
 
     parseThemes = (themes: ITheme[]) => themes.map((t) => t.theme).join(', ');
 
@@ -197,7 +223,7 @@ export class CollectionComponent {
             // update existing if was previously saved
             return batch.map((existingRecord) =>
                 (existingRecord.id ?? existingRecord.temp_id) ===
-                (record.id ?? record.temp_id)
+                    (record.id ?? record.temp_id)
                     ? record
                     : existingRecord
             );
@@ -221,39 +247,42 @@ export class CollectionComponent {
         return [...batch, record];
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     doEdit(index: number, field: string, value: Event) {
-        this.saveBatch.update((batch) => {
-            const existingRecord =
-                this.filteredVolumes()[index].user_collection_data[0];
-            const newValue = this.getEventVal(value);
-            let parsedValue;
-            if (field === 'cost') parsedValue = parseFloat(newValue);
-            else if (field === 'read' || field === 'giftToMe')
-                parsedValue = (<HTMLInputElement>value.target).checked;
-            else parsedValue = newValue;
-            return this._batchEdit(batch, {
-                ...existingRecord,
-                [field]: parsedValue,
-            });
-        });
+        // this.saveBatch.update((batch) => {
+        //     const existingRecord =
+        //         this.filteredVolumes()[index].user_collection_data[0];
+        //     const newValue = this.getEventVal(value);
+        //     let parsedValue;
+        //     if (field === 'cost') parsedValue = parseFloat(newValue);
+        //     else if (field === 'read' || field === 'giftToMe')
+        //         parsedValue = (<HTMLInputElement>value.target).checked;
+        //     else parsedValue = newValue;
+        //     return this._batchEdit(batch, {
+        //         ...existingRecord,
+        //         [field]: parsedValue,
+        //     });
+        // });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     editTags(index: number, value: string[]): void {
-        this.saveBatch.update((batch) => {
-            return this._batchEdit(batch, {
-                ...this.filteredVolumes()[index].user_collection_data[0],
-                tags: value,
-            });
-        });
+        // this.saveBatch.update((batch) => {
+        //     return this._batchEdit(batch, {
+        //         ...this.filteredVolumes()[index].user_collection_data[0],
+        //         tags: value,
+        //     });
+        // });
     }
 
-    markForDelete(record: ICollection) {
-        if (record.id) {
-            this.deleteBatch.update((batch) => [...batch, record.id!]);
+    markForDelete(record: Collection) {
+        if (record.collection_id) {
+            this.deleteBatch.update((batch) => [...batch, record.collection_id!]);
         } else {
-            this.saveBatch.update((batch) =>
-                batch.filter((r) => r.temp_id !== record.temp_id)
-            );
+            // TODO
+            // this.saveBatch.update((batch) =>
+            //     batch.filter((r) => r.temp_id !== record.temp_id)
+            // );
         }
     }
 
@@ -354,8 +383,8 @@ export class CollectionComponent {
                         console.error(err);
                         alert(
                             'could not get volume data for ' +
-                                vol.display_name +
-                                'to add to collection'
+                            vol.display_name +
+                            'to add to collection'
                         );
                     },
                 });

@@ -5,12 +5,59 @@ import { IVolume } from '../../interfaces/iVolume.interface';
 import { IGQLDeleteCollectionResult, IGQLGetCollectionVolumes, IGQLModifyCollectionResult } from '../../interfaces/iGQLRequests.interface';
 import { ICollection } from '../../interfaces/iCollection.interface';
 import { UserService } from './user.service';
+import { APIQueryService, Query } from './api-query.service';
+import { HttpClient } from '@angular/common/http';
+
+export type Volume = {
+    isbn: string;
+    name: string;
+    display_name: string;
+    category: string;
+    volume: string;
+    brand: string;
+    series: {
+        title: string;
+        url: string;
+    };
+    series_id: string;
+    edition: string;
+    edition_id: string;
+    release_date: string;
+    primary_cover_image: string;
+};
+
+export type Collection = {
+    collection_id: string;
+    collection: string;
+    cost: number;
+    store: string;
+    purchase_date: string;
+    read: boolean;
+    tags: string[];
+    volume: Volume;
+};
+
+export type CollectionQuery = Query & {
+    collection?: string;
+    name?: string;
+    category?: string;
+    volume?: string;
+    store?: string;
+    read?: boolean;
+    cost_le?: number;
+    cost_ge?: number;
+    purchase_date_le?: string;
+    purchase_date_ge?: string;
+    tags?: string[];
+};
 
 @Injectable({
     providedIn: 'root'
 })
 export class CollectionDataService {
 
+    private readonly _http = inject(HttpClient);
+    private readonly _queryService = inject(APIQueryService);
     private readonly _apollo = inject(Apollo);
     private readonly _userService = inject(UserService);
 
@@ -101,6 +148,22 @@ export class CollectionDataService {
             return EMPTY;
         })
     );
+
+    getCollectionVolumes$(query: CollectionQuery): Observable<Collection[]> {
+        return this._http
+            .get<Collection[]>(
+                'http://localhost:4000/api/collection?' + this._queryService.parseQuery(query)
+            )
+            .pipe(
+                catchError((err: Error) => {
+                    console.error(
+                        'Could not get collection volume data because ',
+                        err
+                    );
+                    return EMPTY;
+                })
+            );
+    }
 
     private readonly MODIFY_COLLECTION = gql`
         mutation modify_collection($user_id: ID!, $volumes_update: [CollectionDataInput]!) {

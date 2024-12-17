@@ -33,7 +33,7 @@
                 (change)="filterCategory.set(getEventVal($event))"
             >
                 <option class="text-white" value="">Filter by Category</option>
-                @for (category of availableCategories(); track $index) {
+                @for (category of availableCategories; track $index) {
                 <option class="text-white" [value]="category">
                     {{ category ?? "[BLANK]" | titlecase }}
                 </option>
@@ -55,19 +55,16 @@
                 min="0"
                 step="0.01"
                 class="text mc-input"
-                (change)="filterCost.set(getEventVal($event))"
+                [(ngModel)]="filterCost"
             />
 
             <!-- Filter Merchant -->
             <div class="text text-sm w-fit">Merchant</div>
-            <select
-                class="mc-input text-white"
-                (change)="filterMerchant.set(getEventVal($event))"
-            >
+            <select class="mc-input text-white" [(ngModel)]="filterStore">
                 <option class="text-white" value="">Filter by Merchant</option>
-                @for (merchant of availableMerchants(); track $index) {
-                <option class="text-white" [value]="merchant">
-                    {{ merchant ?? "[BLANK]" | titlecase }}
+                @for (store of availableStores; track $index) {
+                <option class="text-white" [value]="store">
+                    {{ store ?? "[BLANK]" }}
                 </option>
                 }
             </select>
@@ -79,7 +76,7 @@
             <input
                 type="date"
                 class="text mc-input"
-                (change)="filterPurchaseDate.set(getEventVal($event))"
+                [(ngModel)]="filterPurchaseDate"
             />
 
             <!-- Filter Read -->
@@ -87,17 +84,8 @@
             <input
                 type="checkbox"
                 class="green-checkbox al_center"
-                [checked]="filterRead() === 'YES'"
-                (change)="filterRead.set(getEventVal($event))"
-            />
-
-            <!-- Filter Gift -->
-            <div class="text text-sm w-fit">Gift</div>
-            <input
-                type="checkbox"
-                class="blue-checkbox al_center"
-                [checked]="filterGiftToMe() === 'YES'"
-                (change)="filterGiftToMe.set(getEventVal($event))"
+                [(ngModel)]="filterRead"
+                [checked]="filterRead()"
             />
 
             <!-- Filter Tags -->
@@ -112,39 +100,39 @@
 
     <div class="flex justify-center w-full m-4">
         <div class="w-full overflow-auto" style="height: calc(100vh - 112px)">
-            @if (filteredVolumes(); as volumes) { @for (volume of volumes; track
-            $index) { @defer (on viewport) {
+            @if (collections$ | async; as collections) { @for (collection of
+            collections; track $index) { @defer (on viewport) {
             <!-- TODO remove hardcoded color -->
             <div
                 class="volume-row bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
-                [ngClass]="
-                    volume.edited ? 'volume-row edited-row' : 'volume-row'
-                "
             >
+                <!-- TODO [ngClass]="volume.edited ? 'volume-row edited-row' : 'volume-row'" -->
                 <img
-                    [src]="volume.primary_cover_image_url"
+                    [src]="collection.volume.primary_cover_image"
                     appLazyImage
-                    alt="{{ 'cover image for' + volume.name }}"
+                    alt="{{ 'cover image for' + collection.volume.name }}"
                     class="cover-image cursor-pointer"
-                    (click)="openVolumeDetails(volume.isbn)"
-                    (keypress)="openVolumeDetails(volume.isbn)"
+                    (click)="openVolumeDetails(collection.volume.isbn)"
+                    (keypress)="openVolumeDetails(collection.volume.isbn)"
                     tabindex="{$index}"
                 />
                 <div class="cell w260">
                     <a
                         class="text t-wrap"
-                        [href]="volume.series_data.url"
+                        [href]="collection.volume.series.url"
                         target="_blank"
-                        >{{ volume.name }}</a
+                        >{{ collection.volume.name }}</a
                     >
                 </div>
                 <div class="cell w60">
                     <div class="text al_center">
-                        {{ volume.category | titlecase }}
+                        {{ collection.volume.category | titlecase }}
                     </div>
                 </div>
                 <div class="cell w50">
-                    <div class="text al_center">{{ volume.volume }}</div>
+                    <div class="text al_center">
+                        {{ collection.volume.volume }}
+                    </div>
                 </div>
                 <div class="cell w60">
                     @if (isEditing()) {
@@ -153,12 +141,12 @@
                         min="0"
                         step="0.01"
                         class="text"
-                        [value]="volume.user_collection_data[0].cost"
+                        [value]="collection.cost"
                         (change)="doEdit($index, 'cost', $event)"
                     />
                     } @else {
                     <div class="text al_right">
-                        {{ volume.user_collection_data[0].cost | currency }}
+                        {{ collection.cost | currency }}
                     </div>
                     }
                 </div>
@@ -167,12 +155,12 @@
                     <input
                         type="text"
                         class="text"
-                        [value]="volume.user_collection_data[0].merchant"
+                        [value]="collection.store"
                         (change)="doEdit($index, 'merchant', $event)"
                     />
                     } @else {
                     <div class="text al_center">
-                        {{ volume.user_collection_data[0].merchant }}
+                        {{ collection.store }}
                     </div>
                     }
                 </div>
@@ -181,12 +169,12 @@
                     <input
                         type="text"
                         class="text"
-                        [value]="volume.user_collection_data[0].purchaseDate"
+                        [value]="collection.purchase_date"
                         (change)="doEdit($index, 'purchaseDate', $event)"
                     />
                     } @else {
                     <div class="text al_center">
-                        {{ volume.user_collection_data[0].purchaseDate }}
+                        {{ collection.purchase_date }}
                     </div>
                     }
                 </div>
@@ -194,23 +182,14 @@
                     <input
                         type="checkbox"
                         class="green-checkbox al_center"
-                        [checked]="volume.user_collection_data[0].read"
+                        [checked]="collection.read"
                         [disabled]="!isEditing()"
                         (change)="doEdit($index, 'read', $event)"
                     />
                 </div>
-                <div class="cell w50">
-                    <input
-                        type="checkbox"
-                        class="blue-checkbox al_center"
-                        [checked]="volume.user_collection_data[0].giftToMe"
-                        [disabled]="!isEditing()"
-                        (change)="doEdit($index, 'giftToMe', $event)"
-                    />
-                </div>
                 <div class="cell w150 items-center">
                     <app-tag-list
-                        [filterTags]="volume.user_collection_data[0].tags"
+                        [filterTags]="collection.tags"
                         [editMode]="isEditing()"
                         (updateTags)="editTags($index, $event)"
                     >
@@ -220,7 +199,7 @@
                 <div class="cell w50">
                     <button
                         class="btn-sm inactive-button"
-                        (click)="markForDelete(volume.user_collection_data[0])"
+                        (click)="markForDelete(collection)"
                     >
                         X
                     </button>

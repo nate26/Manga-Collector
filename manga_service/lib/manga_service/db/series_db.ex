@@ -117,4 +117,24 @@ defmodule MangaService.SeriesDB do
   def change_series(%Series{} = series, attrs \\ %{}) do
     Series.changeset(series, attrs)
   end
+
+  def distinct_genres do
+    # query = from(o in Project.Orders.Schemas.Order, where:
+    # fragment("(select count(distinct json->> 'customer_id') from unnest(?) as json)",  o.invoices) >1)
+
+    # from(
+    #   series in Series,
+    #   where:
+    #     fragment(
+    #       "(select count(distinct json->> 'genres') from unnest(?) as json)",
+    #       series.genres
+    #     ) > 1
+    # )
+    # from(
+    #   series in Series,
+    #   where: fragment("select distinct(genres) from unnest(?)", series.genres)
+    # )
+    # query =
+    #   Repo.all(fragment("select distinct(unnest(genres)) from series"))
+  end
 end

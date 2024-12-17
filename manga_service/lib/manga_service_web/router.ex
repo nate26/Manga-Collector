@@ -16,6 +16,12 @@ defmodule MangaServiceWeb.Router do
     resources("/bundle", BundleController, only: [:index, :show, :create, :update, :delete])
     resources("/shop", ShopController, only: [:index, :show, :create, :update, :delete])
     resources("/market", MarketController, only: [:index, :show, :create, :update, :delete])
+
+    resources("/collection", CollectionController,
+      only: [:index, :show, :create, :update, :delete]
+    )
+
+    get("/browse-options", BrowseOptionsController, :index)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

@@ -16,7 +16,7 @@ defmodule MangaService.Parsers.MangaData do
     collections =
       case user_id do
         nil -> nil
-        _ -> CollectionDB.get_collections_by_user_id(isbn, user_id)
+        _ -> CollectionDB.get_collections_by_user_id(%{isbn: isbn, user_id: user_id})
       end
 
     %{volume: volume, series: series, market: market, shops: shops, collections: collections}
@@ -34,7 +34,7 @@ defmodule MangaService.Parsers.MangaData do
       Task.async(fn ->
         case user_id do
           nil -> nil
-          _ -> CollectionDB.get_collections_by_user_id(isbn, user_id)
+          _ -> CollectionDB.get_collections_by_user_id(%{isbn: isbn, user_id: user_id})
         end
       end)
     ]

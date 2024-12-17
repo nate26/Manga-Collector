@@ -4,9 +4,9 @@ import {
     catchError,
     EMPTY
 } from 'rxjs';
-import { UserService } from './user.service';
 import { HttpClient } from '@angular/common/http';
 import { ShopVolume } from '../../interfaces/iShop.interface';
+import { APIQueryService } from './api-query.service';
 
 export type ShopQuery = {
     order_by?: string;
@@ -36,12 +36,12 @@ export type ShopQuery = {
 })
 export class SaleDataService {
     private readonly _http = inject(HttpClient);
-    private readonly _userService = inject(UserService);
+    private readonly _queryService = inject(APIQueryService);
 
     getSaleVolumes$(query: ShopQuery): Observable<(ShopVolume)[]> {
         return this._http
             .get<ShopVolume[]>(
-                'http://localhost:4000/api/shop?' + this._parseQuery(query)
+                'http://localhost:4000/api/shop?' + this._queryService.parseQuery(query)
             )
             .pipe(
                 catchError((err: Error) => {
@@ -52,14 +52,5 @@ export class SaleDataService {
                     return EMPTY;
                 })
             );
-    }
-
-    _parseQuery(query: ShopQuery): string {
-        return Object.entries(query).reduce((acc, [key, value]) => {
-            if (!value && value !== 0) {
-                return acc;
-            }
-            return acc + key + '=' + value + '&';
-        }, (!query.limit ? 'limit=100&' : '') + (!query.offset ? 'offset=0&' : ''));
     }
 }
