@@ -6,8 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { combineLatest, debounceTime, filter, map, startWith } from 'rxjs';
 import { VolumeService } from '../../services/data/volume.service';
-import { IVolume } from '../../interfaces/iVolume.interface';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Volume } from '../../services/data/collection-data.service';
 
 @Component({
     selector: 'app-search-volumes',
@@ -27,7 +27,7 @@ export class SearchVolumesComponent {
 
     private readonly _volumeService = inject(VolumeService);
 
-    readonly selectVolume = output<IVolume>();
+    readonly selectVolume = output<any>();
     protected readonly disableSearchOnSelect = outputToObservable(this.selectVolume).pipe(
         takeUntilDestroyed()
     ).subscribe(() => this.searchActive.set(false));

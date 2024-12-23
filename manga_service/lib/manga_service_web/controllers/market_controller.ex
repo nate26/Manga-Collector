@@ -87,7 +87,7 @@ defmodule MangaServiceWeb.MarketController do
       {:ok, _} ->
         conn
         |> put_status(:ok)
-        |> text("Market deleted")
+        |> json(%{success: true})
 
       {:error, _} ->
         conn

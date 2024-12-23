@@ -159,7 +159,7 @@ defmodule MangaServiceWeb.SeriesController do
       {:ok, _} ->
         conn
         |> put_status(:ok)
-        |> text("Series deleted")
+        |> json(%{success: true})
 
       {:error, _} ->
         conn

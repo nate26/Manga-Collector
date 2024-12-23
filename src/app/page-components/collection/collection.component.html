@@ -1,37 +1,16 @@
 <div class="flex space-between mt-20">
     <div>
-        @if (userService.canUserEdit()) { @if (isEditing()) {
-        <button
-            class="btn active-button"
-            (click)="save()"
-            [disabled]="saveBatch().length === 0 && deleteBatch().length === 0"
-        >
-            Save
-        </button>
-        <button class="btn active-button" (click)="stopEditing()">
-            Cancel
-        </button>
-        <app-search-volumes (selectVolume)="addVolume($event)" />
-        } @else {
-        <button class="btn inactive-button" (click)="editSwitch.set(true)">
-            Edit
-        </button>
-        } }
+        @if (canUserEdit()) {
+        <app-search-volumes (selectVolume)="createCollection($event)" />
+        }
         <div class="grid grid-cols-[min-content_auto] gap-3 h-fit w-72 m-8">
             <!-- Filter Name -->
             <div class="text text-sm w-fit">Name</div>
-            <input
-                type="text"
-                class="text mc-input"
-                (change)="filterName.set(getEventVal($event))"
-            />
+            <input type="text" class="text mc-input" [(ngModel)]="filterName" />
 
             <!-- Filter Category -->
             <div class="text text-sm w-fit">Category</div>
-            <select
-                class="mc-input text-white"
-                (change)="filterCategory.set(getEventVal($event))"
-            >
+            <select class="mc-input text-white" [(ngModel)]="filterCategory">
                 <option class="text-white" value="">Filter by Category</option>
                 @for (category of availableCategories; track $index) {
                 <option class="text-white" [value]="category">
@@ -45,7 +24,7 @@
             <input
                 type="text"
                 class="text mc-input"
-                (change)="filterVolume.set(getEventVal($event))"
+                [(ngModel)]="filterVolume"
             />
 
             <!-- Filter Cost -->
@@ -61,7 +40,7 @@
             <!-- Filter Merchant -->
             <div class="text text-sm w-fit">Merchant</div>
             <select class="mc-input text-white" [(ngModel)]="filterStore">
-                <option class="text-white" value="">Filter by Merchant</option>
+                <option class="text-white" value="">Filter by Store</option>
                 @for (store of availableStores; track $index) {
                 <option class="text-white" [value]="store">
                     {{ store ?? "[BLANK]" }}
@@ -106,7 +85,6 @@
             <div
                 class="volume-row bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
             >
-                <!-- TODO [ngClass]="volume.edited ? 'volume-row edited-row' : 'volume-row'" -->
                 <img
                     [src]="collection.volume.primary_cover_image"
                     appLazyImage
@@ -135,14 +113,14 @@
                     </div>
                 </div>
                 <div class="cell w60">
-                    @if (isEditing()) {
+                    @if (canUserEdit()) {
                     <input
                         type="number"
                         min="0"
                         step="0.01"
                         class="text"
                         [value]="collection.cost"
-                        (change)="doEdit($index, 'cost', $event)"
+                        (change)="updateValue(collection, 'cost', $event)"
                     />
                     } @else {
                     <div class="text al_right">
@@ -151,12 +129,12 @@
                     }
                 </div>
                 <div class="cell w75">
-                    @if (isEditing()) {
+                    @if (canUserEdit()) {
                     <input
                         type="text"
                         class="text"
                         [value]="collection.store"
-                        (change)="doEdit($index, 'merchant', $event)"
+                        (change)="updateValue(collection, 'store', $event)"
                     />
                     } @else {
                     <div class="text al_center">
@@ -165,12 +143,14 @@
                     }
                 </div>
                 <div class="cell w90">
-                    @if (isEditing()) {
+                    @if (canUserEdit()) {
                     <input
                         type="text"
                         class="text"
                         [value]="collection.purchase_date"
-                        (change)="doEdit($index, 'purchaseDate', $event)"
+                        (change)="
+                            updateValue(collection, 'purchase_date', $event)
+                        "
                     />
                     } @else {
                     <div class="text al_center">
@@ -183,23 +163,23 @@
                         type="checkbox"
                         class="green-checkbox al_center"
                         [checked]="collection.read"
-                        [disabled]="!isEditing()"
-                        (change)="doEdit($index, 'read', $event)"
+                        [disabled]="!canUserEdit()"
+                        (change)="updateValue(collection, 'read', $event)"
                     />
                 </div>
                 <div class="cell w150 items-center">
                     <app-tag-list
                         [filterTags]="collection.tags"
-                        [editMode]="isEditing()"
-                        (updateTags)="editTags($index, $event)"
+                        [editMode]="canUserEdit()"
+                        (updateTags)="updateTags(collection, $event)"
                     >
                     </app-tag-list>
                 </div>
-                @if (isEditing()) {
+                @if (canUserEdit()) {
                 <div class="cell w50">
                     <button
                         class="btn-sm inactive-button"
-                        (click)="markForDelete(collection)"
+                        (click)="deleteCollection(collection)"
                     >
                         X
                     </button>

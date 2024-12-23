@@ -111,7 +111,7 @@ defmodule MangaServiceWeb.BundleController do
       {:ok, _} ->
         conn
         |> put_status(:ok)
-        |> text("Bundle deleted")
+        |> json(%{success: true})
 
       {:error, _} ->
         conn

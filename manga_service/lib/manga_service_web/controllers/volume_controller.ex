@@ -173,7 +173,7 @@ defmodule MangaServiceWeb.VolumeController do
       {:ok, _} ->
         conn
         |> put_status(:ok)
-        |> text("Volume deleted")
+        |> json(%{success: true})
 
       {:error, _} ->
         conn

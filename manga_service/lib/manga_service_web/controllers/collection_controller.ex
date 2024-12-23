@@ -3,12 +3,11 @@ defmodule MangaServiceWeb.CollectionController do
   alias MangaService.CollectionDB
 
   def index(conn, params) do
-    shops = CollectionDB.list_collection(params)
-    IO.inspect(shops)
+    collections = CollectionDB.list_collection(params)
 
     json(
       conn,
-      shops
+      collections
       |> Enum.map(fn collection ->
         %{
           collection_id: collection.collection_id,
@@ -41,8 +40,8 @@ defmodule MangaServiceWeb.CollectionController do
     )
   end
 
-  def show(conn, params) do
-    collection = CollectionDB.get_collections_by_user_id(params)
+  def show(conn, %{"id" => collection_id}) do
+    collection = CollectionDB.get_collection_by_id(collection_id)
 
     case collection do
       nil ->
@@ -111,9 +110,9 @@ defmodule MangaServiceWeb.CollectionController do
   end
 
   def update(conn, %{"id" => collection_id, "collection" => collection_params}) do
-    curr_collection = CollectionDB.get_collection(collection_id)
+    curr_collection = CollectionDB.get_collection_by_id(collection_id)
 
-    case CollectionDB.update_shop(curr_collection, collection_params) do
+    case CollectionDB.update_collection(curr_collection, collection_params) do
       {:ok, collection} ->
         conn
         |> put_status(:ok)
@@ -141,13 +140,13 @@ defmodule MangaServiceWeb.CollectionController do
   end
 
   def delete(conn, %{"id" => collection_id}) do
-    collection = CollectionDB.get_collection(collection_id)
+    collection = CollectionDB.get_collection_by_id(collection_id)
 
     case CollectionDB.delete_collection(collection) do
       {:ok, _} ->
         conn
         |> put_status(:ok)
-        |> text("Collection deleted")
+        |> json(%{success: true})
 
       {:error, _} ->
         conn

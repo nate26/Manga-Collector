@@ -39,6 +39,12 @@ defmodule MangaService.CollectionDB do
 
   defp filter_where(params) do
     Enum.reduce(params, dynamic(true), fn
+      {"name", value}, dynamic ->
+        dynamic(
+          [_, v],
+          ^dynamic and fragment("lower(?) like '%' || lower(?) || '%'", v.display_name, ^value)
+        )
+
       {"user_id", value}, dynamic ->
         dynamic([c], ^dynamic and c.user_id == ^value)
 
@@ -70,7 +76,7 @@ defmodule MangaService.CollectionDB do
         dynamic([c], ^dynamic and c.read == ^value)
 
       {"tags", value}, dynamic ->
-        dynamic([c], ^dynamic and fragment("? = ANY(?)", ^value, c.tags))
+        dynamic([c], ^dynamic and (fragment("? = ANY(?)", ^value, c.tags) or ^value == ""))
 
       {_, _}, dynamic ->
         dynamic
@@ -97,24 +103,10 @@ defmodule MangaService.CollectionDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_collection(id), do: Repo.get(Collection, id)
-
-  @doc """
-  Gets a single volume collection data by id.
-
-  Raises `Ecto.NoResultsError` if the Collection does not exist.
-
-  ## Examples
-
-      iex> get_shop_by_isbn!("123412341234112341234")
-      %Collection{}
-
-      iex> get_shop_by_isbn!("123412341234112341234")
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_collection_by_id(collection_id),
-    do: Repo.get_by(Collection, %{collection_id: collection_id})
+  def get_collection_by_id(id) do
+    Repo.get_by(Collection, %{collection_id: id})
+    |> Repo.preload(:volume)
+  end
 
   @doc """
   Gets collection data for a volume by isbn.

@@ -4,7 +4,6 @@ defmodule MangaServiceWeb.ShopController do
 
   def index(conn, params) do
     shops = ShopsDB.list_shops(params)
-    IO.inspect(shops)
 
     json(
       conn,
@@ -160,7 +159,7 @@ defmodule MangaServiceWeb.ShopController do
       {:ok, _} ->
         conn
         |> put_status(:ok)
-        |> text("Shop deleted")
+        |> json(%{success: true})
 
       {:error, _} ->
         conn
