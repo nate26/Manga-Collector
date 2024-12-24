@@ -38,6 +38,7 @@ export class BrowseSalesComponent {
     offset = signal(0);
     disablePrevious = computed(() => this.offset() === 0);
 
+    filterName = model<string>();
     filterStore = model('Crunchyroll');
     filterCondition = model('New');
     filterInStock = model('In Stock');
@@ -52,6 +53,7 @@ export class BrowseSalesComponent {
             order_by: this.orderBy(),
             limit: 100,
             offset: this.offset(),
+            name: this.filterName(),
             store: this.filterStore(),
             condition: this.filterCondition(),
             stock: this.filterInStock(),

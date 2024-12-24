@@ -3,72 +3,72 @@
         @if (canUserEdit()) {
         <app-search-volumes (selectVolume)="createCollection($event)" />
         }
-        <div class="grid grid-cols-[min-content_auto] gap-3 h-fit w-72 m-8">
+        <div class="h-fit w-36 m-8 text-white text-sm text-nowrap">
             <!-- Filter Name -->
-            <div class="text text-sm w-fit">Name</div>
-            <input type="text" class="text mc-input" [(ngModel)]="filterName" />
+            <div class="text-xs italic">Name</div>
+            <input type="text" class="mc-input mb-2" [(ngModel)]="filterName" />
 
             <!-- Filter Category -->
-            <div class="text text-sm w-fit">Category</div>
-            <select class="mc-input text-white" [(ngModel)]="filterCategory">
-                <option class="text-white" value="">Filter by Category</option>
+            <div class="text-xs italic">Category</div>
+            <select class="mc-input mb-2" [(ngModel)]="filterCategory">
+                <option value="">Filter by Category</option>
                 @for (category of availableCategories; track $index) {
-                <option class="text-white" [value]="category">
+                <option [value]="category">
                     {{ category ?? "[BLANK]" | titlecase }}
                 </option>
                 }
             </select>
 
             <!-- Filter Volume -->
-            <div class="text text-sm w-fit">Volume</div>
+            <div class="text-xs italic">Volume</div>
             <input
                 type="text"
-                class="text mc-input"
+                class="mc-input mb-2"
                 [(ngModel)]="filterVolume"
             />
 
             <!-- Filter Cost -->
-            <div class="text text-sm w-fit">Cost</div>
+            <div class="text-xs italic">Cost</div>
             <input
                 type="number"
                 min="0"
                 step="0.01"
-                class="text mc-input"
+                class="mc-input mb-2"
                 [(ngModel)]="filterCost"
             />
 
             <!-- Filter Merchant -->
-            <div class="text text-sm w-fit">Merchant</div>
-            <select class="mc-input text-white" [(ngModel)]="filterStore">
-                <option class="text-white" value="">Filter by Store</option>
+            <div class="text-xs italic">Merchant</div>
+            <select class="mc-input mb-2" [(ngModel)]="filterStore">
+                <option value="">Filter by Store</option>
                 @for (store of availableStores; track $index) {
-                <option class="text-white" [value]="store">
+                <option [value]="store">
                     {{ store ?? "[BLANK]" }}
                 </option>
                 }
             </select>
 
             <!-- Filter Purchase Date -->
-            <div class="text text-sm w-fit" style="font-size: 10pt">
+            <div class="text-xs italic" style="font-size: 10pt">
                 Purchase Date
             </div>
             <input
                 type="date"
-                class="text mc-input"
+                class="mc-input mb-2"
                 [(ngModel)]="filterPurchaseDate"
             />
 
             <!-- Filter Read -->
-            <div class="text text-sm w-fit">Read</div>
+            <div class="text-xs italic">Read</div>
             <input
                 type="checkbox"
-                class="green-checkbox al_center"
+                class="green-checkbox ml-3 mb-2"
                 [(ngModel)]="filterRead"
                 [checked]="filterRead()"
             />
 
             <!-- Filter Tags -->
-            <div class="mt-1 text-sm w-fit text-white">Tags</div>
+            <div class="mt-1 text-xs italic text-white">Tags</div>
             <app-tag-list
                 [filterTags]="filterTags()"
                 [editMode]="true"

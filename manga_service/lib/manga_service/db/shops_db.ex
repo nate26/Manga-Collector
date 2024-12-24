@@ -51,11 +51,11 @@ defmodule MangaService.ShopsDB do
 
   defp filter_where(params) do
     Enum.reduce(params, dynamic(true), fn
-      # {"name", value}, dynamic ->
-      #   dynamic(
-      #     [_, v],
-      #     ^dynamic and fragment("lower(?) = ?", v.display_name, ^value)
-      #   )
+      {"name", value}, dynamic ->
+        dynamic(
+          [_, v],
+          ^dynamic and fragment("lower(?) like '%' || lower(?) || '%'", v.display_name, ^value)
+        )
 
       {"store", value}, dynamic ->
         dynamic([p], ^dynamic and p.store == ^value)
