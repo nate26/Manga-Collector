@@ -96,9 +96,10 @@
                 />
                 <div class="cell w260">
                     <a
-                        class="text t-wrap"
-                        [href]="collection.volume.series.url"
-                        target="_blank"
+                        class="text t-wrap cursor-pointer"
+                        (click)="openVolumeDetails(collection.volume.isbn)"
+                        (keypress)="openVolumeDetails(collection.volume.isbn)"
+                        tabindex="{$index}"
                         >{{ collection.volume.name }}</a
                     >
                 </div>

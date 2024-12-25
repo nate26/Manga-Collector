@@ -61,7 +61,12 @@
             Search
         </button>
     </div>
-    <div class="w-full overflow-auto" style="max-height: calc(100vh - 112px)">
+    <div
+        #display_items
+        id="display_items"
+        class="w-full overflow-auto"
+        style="max-height: calc(100vh - 112px)"
+    >
         <div class="grid grid-cols-5 w-fit m-auto">
             @for (item of items$ | async; track item.item_id; let i = $index) {
             @defer (on viewport) {
