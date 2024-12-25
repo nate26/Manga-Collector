@@ -1,194 +1,129 @@
 import { Injectable, inject } from '@angular/core';
-import { Apollo, gql } from 'apollo-angular';
-import { Observable, catchError, map, of, tap, throwError, switchMap, EMPTY } from 'rxjs';
-import { IVolume } from '../../interfaces/iVolume.interface';
-import { IGQLDeleteCollectionResult, IGQLGetCollectionVolumes, IGQLModifyCollectionResult } from '../../interfaces/iGQLRequests.interface';
-import { ICollection } from '../../interfaces/iCollection.interface';
+import { catchError, of, throwError, switchMap, EMPTY, pipe, map, debounceTime } from 'rxjs';
 import { UserService } from './user.service';
+import { APIQueryService, Query } from './api-query.service';
+import { HttpClient } from '@angular/common/http';
+import { UserDataPartial } from '../../interfaces/iUserData.type';
+
+export type Volume = {
+    isbn: string;
+    name: string;
+    display_name: string;
+    category: string;
+    volume: string;
+    brand: string;
+    series: {
+        title: string;
+        url: string;
+    };
+    series_id: string;
+    edition: string;
+    edition_id: string;
+    release_date: string;
+    primary_cover_image: string;
+};
+
+type CollectionBase = {
+    collection_id: string;
+    collection: string;
+    cost: number;
+    store: string;
+    purchase_date: string;
+    read: boolean;
+    tags: string[];
+    user_id: string;
+};
+
+export type CollectionInput = CollectionBase & {
+    isbn: string;
+    user_id: string;
+};
+
+export type CollectionOutput = CollectionBase & {
+    volume: Volume;
+};
+
+export type CollectionQuery = Query & {
+    collection?: string;
+    name?: string;
+    category?: string;
+    volume?: string;
+    store?: string;
+    read?: boolean;
+    cost_le?: number;
+    cost_ge?: number;
+    purchase_date_le?: string;
+    purchase_date_ge?: string;
+    tags?: string[];
+};
 
 @Injectable({
     providedIn: 'root'
 })
 export class CollectionDataService {
 
-    private readonly _apollo = inject(Apollo);
+    private readonly _http = inject(HttpClient);
+    private readonly _queryService = inject(APIQueryService);
     private readonly _userService = inject(UserService);
 
-    private readonly COLLECTION_VOLUMES_QUERY = gql`
-        query get_collection_volumes($user_id: ID!) {
-            get_collection_volumes(user_id: $user_id) {
-                records {
-                    isbn
-                    brand
-                    series
-                    series_id
-                    display_name
-                    name
-                    category
-                    volume
-                    url
-                    record_added_date
-                    record_updated_date
-                    release_date
-                    publisher
-                    format
-                    pages
-                    authors
-                    isbn_10
-                    primary_cover_image_url
-                    other_images {
-                        name
-                        url
-                    }
-                    description
-                    series_data {
-                        title
-                        url
-                        description
-                        series_match_confidence
-                        volumes {
-                            isbn
-                            volume
-                            category
-                        }
-                        status
-                        genres
-                        themes {
-                            theme
-                        }
-                    }
-                    retail_price
-                    user_collection_data {
-                        id
-                        state
-                        cost
-                        merchant
-                        purchaseDate
-                        giftToMe
-                        read
-                        tags
-                        isbn
-                        inserted
-                        updated
-                        user_id
-                    }
-                }
-                success
-                errors
-            }
-        }
-    `;
+    private readonly COLLECTION_PATH = 'http://localhost:4000/api/collection';
 
-    readonly collectionVolumes$: Observable<IVolume[]> = this._userService.userIdFromRoute$.pipe(
-        switchMap(({ user_id }) =>
-            this._apollo.watchQuery<IGQLGetCollectionVolumes>({
-                query: this.COLLECTION_VOLUMES_QUERY,
-                variables: { user_id }
-            }).valueChanges
-        ),
-        tap(({ error }) => {
-            if (error) throw error;
-        }),
-        map(response => response.data.get_collection_volumes.records.map(vol => ({
-            ...vol,
-            user_collection_data: vol.user_collection_data.map(collection => ({
-                ...collection,
-                tags: collection.tags ?? []
-            }))
-        }))),
+    private _checkUserId = pipe(
+        map(({ user_id }: UserDataPartial) => {
+            if (!user_id) {
+                throw new Error('User data is missing');
+            }
+            return user_id;
+        })
+    );
+
+    collectionSearch = pipe(
+        map((query: CollectionQuery) => this.COLLECTION_PATH + '?' + this._queryService.parseQuery(query)),
+        debounceTime(300),
+        switchMap(url => this._http.get<CollectionOutput[]>(url)),
         catchError((err: Error) => {
-            console.error('Could not get data because ', err);
+            console.error(
+                'Could not get collection volume data because ',
+                err
+            );
             return EMPTY;
         })
     );
 
-    private readonly MODIFY_COLLECTION = gql`
-        mutation modify_collection($user_id: ID!, $volumes_update: [CollectionDataInput]!) {
-            modify_collection(user_id: $user_id, volumes_update: $volumes_update) {
-                response {
-                    id
-                    state
-                    cost
-                    merchant
-                    purchaseDate
-                    giftToMe
-                    read
-                    tags
-                    isbn
-                    inserted
-                    updated
-                    user_id
-                }
-                success
-                errors
-            }
-        }
-    `;
-
-    private readonly DELETE_COLLECTION = gql`
-        mutation delete_collection_records($user_id: ID!, $ids_delete: [String]!) {
-            delete_collection_records(user_id: $user_id, ids_delete: $ids_delete) {
-                response
-                success
-                errors
-            }
-        }
-    `;
-
-    saveToCollection(records: ICollection[]) {
-        if (records.length === 0) return of([]);
+    createCollection(isbn: string) {
         return of(this._userService.userData()).pipe(
-            switchMap(({ user_id }) => this._apollo.mutate<IGQLModifyCollectionResult>({
-                mutation: this.MODIFY_COLLECTION,
-                variables: { user_id: user_id, volumes_update: records }
-            })),
-            map(result => {
-                if (result.data?.modify_collection.success && result.data?.modify_collection.response) {
-                    return result.data.modify_collection.response;
-                }
-                else {
-                    console.error('could not save data... ', result);
-                    throw new Error(result.errors?.join(', '));
-                }
-            }),
-            catchError((err: Error) => throwError(() => 'Could not save data because ' + err.message))
+            this._checkUserId,
+            map(user_id => this._buildNewRecord(isbn, user_id)),
+            switchMap(collection => this._http.post<CollectionOutput>(this.COLLECTION_PATH, { collection })),
+            catchError((err: Error) => throwError(() => 'Could not create collection because ' + err.message))
         );
     }
 
-    deleteFromCollection(records: string[]) {
-        if (records.length === 0) return of([]);
+    updateCollection(collection_id: string, collectionInput: Partial<CollectionInput>) {
         return of(this._userService.userData()).pipe(
-            switchMap(({ user_id }) => this._apollo.mutate<IGQLDeleteCollectionResult>({
-                mutation: this.DELETE_COLLECTION,
-                variables: { user_id, ids_delete: records }
-            })),
-            map(result => {
-                if (result.data?.delete_collection_records.success && result.data?.delete_collection_records.response) {
-                    return result.data.delete_collection_records.response;
-                }
-                else {
-                    console.error('could not delete data... ', result);
-                    throw new Error(result.errors?.join(', '));
-                }
-            }),
-            catchError((err: Error) => throwError(() => 'Could not delete data because ' + err.message))
+            this._checkUserId,
+            map(user_id => ({ ...collectionInput, user_id } as CollectionInput)),
+            switchMap(collection => this._http.patch<CollectionOutput>(this.COLLECTION_PATH + '/' + collection_id, { collection })),
+            catchError((err: Error) => throwError(() => 'Could not update collection because ' + err.message))
         );
     }
 
-    buildNewRecord(vol: IVolume): ICollection {
-        const user_id = localStorage.getItem('user_id');
-        if (!user_id) throw new Error('User ID not found');
+    deleteCollection(collectionId: string) {
+        return of(this._userService.userData()).pipe(
+            this._checkUserId,
+            switchMap(() => this._http.delete<CollectionOutput>(this.COLLECTION_PATH + '/' + collectionId)),
+            catchError((err: Error) => throwError(() => 'Could not delete collection because ' + err.message))
+        );
+    }
+
+    private _buildNewRecord(isbn: string, user_id: string): Partial<CollectionInput> {
         return {
-            isbn: vol.isbn,
-            state: '',
-            cost: 0,
-            merchant: '',
-            purchaseDate: '',
-            giftToMe: false,
+            isbn,
+            collection: 'Collection',
             read: false,
             tags: [],
             user_id,
-            temp_id: Date.now().toString()
+            collection_id: window.crypto.randomUUID().toString()
         };
     }
 

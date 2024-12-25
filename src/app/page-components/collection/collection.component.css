@@ -25,11 +25,7 @@
     filter: brightness(1.4);
 }
 
-
 /* ignore above for now */
-
-
-
 
 .editor-header {
     display: flex;
@@ -38,19 +34,10 @@
     margin-bottom: 10px;
 }
 
-.volumes {
-    overflow: auto;
-    height: calc(100vh - 100px);
-    /* height: calc(100vh - 233px); */
-    /* 66px */
-    /* width: 100vw; */
-    /* min-width: 1012px; */
-}
-
 .volume-row {
     display: flex;
     margin: 10px auto;
-    background-color: var(--item-background-color);
+    /* background-color: var(--item-background-color); */
     border-radius: 5px;
     height: 60px;
     width: fit-content;

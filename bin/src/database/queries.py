@@ -365,3 +365,52 @@ class Queries:
                 'success': False,
                 'errors': ['could not fetch series data... ' + str(traceback.format_exc())]
             }
+
+    def get_on_sale_volumes_resolver(self, _obj, _info):
+        '''
+        Gets a list of all volumes on sale
+
+        Returns:
+        - dict: The fetched volumes
+        '''
+        try:
+            volume_data, _, shop_data, _, _ = self.__get_data()
+            on_sale_volumes = []
+            for _, shop_vol in enumerate(shop_data.values()):
+                for shop_item in shop_vol['shops']:
+                    if shop_item['is_on_sale'] and \
+                        round(shop_item['store_price']) < round(shop_vol['retail_price']):
+                        volume = volume_data[shop_vol['isbn']]
+                        primary_cover_images = [
+                            image['url'] for image in volume['cover_images']
+                            if image['name'] == 'primary'
+                        ]
+                        on_sale_volumes.append({
+                            'isbn': shop_vol['isbn'],
+                            'display_name': volume['display_name'],
+                            'primary_cover_image_url': primary_cover_images[0] \
+                                if len(primary_cover_images) > 0 else None,
+                            'retail_price': shop_vol['retail_price'],
+                            'store': shop_item['store'],
+                            'store_price': shop_item['store_price'],
+                            'is_on_sale': shop_item['is_on_sale'],
+                            'stock_status': shop_item['stock_status'],
+                            'condition': shop_item['condition'],
+                            'coupon': shop_item['coupon'],
+                            'last_stock_update': shop_item['last_stock_update'],
+                            'sale_price': round(
+                                (1 - shop_item['store_price'] / shop_vol['retail_price']) * 100
+                            ),
+                            'url': shop_item['url']
+                        })
+
+            self.logger.info('Found %s total volumes on sale', len(on_sale_volumes))
+            return {
+                'success': True,
+                'records': sorted(on_sale_volumes, key = lambda x: x['display_name'])
+            }
+        except RequestException:
+            return {
+                'success': False,
+                'errors': ['could not fetch sale volume data... ' + str(traceback.format_exc())]
+            }

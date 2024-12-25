@@ -71,7 +71,7 @@ class ScrapeISBN:
                         if date != today:
                             details['release_date'] = date
                         else:
-                            self.logger.error(
+                            self.logger.warning(
                                 'Release date is today for future releases (incorrect): %s',
                                 details['release_date']
                             )
@@ -102,9 +102,16 @@ class ScrapeISBN:
                 if None not in details.values():
                     break
             if None in details.values():
-                raise NotFoundErr
-        except (AttributeError, NotFoundErr) as err:
+                self.logger.warning('Some ISBN detail attributes returned None: %s',
+                                    json.dumps(details))
+        except AttributeError as err:
             self.logger.error(traceback.format_exc())
+            self.logger.warning(
+                'Could not find all book details from isbn... ending process because %s',
+                err
+            )
+            self.logger.warning('Details found: %s', json.dumps(details))
+        except NotFoundErr as err:
             self.logger.warning(
                 'Could not find all book details from isbn... ending process because %s',
                 err
@@ -112,10 +119,10 @@ class ScrapeISBN:
             self.logger.warning('Details found: %s', json.dumps(details))
         return details
 
-    def get_shop_data(self, soup_isbn_data, isbn_10: str):
+    def get_shop_data(self, soup_isbn_data, isbn_10: str, isbn: str):
         '''
         Gets all the valid shop details from the given isbn soup object.
-        
+
         Parameters:
         - soup_isbn_data: The soup object containing the ISBN data.
         - isbn_10 (str): The ISBN-10 number to search for.
@@ -125,25 +132,35 @@ class ScrapeISBN:
         '''
         shops = []
         try:
-            stores = soup_isbn_data.find('div', {'class': 'standard-offers'}).find_all('tr')
+            offers = soup_isbn_data.find('div', {'class': 'standard-offers'})
+            if offers is None:
+                return []
+
+            stores = offers.find_all('tr')
             for store in stores:
                 try:
                     if store.find('td', {'class': 'logo'}).find('span').attrs['title'].strip() \
                         != 'Amazon Mkt Used':
                         raise AttributeError('could not find "Amazon Mkt Used" in page')
                     self.logger.info('Found record for shop: Amazon')
+                    condition = store.find('td', {'class': 'condition'}).attrs['data-condition']
                     shops.append({
+                        'item_id': isbn + 'Amazon' + condition,
+                        'isbn': isbn,
                         'store': 'Amazon',
-                        'condition': store.find('td', {'class': 'condition'}) \
-                            .attrs['data-condition'],
+                        'condition': condition,
                         'url': 'https://www.amazon.com/dp/' + isbn_10,
-                        'store_price': float(store.find('td', {'class': 'total'})
+                        'price': float(store.find('td', {'class': 'total'})
                             .text.strip().replace('$', '')),
                         'stock_status': None,
-                        'last_stock_update': None,
-                        'record_updated_date': str(datetime.now()),
+                        'last_stock_update': None, #* gets set later
                         'coupon': '',
-                        'is_on_sale': False
+                        'is_on_sale': False,
+                        'exclusive': False,
+                        'promotion': '',
+                        'promotion_percentage': None,
+                        'backorder_details': None,
+                        'dropped_check': False
                     })
                     self.logger.info('Shop details added: %s', shops[-1])
                 except AttributeError:
@@ -177,5 +194,5 @@ class ScrapeISBN:
         isbn_details = self.get_isbn_details(soup_isbn_data)
         return {
             'details': isbn_details,
-            'shops': self.get_shop_data(soup_isbn_data, isbn_details['isbn_10'])
+            'shops': self.get_shop_data(soup_isbn_data, isbn_details['isbn_10'], isbn)
         }

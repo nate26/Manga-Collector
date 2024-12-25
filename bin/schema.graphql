@@ -3,6 +3,28 @@ schema {
     mutation: Mutation
 }
 
+type Profile {
+    picture: String
+    banner: String
+    color: String
+    theme: String
+}
+
+type Authentication {
+    token: String!
+    expiration: String!
+    refresh_token: String!
+}
+
+type User {
+    email: String!
+    username: String!
+    user_id: ID!
+    profile: Profile
+    personal_stores: [String]
+    authentication: Authentication
+}
+
 type SeriesVolume {
     isbn: String!
     volume: String
@@ -132,6 +154,22 @@ type VolumeRecord {
     user_wishlist_data: [WishlistData]
 }
 
+type ShopVolume {
+    isbn: String
+    display_name: String
+    primary_cover_image_url: String
+    retail_price: Float
+    store: String
+    store_price: Float
+    is_on_sale: Boolean
+    stock_status: String
+    sale_price: Float
+    condition: String
+    coupon: String
+    last_stock_update: String
+    url: String
+}
+
 type SingleVolumeRecordResult {
     success: Boolean!
     errors: [String]
@@ -150,18 +188,21 @@ type MultipleSeriesRecordResult {
     records: [SeriesRecord]
 }
 
+type MultipleShopVolumeResult {
+    success: Boolean!
+    errors: [String]
+    records: [ShopVolume]
+}
+
 type Query {
+    login(email: String!, password: String!): User!
+    get_user(username: String!): User!
     get_record(isbn: ID!, user_id: ID): SingleVolumeRecordResult!
     all_records(user_id: ID): MultipleVolumeRecordResult!
     get_collection_series(user_id: ID!): MultipleSeriesRecordResult!
     get_collection_volumes(user_id: ID): MultipleVolumeRecordResult!
+    get_on_sale_volumes: MultipleShopVolumeResult!
 }
-
-
-
-
-
-
 
 
 
@@ -262,6 +303,15 @@ type DeleteAWSResult {
 }
 
 type Mutation {
+    sign_up(
+        email: String!
+        username: String!
+        password: String!
+    ): User!
+    refresh_token(
+        username: String!
+        refresh_token: String!
+    ): Authentication!
     # modify_volumes(
     #     volumes_input: [VolumeRecordInput]!
     # ): SingleVolumeRecordResult!

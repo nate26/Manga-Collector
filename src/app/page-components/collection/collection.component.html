@@ -1,246 +1,203 @@
 <div class="flex space-between mt-20">
     <div>
-        @if (userService.canUserEdit()) {
-            @if (isEditing()) {
-                <button class="btn active-button" (click)="save()" [disabled]="saveBatch().length === 0 && deleteBatch().length === 0">
-                    Save
-                </button>
-                <button class="btn active-button" (click)="stopEditing()">
-                    Cancel
-                </button>
-                <app-search-volumes (selectVolume)="addVolume($event)" />
-            }
-            @else {
-                <button class="btn inactive-button" (click)="editSwitch.set(true)">Edit</button>
-            }
+        @if (canUserEdit()) {
+        <app-search-volumes (selectVolume)="createCollection($event)" />
         }
-        <div class="grid grid-cols-[min-content_auto] gap-3 h-fit w-72 m-8">
-
+        <div class="h-fit w-36 m-8 text-white text-sm text-nowrap">
             <!-- Filter Name -->
-            <div class="text text-sm w-fit">Name</div>
-            <input type="text" class="text mc-input" (change)="filterName.set(getEventVal($event))">
+            <div class="text-xs italic">Name</div>
+            <input type="text" class="mc-input mb-2" [(ngModel)]="filterName" />
 
             <!-- Filter Category -->
-            <div class="text text-sm w-fit">Category</div>
-            <select class="mc-input text-white" (change)="filterCategory.set(getEventVal($event))">
-                <option class="text-white" value="">Filter by Category</option>
-                @for (category of availableCategories(); track $index) {
-                    <option class="text-white" [value]="category">{{ category ?? '[BLANK]' | titlecase }}</option>
+            <div class="text-xs italic">Category</div>
+            <select class="mc-input mb-2" [(ngModel)]="filterCategory">
+                <option value="">Filter by Category</option>
+                @for (category of availableCategories; track $index) {
+                <option [value]="category">
+                    {{ category ?? "[BLANK]" | titlecase }}
+                </option>
                 }
             </select>
 
             <!-- Filter Volume -->
-            <div class="text text-sm w-fit">Volume</div>
-            <input type="text" class="text mc-input" (change)="filterVolume.set(getEventVal($event))">
+            <div class="text-xs italic">Volume</div>
+            <input
+                type="text"
+                class="mc-input mb-2"
+                [(ngModel)]="filterVolume"
+            />
 
             <!-- Filter Cost -->
-            <div class="text text-sm w-fit">Cost</div>
-            <input type="number" min="0" step="0.01" class="text mc-input" (change)="filterCost.set(getEventVal($event))">
+            <div class="text-xs italic">Cost</div>
+            <input
+                type="number"
+                min="0"
+                step="0.01"
+                class="mc-input mb-2"
+                [(ngModel)]="filterCost"
+            />
 
             <!-- Filter Merchant -->
-            <div class="text text-sm w-fit">Merchant</div>
-            <select class="mc-input text-white" (change)="filterMerchant.set(getEventVal($event))">
-                <option class="text-white" value="">Filter by Merchant</option>
-                @for (merchant of availableMerchants(); track $index) {
-                    <option class="text-white" [value]="merchant">{{ merchant ?? '[BLANK]' | titlecase }}</option>
+            <div class="text-xs italic">Merchant</div>
+            <select class="mc-input mb-2" [(ngModel)]="filterStore">
+                <option value="">Filter by Store</option>
+                @for (store of availableStores; track $index) {
+                <option [value]="store">
+                    {{ store ?? "[BLANK]" }}
+                </option>
                 }
             </select>
 
             <!-- Filter Purchase Date -->
-            <div class="text text-sm w-fit" style="font-size: 10pt;">Purchase Date</div>
-            <input type="date" class="text mc-input" (change)="filterPurchaseDate.set(getEventVal($event))">
+            <div class="text-xs italic" style="font-size: 10pt">
+                Purchase Date
+            </div>
+            <input
+                type="date"
+                class="mc-input mb-2"
+                [(ngModel)]="filterPurchaseDate"
+            />
 
             <!-- Filter Read -->
-            <div class="text text-sm w-fit">Read</div>
-            <input type="checkbox" class="green-checkbox al_center" [checked]="filterRead() === 'YES'"
-                (change)="filterRead.set(getEventVal($event))">
-
-            <!-- Filter Gift -->
-            <div class="text text-sm w-fit">Gift</div>
-            <input type="checkbox" class="blue-checkbox al_center" [checked]="filterGiftToMe() === 'YES'"
-                (change)="filterGiftToMe.set(getEventVal($event))">
+            <div class="text-xs italic">Read</div>
+            <input
+                type="checkbox"
+                class="green-checkbox ml-3 mb-2"
+                [(ngModel)]="filterRead"
+                [checked]="filterRead()"
+            />
 
             <!-- Filter Tags -->
-            <div class="mt-1 text-sm w-fit text-white">Tags</div>
-            <app-tag-list [filterTags]="filterTags()" [editMode]="true" (updateTags)="filterTags.set($event)"></app-tag-list>
+            <div class="mt-1 text-xs italic text-white">Tags</div>
+            <app-tag-list
+                [filterTags]="filterTags()"
+                [editMode]="true"
+                (updateTags)="filterTags.set($event)"
+            ></app-tag-list>
         </div>
     </div>
 
-    <div class="display-area">
-        <div class="volumes">
-            @if (filteredVolumes(); as volumes) {
-                @for (volume of volumes; track $index) {
-                    @defer (on viewport) {
-                        <div class="volume-row" [ngClass]="volumeRowClass(volume)">
-                            <img [src]="volume.primary_cover_image_url" appLazyImage alt="{{'cover image for' + volume.name}}" class="cover-image"
-                                (click)="showVolumeDetails(volume)" (keypress)="selectedVol.set(volume)" tabindex={$index}>
-                            <div class="cell w260">
-                                <a class="text t-wrap" [href]="volume.series_data.url" target="_blank">{{volume.name}}</a>
-                            </div>
-                            <div class="cell w60">
-                                <div class="text al_center">{{volume.category | titlecase}}</div>
-                            </div>
-                            <div class="cell w50">
-                                <div class="text al_center">{{volume.volume}}</div>
-                            </div>
-                            <div class="cell w60">
-                                @if (isEditing()) {
-                                    <input type="number" min="0" step="0.01" class="text"
-                                        [value]="volume.user_collection_data[0].cost" (change)="doEdit($index, 'cost', $event)">
-                                }
-                                @else {
-                                    <div class="text al_right">
-                                        {{volume.user_collection_data[0].cost | currency}}
-                                    </div>
-                                }
-                            </div>
-                            <div class="cell w75">
-                                @if (isEditing()) {
-                                    <input type="text" class="text"  [value]="volume.user_collection_data[0].merchant"
-                                        (change)="doEdit($index, 'merchant', $event)">
-                                }
-                                @else {
-                                    <div class="text al_center">
-                                        {{volume.user_collection_data[0].merchant}}
-                                    </div>
-                                }
-                            </div>
-                            <div class="cell w90">
-                                @if (isEditing()) {
-                                    <input type="text" class="text"  [value]="volume.user_collection_data[0].purchaseDate"
-                                        (change)="doEdit($index, 'purchaseDate', $event)">
-                                }
-                                @else {
-                                    <div class="text al_center">
-                                        {{volume.user_collection_data[0].purchaseDate}}
-                                    </div>
-                                }
-                            </div>
-                            <div class="cell w50">
-                                <input type="checkbox" class="green-checkbox al_center" [checked]="volume.user_collection_data[0].read"
-                                    [disabled]="!isEditing()" (change)="doEdit($index, 'read', $event)">
-                            </div>
-                            <div class="cell w50">
-                                <input type="checkbox" class="blue-checkbox al_center" [checked]="volume.user_collection_data[0].giftToMe"
-                                    [disabled]="!isEditing()" (change)="doEdit($index, 'giftToMe', $event)">
-                            </div>
-                            <div class="cell w150 items-center">
-                                <app-tag-list
-                                    [filterTags]="volume.user_collection_data[0].tags"
-                                    [editMode]="isEditing()"
-                                    (updateTags)="editTags($index, $event)">
-                                </app-tag-list>
-                            </div>
-                            @if (isEditing()) {
-                                <div class="cell w50">
-                                    <button class="btn-sm inactive-button" (click)="markForDelete(volume.user_collection_data[0])">
-                                        X
-                                    </button>
-                                </div>
-                            }
-                        </div>
-
-                        @defer (on viewport) {
-                            <div [ngClass]="volumeIsSelected(volume) ? 'grow-container' : 'shrink-container'">
-                                @if (volumeIsSelected(volume)) {
-                                    <div class="volume-details" style="overflow: hidden">
-                                        <div style="height: inherit; font-size: 88%;">
-                                            <img [src]="volume.primary_cover_image_url" appLazyImage alt="{{'cover image for' + volume.name}}" class="cover-image">
-                                            <div class="text">
-                                                <span class="subject">Added to Your Collection:</span>
-                                                {{volume.user_collection_data[0].inserted | date}}
-                                            </div>
-                                            <div class="text">
-                                                <span class="subject">Updated in Your Collection:</span>
-                                                {{volume.user_collection_data[0].updated | date}}
-                                            </div>
-                                            <div class="text">
-                                                <span class="subject">Added to Library:</span>
-                                                {{volume.record_added_date | date}}
-                                            </div>
-                                            <div class="text">
-                                                <span class="subject">Updated in Library:</span>
-                                                {{volume.record_updated_date | date}}
-                                            </div>
-                                        </div>
-                                        <div class="volume-details-area">
-                                            <a class="text title t-wrap" [href]="volume.url" target="_blank">{{volume.display_name}}</a>
-                                            <div class="text t-wrap">
-                                                <span class="subject">Series: </span>
-                                                @if (volume.series) { {{volume.series}} }
-                                                @else { <span class="text-g">Unknown</span> }
-                                            </div>
-                                            <hr>
-                                            <div class="text t-wrap" style="display: block">
-                                                <span class="subject">Description: </span>
-                                                @if (volume.description) { {{volume.description}} }
-                                                @else { <span class="text-g">None</span> }
-                                            </div>
-                                            <hr>
-                                            <div class="flex">
-                                                <div class="detail-section">
-                                                    <div class="text">
-                                                        <span class="subject">Author(s): </span>
-                                                        @if (volume.authors) { {{volume.authors}} }
-                                                        @else { <span class="text-g">Unknown</span> }
-                                                    </div>
-                                                    <div class="text">
-                                                        <span class="subject">Release Date: </span>
-                                                        @if (volume.release_date) { {{volume.release_date | date}} }
-                                                        @else { <span class="text-g">Unknown</span> }
-                                                    </div>
-                                                    <div class="text">
-                                                        <span class="subject">Cost: </span>
-                                                        {{volume.user_collection_data[0].cost | currency}}
-                                                        <span class="text retail-price text-g">{{volume.retail_price | currency}}</span>
-                                                    </div>
-                                                    <div class="text">
-                                                        <span class="subject">Publisher: </span>
-                                                        @if (volume.publisher) { {{volume.publisher}} }
-                                                        @else { <span class="text-g">Unknown</span> }
-                                                    </div>
-                                                </div>
-                                                <div class="detail-section">
-                                                    <div class="text">
-                                                        <span class="subject">Format: </span>
-                                                        @if (volume.format) { {{volume.format}} }
-                                                        @else { <span class="text-g">Unknown</span> }
-                                                    </div>
-                                                    <div class="text">
-                                                        <span class="subject">Pages: </span>
-                                                        @if (volume.pages) { {{volume.pages}} }
-                                                        @else { <span class="text-g">Unknown</span> }
-                                                    </div>
-                                                    <div class="text">
-                                                        <span class="subject">ISBN (13): </span>
-                                                        {{volume.isbn}}
-                                                    </div>
-                                                    <div class="text">
-                                                        <span class="subject">ISBN (10): </span>
-                                                        @if (volume.isbn_10) { {{volume.isbn_10}} }
-                                                        @else { <span class="text-g">Unknown</span> }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            @if (volume.brand) {
-                                                <div class="text t-wrap">Checkout more from <span style="text-decoration: underline;">{{volume.brand}}</span></div>
-                                            }
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
-                        @placeholder {
-                            <div></div>
-                        }
+    <div class="flex justify-center w-full m-4">
+        <div class="w-full overflow-auto" style="height: calc(100vh - 112px)">
+            @if (collections$ | async; as collections) { @for (collection of
+            collections; track $index) { @defer (on viewport) {
+            <!-- TODO remove hardcoded color -->
+            <div
+                class="volume-row bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
+            >
+                <img
+                    [src]="collection.volume.primary_cover_image"
+                    appLazyImage
+                    alt="{{ 'cover image for' + collection.volume.name }}"
+                    class="cover-image cursor-pointer"
+                    (click)="openVolumeDetails(collection.volume.isbn)"
+                    (keypress)="openVolumeDetails(collection.volume.isbn)"
+                    tabindex="{$index}"
+                />
+                <div class="cell w260">
+                    <a
+                        class="text t-wrap cursor-pointer"
+                        (click)="openVolumeDetails(collection.volume.isbn)"
+                        (keypress)="openVolumeDetails(collection.volume.isbn)"
+                        tabindex="{$index}"
+                        >{{ collection.volume.name }}</a
+                    >
+                </div>
+                <div class="cell w60">
+                    <div class="text al_center">
+                        {{ collection.volume.category | titlecase }}
+                    </div>
+                </div>
+                <div class="cell w50">
+                    <div class="text al_center">
+                        {{ collection.volume.volume }}
+                    </div>
+                </div>
+                <div class="cell w60">
+                    @if (canUserEdit()) {
+                    <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        class="text"
+                        [value]="collection.cost"
+                        (change)="updateValue(collection, 'cost', $event)"
+                    />
+                    } @else {
+                    <div class="text al_right">
+                        {{ collection.cost | currency }}
+                    </div>
                     }
-                    @placeholder {
-                        <div style="display: flex; margin: 10px; background-color: rgb(12, 17, 24); border-radius: 5px; height: 30px;"></div>
+                </div>
+                <div class="cell w75">
+                    @if (canUserEdit()) {
+                    <input
+                        type="text"
+                        class="text"
+                        [value]="collection.store"
+                        (change)="updateValue(collection, 'store', $event)"
+                    />
+                    } @else {
+                    <div class="text al_center">
+                        {{ collection.store }}
+                    </div>
                     }
+                </div>
+                <div class="cell w90">
+                    @if (canUserEdit()) {
+                    <input
+                        type="text"
+                        class="text"
+                        [value]="collection.purchase_date"
+                        (change)="
+                            updateValue(collection, 'purchase_date', $event)
+                        "
+                    />
+                    } @else {
+                    <div class="text al_center">
+                        {{ collection.purchase_date }}
+                    </div>
+                    }
+                </div>
+                <div class="cell w50">
+                    <input
+                        type="checkbox"
+                        class="green-checkbox al_center"
+                        [checked]="collection.read"
+                        [disabled]="!canUserEdit()"
+                        (change)="updateValue(collection, 'read', $event)"
+                    />
+                </div>
+                <div class="cell w150 items-center">
+                    <app-tag-list
+                        [filterTags]="collection.tags"
+                        [editMode]="canUserEdit()"
+                        (updateTags)="updateTags(collection, $event)"
+                    >
+                    </app-tag-list>
+                </div>
+                @if (canUserEdit()) {
+                <div class="cell w50">
+                    <button
+                        class="btn-sm inactive-button"
+                        (click)="deleteCollection(collection)"
+                    >
+                        X
+                    </button>
+                </div>
                 }
-            }
+            </div>
+            } @placeholder {
+            <div
+                style="
+                    display: flex;
+                    margin: 10px;
+                    background-color: rgb(12, 17, 24);
+                    border-radius: 5px;
+                    height: 30px;
+                "
+            ></div>
+            } } }
         </div>
     </div>
-
 </div>
