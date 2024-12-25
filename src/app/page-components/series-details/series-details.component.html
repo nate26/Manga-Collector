@@ -1,0 +1,109 @@
+@if (series$ | async; as series) {
+<div
+    class="mt-24 m-4 flex justify-center overflow-auto text-white"
+    style="height: calc(100vh - 6rem - 1rem)"
+>
+    @defer (on viewport) {
+    <img
+        [src]="series.cover_image"
+        appLazyImage
+        alt="{{ 'cover image for' + series.title }}"
+        class="cover-image max-h-64"
+    />
+    } @placeholder {
+    <div class="cover-image"></div>
+    }
+    <div class="m-1 ml-4">
+        <div class="align-baseline">
+            <a
+                class="mb-4 text-2xl underline tw-3"
+                [href]="series.url"
+                target="_blank"
+                >{{ series.title }}</a
+            >
+        </div>
+        <div class="flex">
+            <div>
+                <div>
+                    @for (label of headerLabels; track $index) {
+
+                    <div class="text-gray-400 italic text-xs">
+                        {{ label.header }}:
+                        <span class="text-white text-base not-italic">{{
+                            series[label.field]
+                        }}</span>
+                    </div>
+                    }
+                </div>
+                <hr class="border-gray-300" />
+                <div class="text-wrap">
+                    <span class="mr-1 text-xs italic text-gray-400"
+                        >Description:
+                    </span>
+                    {{ series.description }}
+                </div>
+                <div class="flex flex-wrap">
+                    @for (volume of series.volumes; track $index) {
+                    <div
+                        class="flex gap-4 m-2 pr-4 rounded-md h-16 w-fit shadow-xl cursor-pointer bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
+                        (click)="openVolumeDetails(volume.isbn)"
+                        (keypress)="openVolumeDetails(volume.isbn)"
+                        tabindex="{$index}"
+                    >
+                        <img
+                            [src]="volume.primary_cover_image"
+                            appLazyImage
+                            alt="{{ 'cover image for' + volume.name }}"
+                            class="cover-image"
+                        />
+                        <div class="max-w-64 w-fit">
+                            <a class="leading-[4rem] h-full tw-2">{{
+                                volume.name
+                            }}</a>
+                        </div>
+                        <div class="w-fit m-auto text-center">
+                            {{ volume.category | titlecase }}
+                        </div>
+                        <div class="w-fit m-auto text-center">
+                            Volume {{ volume.volume }}
+                        </div>
+                        <div class="w-fit m-auto text-center">
+                            {{ volume.format }}
+                        </div>
+                        <div class="w-fit m-auto text-center">
+                            {{ volume.release_date | date }}
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            <div class="ml-4">
+                <div class="w-40">
+                    Genres:
+                    <div class="flex flex-col gap-1 mt-1">
+                        @for (genre of series.genres; track $index) {
+                        <div
+                            class="ml-2 text-sm tw-2 text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
+                        >
+                            {{ genre }}
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="w-40 mt-4">
+                    Themes:
+                    <div class="flex flex-col gap-1 mt-1">
+                        @for (theme of series.themes; track $index) {
+                        <div
+                            class="ml-2 text-sm tw-2 text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
+                        >
+                            {{ theme.theme }}
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

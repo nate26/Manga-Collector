@@ -234,13 +234,14 @@ defmodule MangaService.ShopsDB do
     Shop.changeset(shop, attrs)
   end
 
-  def distinct(key) do
-    query =
-      from(v in Shop,
-        select: v.promotion,
-        distinct: true
-      )
+  # TODO
+  #   def distinct(key) do
+  #     query =
+  #       from(v in Shop,
+  #         select: v.promotion,
+  #         distinct: true
+  #       )
 
-    Repo.all(query)
-  end
+  #     Repo.all(query)
+  #   end
 end

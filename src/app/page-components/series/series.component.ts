@@ -1,60 +1,74 @@
-import { Component, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { SeriesDataService } from '../../services/data/series-data.service';
-import { IVolume } from '../../interfaces/iVolume.interface';
-import { NgClass, NgStyle } from '@angular/common';
-import { ISeriesRecord } from '../../interfaces/iSeries.interface';
+import { Component, computed, ElementRef, inject, model, signal, ViewChild } from '@angular/core';
+import { SeriesDataService, SeriesVolume } from '../../services/data/series-data.service';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { LazyImageDirective } from '../../common/directives/lazy-image/lazy-image.directive';
-import { VolumeCoverTextComponent } from '../../common/volume-cover-text/volume-cover-text.component';
+import { VolumeDetailsComponent } from '../../common/components/volume-details/volume-details.component';
+import { MatDialog } from '@angular/material/dialog';
+import { tap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-series',
     standalone: true,
-    imports: [NgStyle, NgClass, LazyImageDirective, VolumeCoverTextComponent],
+    imports: [NgStyle, AsyncPipe, LazyImageDirective],
     templateUrl: './series.component.html',
     styleUrl: './series.component.css'
 })
 export class SeriesComponent {
 
+    private readonly _route = inject(Router);
+    private readonly _activatedRoute = inject(ActivatedRoute);
+    private readonly _dialog = inject(MatDialog);
     private readonly _seriesDataService = inject(SeriesDataService);
 
-    protected readonly series = toSignal(this._seriesDataService.collectionSeries$, { initialValue: [] });
+    @ViewChild('display_items') displayItems!: ElementRef;
 
-    protected readonly selectedSeries = signal<ISeriesRecord | null>(null);
-    protected readonly seriesIsSelected = (series: ISeriesRecord) => {
-        const selectedId = this.selectedSeries()?.series_id ?? this.selectedSeries()?.url;
-        const seriesId = this.selectedSeries()?.series_id ? series.series_id : series.url; // fix url to series_id
-        return selectedId === seriesId && selectedId !== undefined;
-    };
+    orderBy = model('name');
+    offset = signal(0);
+    disablePrevious = computed(() => this.offset() === 0);
 
-    protected getVolumeStatusColor(volume: IVolume) {
-        if (volume.user_collection_data.length > 0) {
-            return { 'background-color': '#A6F7CD' }; //CDA6F7
-        }
-        if (!volume.release_date) {
-            return { 'background-color': '#C4C4C4' };
-        }
-        const today = new Date();
-        const releaseDate = new Date(volume.release_date);
-        if (releaseDate.getTime() > today.getTime()) {
-            return { 'background-color': '#F7CDA6' };
-        }
-        else {
+    filterTitle = model<string>();
+
+    series$ = this._activatedRoute.queryParams.pipe(
+        tap(query => {
+            this.orderBy.set(query['order_by'] || 'name');
+            this.offset.set(+(query['offset'] || 0));
+            this.filterTitle.set(query['title'] || '');
+        }),
+        this._seriesDataService.seriesSearch,
+        tap(() => this.displayItems.nativeElement.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'instant'
+        } as ScrollToOptions))
+    );
+
+    protected getVolumeStatusColor(volume: SeriesVolume) {
+        // if (volume.user_collection_data.length > 0) {
+        //     return { 'background-color': '#A6F7CD' }; //CDA6F7
+        // }
+        if (volume.stock_status === 'In Stock') {
             return { 'background-color': '#EBEBEB' };
         }
+        if (volume.stock_status === 'Pre-Order') {
+            return { 'background-color': '#F7CDA6' };
+        }
+        if (volume.stock_status === 'Backorder') {
+            return { 'background-color': '#8b5cf6' };
+        }
+        if (volume.stock_status === 'Out of Print') {
+            return { 'background-color': '#929292' };
+        }
+        return { 'background-color': '#C4C4C4' };
+
     }
 
-    protected navTo(url: string) {
-        window.open(url, '_blank');
+    openSeriesDetails(series_id: string) {
+        this._route.navigate(['series', series_id]);
     }
 
-    protected showVolumeDetails(series: ISeriesRecord) {
-        if (this.seriesIsSelected(series)) {
-            this.selectedSeries.set(null);
-        }
-        else {
-            this.selectedSeries.set(series);
-        }
+    openVolumeDetails(isbn: string) {
+        this._dialog.open(VolumeDetailsComponent, { data: isbn });
     }
 
 }

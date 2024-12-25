@@ -57,7 +57,9 @@ body {
 }
 
 .t-wrap,
-.tw {
+.tw,
+.tw-2,
+.tw-3 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;

@@ -17,8 +17,36 @@ defmodule MangaService.SeriesDB do
       [%Series{}, ...]
 
   """
-  def list_series do
-    Repo.all(Series)
+  def list_series(params) do
+    Series
+    |> order_by(^filter_order_by(params["order_by"]))
+    |> where(^filter_where(params))
+    |> limit(^(params["limit"] || 100))
+    |> offset(^(params["offset"] || 0))
+    |> Repo.all()
+    |> Repo.preload(:volumes)
+  end
+
+  defp filter_order_by("name_desc"),
+    do: [desc: dynamic([_, v], v.display_name)]
+
+  defp filter_order_by("name"),
+    do: [asc: dynamic([_, v], v.display_name)]
+
+  defp filter_order_by(_),
+    do: []
+
+  defp filter_where(params) do
+    Enum.reduce(params, dynamic(true), fn
+      {"title", value}, dynamic ->
+        dynamic(
+          [s],
+          ^dynamic and fragment("lower(?) like '%' || lower(?) || '%'", s.title, ^value)
+        )
+
+      {_, _}, dynamic ->
+        dynamic
+    end)
   end
 
   @doc """
@@ -35,7 +63,7 @@ defmodule MangaService.SeriesDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_series(id), do: Repo.get(Series, id)
+  def get_series(id), do: Repo.get(Series, id) |> Repo.preload(:volumes)
 
   @doc """
   Gets a single series by series_id.
@@ -51,7 +79,8 @@ defmodule MangaService.SeriesDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_series_by_id(series_id), do: Repo.get_by(Series, %{series_id: series_id})
+  def get_series_by_id(series_id),
+    do: Repo.get_by(Series, %{series_id: series_id}) |> Repo.preload(:volumes)
 
   @doc """
   Creates a series.

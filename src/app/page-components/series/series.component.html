@@ -1,17 +1,17 @@
 <div class="mt-20">
     <div class="display-area" style="height: calc(100vh - 80px)">
-        <div class="series overflow-auto">
-            @for (series of series(); track $index) {
+        <div #display_items id="display_items" class="series overflow-auto">
+            @for (series of series$ | async; track $index) {
             <div class="series-row">
                 @defer (on viewport) {
                 <img
                     [src]="series.cover_image"
                     appLazyImage
                     alt="{{ 'cover image for' + series.title }}"
-                    class="cover-image cursor-pointer"
-                    (click)="showVolumeDetails(series)"
-                    (keypress)="selectedSeries.set(series)"
+                    (click)="openSeriesDetails(series.series_id)"
+                    (keypress)="openSeriesDetails(series.series_id)"
                     tabindex="{$index}"
+                    class="cover-image cursor-pointer"
                 />
                 } @placeholder {
                 <div class="cover-image"></div>
@@ -36,8 +36,8 @@
                     <div
                         class="volume-mini-box"
                         [ngStyle]="getVolumeStatusColor(volume)"
-                        (click)="navTo(volume.url)"
-                        (keypress)="navTo(volume.url)"
+                        (click)="openVolumeDetails(volume.isbn)"
+                        (keypress)="openVolumeDetails(volume.isbn)"
                         tabindex="{$index}"
                     >
                         <span>{{ volume.volume }}</span>
@@ -46,32 +46,7 @@
                 </div>
             </div>
 
-            @defer (on viewport) { @if (seriesIsSelected(series)) {
-            <div
-                [ngClass]="
-                    seriesIsSelected(series)
-                        ? 'series-volumes grow-container'
-                        : 'shrink-container'
-                "
-            >
-                @for (volume of series.volumes; track $index) { @defer (on
-                viewport) {
-                <div class="vol-cover">
-                    <img
-                        [src]="volume.primary_cover_image_url"
-                        appLazyImage
-                        alt="{{ 'cover image for' + series.title }}"
-                        class="cover-image vol-cover-image cursor-pointer"
-                    />
-                    <app-volume-cover-text [title]="volume.display_name" />
-                </div>
-                } @placeholder {
-                <div class="vol-cover"></div>
-                } }
-            </div>
-            } } @placeholder {
-            <div></div>
-            } } @empty {
+            } @empty {
             <p class="text">Loading...</p>
             }
         </div>
