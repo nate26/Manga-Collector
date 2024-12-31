@@ -1,0 +1,20 @@
+<div class="text-xs italic">{{ title() }}</div>
+<mat-slider
+    [min]="min()"
+    [max]="max()"
+    [step]="step()"
+    showTickMarks
+    discrete
+    [disabled]="disabled()"
+>
+    <input
+        [value]="minValue() ?? min()"
+        (change)="updateMin($event)"
+        matSliderStartThumb
+    />
+    <input
+        [value]="maxValue() ?? max()"
+        (change)="updateMax($event)"
+        matSliderEndThumb
+    />
+</mat-slider>

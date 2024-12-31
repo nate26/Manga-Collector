@@ -1,0 +1,17 @@
+<div class="text-xs italic">{{ title() }}</div>
+<form class="example-form">
+    <input
+        type="text"
+        [formControl]="control"
+        [matAutocomplete]="auto"
+        class="mc-input mb-2"
+    />
+    <mat-autocomplete #auto="matAutocomplete">
+        <mat-option value="">All</mat-option>
+        @for (item of filteredList | async; track item) {
+            <mat-option [value]="item">
+                <span>{{ item }}</span>
+            </mat-option>
+        }
+    </mat-autocomplete>
+</form>

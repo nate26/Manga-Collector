@@ -24,7 +24,8 @@ defmodule MangaService.SeriesDB do
     |> limit(^(params["limit"] || 100))
     |> offset(^(params["offset"] || 0))
     |> Repo.all()
-    |> Repo.preload(:volumes)
+
+    # |> Repo.preload(:volumes)
   end
 
   defp filter_order_by("title_desc"),

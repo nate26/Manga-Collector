@@ -5,58 +5,54 @@
         <input type="text" class="mc-input" [(ngModel)]="filterTitle" />
 
         <!-- Filter Category -->
-        <div class="text-xs italic">Category</div>
-        <select class="mc-input mb-2" [(ngModel)]="filterCategory">
-            <option value="">All</option>
-            @for (option of (options | async)!.category; track option) {
-                <option [value]="option">{{ option }}</option>
-            }
-        </select>
+        <app-autofill-select-filter
+            title="Category"
+            [list]="(options$('category') | async) ?? []"
+            [(ngModel)]="filterCategory"
+        ></app-autofill-select-filter>
 
         <!-- Filter Status -->
-        <div class="text-xs italic">Release Status</div>
-        <select class="mc-input mb-2" [(ngModel)]="filterStatus">
-            <option value="">All</option>
-            @for (option of (options | async)!.status; track option) {
-                <option [value]="option">{{ option }}</option>
-            }
-        </select>
+        <app-autofill-select-filter
+            title="Release Status"
+            [list]="(options$('status') | async) ?? []"
+            [(ngModel)]="filterStatus"
+        ></app-autofill-select-filter>
 
         <!-- Filter Genres -->
-        <div class="text-xs italic">Genre</div>
-        <select class="mc-input mb-2" [(ngModel)]="filterGenre">
-            <option value="">All</option>
-            @for (option of (options | async)!.genres; track option) {
-                <option [value]="option">{{ option }}</option>
-            }
-        </select>
+        <app-autofill-select-filter
+            title="Genre"
+            [list]="(options$('genres') | async) ?? []"
+            [(ngModel)]="filterGenre"
+        ></app-autofill-select-filter>
 
         <!-- Filter Themes -->
-        <div class="text-xs italic">Theme</div>
-        <select class="mc-input mb-2" [(ngModel)]="filterTheme">
-            <option value="">All</option>
-            @for (option of (options | async)!.themes; track option) {
-                <option [value]="option">{{ option }}</option>
-            }
-        </select>
+        <app-autofill-select-filter
+            title="Theme"
+            [list]="(options$('themes') | async) ?? []"
+            [(ngModel)]="filterTheme"
+        ></app-autofill-select-filter>
 
         <!-- Filter Authors -->
-        <div class="text-xs italic">Author</div>
-        <select class="mc-input mb-2" [(ngModel)]="filterAuthor">
-            <option value="">All</option>
-            @for (option of (options | async)!.authors; track option) {
-                <option [value]="option">{{ option }}</option>
-            }
-        </select>
+        <app-autofill-select-filter
+            title="Author"
+            [list]="(options$('authors') | async) ?? []"
+            [(ngModel)]="filterAuthor"
+        ></app-autofill-select-filter>
 
         <!-- Filter Publishers -->
-        <div class="text-xs italic">Publisher</div>
-        <select class="mc-input mb-2" [(ngModel)]="filterPublisher">
-            <option value="">All</option>
-            @for (option of (options | async)!.publishers; track option) {
-                <option [value]="option">{{ option }}</option>
-            }
-        </select>
+        <app-autofill-select-filter
+            title="Publisher"
+            [list]="(options$('publishers') | async) ?? []"
+            [(ngModel)]="filterPublisher"
+        ></app-autofill-select-filter>
+
+        <!-- Filter Rating -->
+        <app-number-range-filter
+            title="Rating"
+            [max]="10"
+            [step]="0.01"
+            [(ngModel)]="filterRating"
+        ></app-number-range-filter>
 
         <!-- Search -->
         <button
@@ -98,24 +94,6 @@
                     </div>
                     <div class="text al_center c c-text">
                         {{ series.status }}
-                    </div>
-                    <input
-                        type="checkbox"
-                        class="blue-checkbox al_center c"
-                        [checked]="series.series_id"
-                    />
-                    <div class="flex flex-wrap c c-f">
-                        @for (volume of series.volumes; track $index) {
-                            <div
-                                class="volume-mini-box"
-                                [ngStyle]="getVolumeStatusColor(volume)"
-                                (click)="openVolumeDetails(volume.isbn)"
-                                (keypress)="openVolumeDetails(volume.isbn)"
-                                tabindex="{$index}"
-                            >
-                                <span>{{ volume.volume }}</span>
-                            </div>
-                        }
                     </div>
                 </div>
             } @empty {

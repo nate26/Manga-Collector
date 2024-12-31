@@ -9,22 +9,35 @@ import {
 } from '@angular/core';
 import {
     SeriesDataService,
-    SeriesQuery,
-    SeriesVolume
+    SeriesQuery
 } from '../../services/data/series-data.service';
-import { AsyncPipe, NgStyle } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { LazyImageDirective } from '../../common/directives/lazy-image/lazy-image.directive';
 import { VolumeDetailsComponent } from '../../common/components/volume-details/volume-details.component';
 import { MatDialog } from '@angular/material/dialog';
-import { tap } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { APIQueryService } from '../../services/data/api-query.service';
+import {
+    APIQueryService,
+    BrowseOptions
+} from '../../services/data/api-query.service';
+import { AutofillSelectFilterComponent } from '../../common/components/filters/autofill-select-filter/autofill-select-filter.component';
+import {
+    NumberRange,
+    NumberRangeFilterComponent
+} from '../../common/components/filters/number-range-filter/number-range-filter.component';
 
 @Component({
     selector: 'app-series',
     standalone: true,
-    imports: [NgStyle, FormsModule, AsyncPipe, LazyImageDirective],
+    imports: [
+        FormsModule,
+        AsyncPipe,
+        LazyImageDirective,
+        AutofillSelectFilterComponent,
+        NumberRangeFilterComponent
+    ],
     templateUrl: './series.component.html',
     styleUrl: './series.component.css'
 })
@@ -37,8 +50,6 @@ export class SeriesComponent {
 
     @ViewChild('display_items') displayItems!: ElementRef;
 
-    options = this._apiQueryService.options$;
-
     orderBy = model('title');
     offset = signal(0);
     disablePrevious = computed(() => this.offset() === 0);
@@ -50,6 +61,8 @@ export class SeriesComponent {
     filterTheme = model<string>();
     filterAuthor = model<string>();
     filterPublisher = model<string>();
+    filterRating = model<NumberRange>();
+    filterRank = model<NumberRange>();
 
     filter = computed(
         () =>
@@ -63,7 +76,11 @@ export class SeriesComponent {
                 genre: this.filterGenre(),
                 theme: this.filterTheme(),
                 author: this.filterAuthor(),
-                publisher: this.filterPublisher()
+                publisher: this.filterPublisher(),
+                rating_ge: this.filterRating()?.min,
+                rating_le: this.filterRating()?.max,
+                rank_ge: this.filterRank()?.min,
+                rank_le: this.filterRank()?.max
             }) as SeriesQuery
     );
 
@@ -78,6 +95,14 @@ export class SeriesComponent {
             this.filterTheme.set(query['theme'] || '');
             this.filterAuthor.set(query['author'] || '');
             this.filterPublisher.set(query['publisher'] || '');
+            this.filterRating.set({
+                min: query['rating_ge'] ? +query['rating_ge'] : undefined,
+                max: query['rating_le'] ? +query['rating_le'] : undefined
+            });
+            this.filterRank.set({
+                min: query['rank_ge'] ? +query['rank_ge'] : undefined,
+                max: query['rank_le'] ? +query['rank_le'] : undefined
+            });
         }),
         this._seriesDataService.seriesSearch,
         tap(() =>
@@ -88,6 +113,10 @@ export class SeriesComponent {
             } as ScrollToOptions)
         )
     );
+
+    options$(key: keyof BrowseOptions) {
+        return this._apiQueryService.options$.pipe(map(o => o[key]));
+    }
 
     routeByQuery() {
         this._router.navigate([], {
@@ -121,24 +150,5 @@ export class SeriesComponent {
 
     openVolumeDetails(isbn: string) {
         this._dialog.open(VolumeDetailsComponent, { data: isbn });
-    }
-
-    protected getVolumeStatusColor(volume: SeriesVolume) {
-        // if (volume.user_collection_data.length > 0) {
-        //     return { 'background-color': '#A6F7CD' }; //CDA6F7
-        // }
-        if (volume.stock_status === 'In Stock') {
-            return { 'background-color': '#EBEBEB' };
-        }
-        if (volume.stock_status === 'Pre-Order') {
-            return { 'background-color': '#F7CDA6' };
-        }
-        if (volume.stock_status === 'Backorder') {
-            return { 'background-color': '#8b5cf6' };
-        }
-        if (volume.stock_status === 'Out of Print') {
-            return { 'background-color': '#929292' };
-        }
-        return { 'background-color': '#C4C4C4' };
     }
 }

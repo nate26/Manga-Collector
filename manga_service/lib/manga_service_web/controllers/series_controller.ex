@@ -58,7 +58,7 @@ defmodule MangaServiceWeb.SeriesController do
           associated_titles: series.associated_titles,
           series_match_confidence: series.series_match_confidence,
           editions: series.editions,
-          volumes: map_volumes(series.volumes),
+          #   volumes: map_volumes(series.volumes),
           cover_image: series.cover_image,
           genres: series.genres,
           themes: series.themes,
