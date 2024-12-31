@@ -63,10 +63,19 @@
         </button>
     </div>
 
-    <div class="display-area" style="height: calc(100vh - 80px)">
-        <div #display_items id="display_items" class="series overflow-auto">
+    <div
+        #display_items
+        id="display_items"
+        class="flex justify-center w-full ml-4 mr-4"
+    >
+        <div
+            class="main-grid grid gap-y-2 overflow-auto"
+            style="height: calc(100vh - 112px)"
+        >
             @for (series of series$ | async; track $index) {
-                <div class="series-row">
+                <div
+                    class="sub-grid big-shadow grid grid-cols-subgrid col-start-2 col-end-8 h-16 w-full items-center gap-2 rounded-md drop-shadow-2xl bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
+                >
                     @defer (on viewport) {
                         <img
                             [src]="series.cover_image"
@@ -100,5 +109,20 @@
                 <p class="text">Loading...</p>
             }
         </div>
+        <!-- <div class="flex justify-center gap-3 m-8">
+            <button
+                class="active-button mr-1 border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
+                (click)="previous()"
+                [disabled]="disablePrevious()"
+            >
+                Previous
+            </button>
+            <button
+                class="active-button ml-1 border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
+                (click)="next()"
+            >
+                Next
+            </button>
+        </div> -->
     </div>
 </div>
