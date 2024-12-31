@@ -66,7 +66,7 @@
     <div
         #display_items
         id="display_items"
-        class="flex justify-center w-full ml-4 mr-4"
+        class="flex justify-center w-full ml-4 mr-4 text-white"
     >
         <div
             class="main-grid grid gap-y-2 overflow-auto"
@@ -90,13 +90,18 @@
                         <div class="cover-image"></div>
                     }
                     <div class="c c-text">
-                        <a
-                            class="text tw tw-3"
-                            [href]="series.url"
-                            target="_blank"
+                        <p class="tw-3">{{ series.title }}</p>
+                        <div
+                            class="flex gap-1 text-xs text-lime-950 text-nowrap font-semibold"
                         >
-                            {{ series.title }}
-                        </a>
+                            @for (genre of series.genres; track genre) {
+                                <p
+                                    class="pl-1 pr-1 leading-4 rounded-md bg-lime-500"
+                                >
+                                    {{ genre }}
+                                </p>
+                            }
+                        </div>
                     </div>
                     <div class="text al_center c c-text">
                         {{ series.category }}
