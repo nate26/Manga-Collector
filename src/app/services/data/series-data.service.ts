@@ -17,7 +17,12 @@ export type SeriesVolume = {
 type Theme = {
     theme: string;
     votes: number;
-}
+};
+
+export type SeriesDetails = {
+    name: string;
+    type: string;
+};
 
 export type SeriesOutput = {
     title: string;
@@ -30,45 +35,58 @@ export type SeriesOutput = {
     genres: string[];
     themes: Theme[];
     description: string;
+    release_status: string;
+    latest_chapter: number;
+    authors: SeriesDetails[];
+    publishers: SeriesDetails[];
+    bayesian_rating: number;
+    rank: number;
+    recommendations: number[];
 };
 
 export type SeriesQuery = Query & {
     title?: string;
-    // ...
+    status?: string;
+    category?: string;
+    genre?: string;
+    theme?: string;
+    author?: string;
+    publisher?: string;
+    rank_le?: number;
+    rank_ge?: number;
+    rating_le?: number;
+    rating_ge?: number;
 };
 
 @Injectable({
     providedIn: 'root'
 })
 export class SeriesDataService {
-
     private readonly _http = inject(HttpClient);
     private readonly _queryService = inject(APIQueryService);
 
     private readonly SERIES_PATH = 'http://localhost:4000/api/series';
 
     seriesSearch = pipe(
-        map((query: SeriesQuery) => this.SERIES_PATH + '?' + this._queryService.parseQuery(query)),
+        map(
+            (query: SeriesQuery) =>
+                this.SERIES_PATH + '?' + this._queryService.parseQuery(query)
+        ),
         debounceTime(300),
         switchMap(url => this._http.get<SeriesOutput[]>(url)),
         catchError((err: Error) => {
-            console.error(
-                'Could not get all series data because ',
-                err
-            );
+            console.error('Could not get all series data because ', err);
             return EMPTY;
         })
     );
 
-    series = pipe(
-        map(series_id => this.SERIES_PATH + '/' + series_id),
-        switchMap(url => this._http.get<SeriesOutput>(url)),
-        catchError((err: Error) => {
-            console.error(
-                'Could not get series data because ',
-                err
-            );
-            return EMPTY;
-        })
-    );
+    getSeries(series_id: number) {
+        const url = this.SERIES_PATH + '/' + series_id;
+        return this._http.get<SeriesOutput>(url).pipe(
+            catchError((err: Error) => {
+                console.error('Could not get series data because ', err);
+                return EMPTY;
+            })
+        );
+    }
 }

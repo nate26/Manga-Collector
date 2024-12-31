@@ -1,14 +1,34 @@
 import { Injectable, inject } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
-import { Observable, tap, map, catchError, throwError, shareReplay, switchMap, of } from 'rxjs';
-import { IGQLAllRecord, IGQLGetRecord } from '../../interfaces/iGQLRequests.interface';
-import { IVolume } from '../../interfaces/iVolume.interface';
+import {
+    Observable,
+    tap,
+    map,
+    catchError,
+    throwError,
+    shareReplay,
+    switchMap,
+    of
+} from 'rxjs';
+import {
+    IGQLAllRecord,
+    IGQLGetRecord
+} from '../../interfaces/iGQLRequests.interface';
+import { IVolume, Volume } from '../../interfaces/iVolume.interface';
 import { UserService } from './user.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
 })
 export class VolumeService {
+    private readonly _http = inject(HttpClient);
+
+    getVolume(isbn: string) {
+        return this._http.get<Volume>(
+            'http://localhost:4000/api/volume/' + isbn
+        );
+    }
 
     private readonly apollo = inject(Apollo);
     private readonly userService = inject(UserService);
@@ -29,21 +49,26 @@ export class VolumeService {
         }
     `;
 
-    readonly volumesBasic$: Observable<IVolume[]> = this.apollo.watchQuery<IGQLAllRecord>({
-        query: this.VOLUMES_BASIC_QUERY,
-        variables: { user_id: null }
-    }).valueChanges.pipe(
-        tap(({ error }) => {
-            if (error) throw error;
-        }),
-        map(response => response.data.all_records.records),
-        shareReplay(),
-        catchError((err) =>
-            throwError(() =>
-                Error('Could not get all volumes because ' + err.message, err)
+    readonly volumesBasic$: Observable<IVolume[]> = this.apollo
+        .watchQuery<IGQLAllRecord>({
+            query: this.VOLUMES_BASIC_QUERY,
+            variables: { user_id: null }
+        })
+        .valueChanges.pipe(
+            tap(({ error }) => {
+                if (error) throw error;
+            }),
+            map(response => response.data.all_records.records),
+            shareReplay(),
+            catchError(err =>
+                throwError(() =>
+                    Error(
+                        'Could not get all volumes because ' + err.message,
+                        err
+                    )
+                )
             )
-        )
-    );
+        );
 
     private readonly SINGLE_VOLUME_QUERY = gql`
         query get_record($isbn: ID!, $user_id: ID!) {
@@ -112,18 +137,24 @@ export class VolumeService {
 
     queryVolume(isbn: string): Observable<IVolume> {
         return of(this.userService.userData()).pipe(
-            switchMap(({ user_id }) =>
-                this.apollo.watchQuery<IGQLGetRecord>(
-                    { query: this.SINGLE_VOLUME_QUERY, variables: { isbn, user_id } }
-                ).valueChanges
+            switchMap(
+                ({ user_id }) =>
+                    this.apollo.watchQuery<IGQLGetRecord>({
+                        query: this.SINGLE_VOLUME_QUERY,
+                        variables: { isbn, user_id }
+                    }).valueChanges
             ),
             tap(({ error }) => {
                 if (error) throw error;
             }),
             map(response => response.data.get_record.record!),
-            catchError((err) =>
-                throwError(() =>
-                    new Error('Could not get all volumes because ' + err.message, err)
+            catchError(err =>
+                throwError(
+                    () =>
+                        new Error(
+                            'Could not get all volumes because ' + err.message,
+                            err
+                        )
                 )
             )
         );

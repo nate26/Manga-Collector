@@ -27,7 +27,7 @@
         <div class="text-xs italic">Promotion</div>
         <select class="mc-input mb-2" [(ngModel)]="filterPromo">
             @for (option of promoOptions; track option) {
-            <option [value]="option">{{ option }}</option>
+                <option [value]="option">{{ option }}</option>
             }
         </select>
         <div class="text-xs italic">Type</div>
@@ -55,7 +55,7 @@
             />
         </div>
         <button
-            class="inactive-button mt-5 mr-auto border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
+            class="block inactive-button mt-5 mr-auto border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
             (click)="submitFilter()"
         >
             Search
@@ -69,50 +69,58 @@
     >
         <div class="grid grid-cols-5 w-fit m-auto">
             @for (item of items$ | async; track item.item_id; let i = $index) {
-            @defer (on viewport) {
-            <div
-                class="relative w-[12vw] m-3 rounded-lg shadow-lg bg-cover bg-center hover:scale-105 transition-transform duration-300 cursor-pointer"
-                style="aspect-ratio: 1 / 1.45"
-                [style.background-image]="
-                    'url(' + item.volume.primary_cover_image + ')'
-                "
-                (click)="openVolumeDetails(item.isbn)"
-                (keypress)="openVolumeDetails(item.isbn)"
-                tabindex="{$index}"
-            >
-                @if (item.promotion_percentage) {
-                <span
-                    class="absolute top-1 right-1 pl-1 pr-1 bg-[#2f4f4fd4] border-2 border-green-500 rounded-md text-green-300 font-semibold shadow-lg"
-                >
-                    {{ item.promotion_percentage }}% off
-                </span>
-                } @switch (item.stock_status) { @case ('Pre-Order') {
-                <span
-                    class="absolute bottom-1 right-1 pl-1 pr-1 bg-[#4f3f2fd4] border-2 border-orange-500 rounded-md text-orange-300 font-semibold shadow-lg"
-                >
-                    Pre-Order
-                </span>
-                } @case ('Backorder') {
-                <span
-                    class="absolute bottom-1 right-1 pl-1 pr-1 bg-[#422f4fd4] border-2 border-violet-500 rounded-md text-violet-300 font-semibold shadow-lg"
-                >
-                    Backorder
-                </span>
-                } @case ('Out of Print') {
-                <span
-                    class="absolute bottom-1 right-1 pl-1 pr-1 bg-[#4d4d4dd4] border-2 border-gray-500 rounded-md text-gray-300 font-semibold shadow-lg"
-                >
-                    Out of Print
-                </span>
-                } }
-                <app-volume-cover-text [title]="item.volume.display_name" />
-            </div>
-            } @placeholder {
-            <div
-                class="h-60 rounded-lg shadow-lg"
-                style="aspect-ratio: 1 / 1.45"
-            ></div>
-            } }
+                @defer (on viewport) {
+                    <div
+                        class="relative w-[12vw] m-3 rounded-lg shadow-lg bg-cover bg-center hover:scale-105 transition-transform duration-300 cursor-pointer"
+                        style="aspect-ratio: 1 / 1.45"
+                        [style.background-image]="
+                            'url(' + item.volume.primary_cover_image + ')'
+                        "
+                        (click)="openVolumeDetails(item.isbn)"
+                        (keypress)="openVolumeDetails(item.isbn)"
+                        tabindex="{$index}"
+                    >
+                        @if (item.promotion_percentage) {
+                            <span
+                                class="absolute top-1 right-1 pl-1 pr-1 bg-[#2f4f4fd4] border-2 border-green-500 rounded-md text-green-300 font-semibold shadow-lg"
+                            >
+                                {{ item.promotion_percentage }}% off
+                            </span>
+                        }
+                        @switch (item.stock_status) {
+                            @case ('Pre-Order') {
+                                <span
+                                    class="absolute bottom-1 right-1 pl-1 pr-1 bg-[#4f3f2fd4] border-2 border-orange-500 rounded-md text-orange-300 font-semibold shadow-lg"
+                                >
+                                    Pre-Order
+                                </span>
+                            }
+                            @case ('Backorder') {
+                                <span
+                                    class="absolute bottom-1 right-1 pl-1 pr-1 bg-[#422f4fd4] border-2 border-violet-500 rounded-md text-violet-300 font-semibold shadow-lg"
+                                >
+                                    Backorder
+                                </span>
+                            }
+                            @case ('Out of Print') {
+                                <span
+                                    class="absolute bottom-1 right-1 pl-1 pr-1 bg-[#4d4d4dd4] border-2 border-gray-500 rounded-md text-gray-300 font-semibold shadow-lg"
+                                >
+                                    Out of Print
+                                </span>
+                            }
+                        }
+                        <app-volume-cover-text
+                            [title]="item.volume.display_name"
+                        />
+                    </div>
+                } @placeholder {
+                    <div
+                        class="h-60 rounded-lg shadow-lg"
+                        style="aspect-ratio: 1 / 1.45"
+                    ></div>
+                }
+            }
         </div>
         <div class="flex justify-center gap-3 m-8">
             <button

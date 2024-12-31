@@ -1,53 +1,125 @@
-<div class="mt-20">
+<div class="mt-28 flex justify-between">
+    <div class="h-fit w-36 m-8 text-white text-sm text-nowrap">
+        <!-- Filter Title -->
+        <div class="text-xs italic">Title</div>
+        <input type="text" class="mc-input" [(ngModel)]="filterTitle" />
+
+        <!-- Filter Category -->
+        <div class="text-xs italic">Category</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterCategory">
+            <option value="">All</option>
+            @for (option of (options | async)!.category; track option) {
+                <option [value]="option">{{ option }}</option>
+            }
+        </select>
+
+        <!-- Filter Status -->
+        <div class="text-xs italic">Release Status</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterStatus">
+            <option value="">All</option>
+            @for (option of (options | async)!.status; track option) {
+                <option [value]="option">{{ option }}</option>
+            }
+        </select>
+
+        <!-- Filter Genres -->
+        <div class="text-xs italic">Genre</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterGenre">
+            <option value="">All</option>
+            @for (option of (options | async)!.genres; track option) {
+                <option [value]="option">{{ option }}</option>
+            }
+        </select>
+
+        <!-- Filter Themes -->
+        <div class="text-xs italic">Theme</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterTheme">
+            <option value="">All</option>
+            @for (option of (options | async)!.themes; track option) {
+                <option [value]="option">{{ option }}</option>
+            }
+        </select>
+
+        <!-- Filter Authors -->
+        <div class="text-xs italic">Author</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterAuthor">
+            <option value="">All</option>
+            @for (option of (options | async)!.authors; track option) {
+                <option [value]="option">{{ option }}</option>
+            }
+        </select>
+
+        <!-- Filter Publishers -->
+        <div class="text-xs italic">Publisher</div>
+        <select class="mc-input mb-2" [(ngModel)]="filterPublisher">
+            <option value="">All</option>
+            @for (option of (options | async)!.publishers; track option) {
+                <option [value]="option">{{ option }}</option>
+            }
+        </select>
+
+        <!-- Search -->
+        <button
+            class="block inactive-button mt-5 mr-auto border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
+            (click)="submitFilter()"
+        >
+            Search
+        </button>
+    </div>
+
     <div class="display-area" style="height: calc(100vh - 80px)">
         <div #display_items id="display_items" class="series overflow-auto">
             @for (series of series$ | async; track $index) {
-            <div class="series-row">
-                @defer (on viewport) {
-                <img
-                    [src]="series.cover_image"
-                    appLazyImage
-                    alt="{{ 'cover image for' + series.title }}"
-                    (click)="openSeriesDetails(series.series_id)"
-                    (keypress)="openSeriesDetails(series.series_id)"
-                    tabindex="{$index}"
-                    class="cover-image cursor-pointer"
-                />
-                } @placeholder {
-                <div class="cover-image"></div>
-                }
-                <div class="c c-text">
-                    <a
-                        class="text tw tw-3"
-                        [href]="series.url"
-                        target="_blank"
-                        >{{ series.title }}</a
-                    >
-                </div>
-                <div class="text al_center c c-text">{{ series.category }}</div>
-                <div class="text al_center c c-text">{{ series.status }}</div>
-                <input
-                    type="checkbox"
-                    class="blue-checkbox al_center c"
-                    [checked]="series.series_id"
-                />
-                <div class="flex flex-wrap c c-f">
-                    @for (volume of series.volumes; track $index) {
-                    <div
-                        class="volume-mini-box"
-                        [ngStyle]="getVolumeStatusColor(volume)"
-                        (click)="openVolumeDetails(volume.isbn)"
-                        (keypress)="openVolumeDetails(volume.isbn)"
-                        tabindex="{$index}"
-                    >
-                        <span>{{ volume.volume }}</span>
-                    </div>
+                <div class="series-row">
+                    @defer (on viewport) {
+                        <img
+                            [src]="series.cover_image"
+                            appLazyImage
+                            alt="{{ 'cover image for' + series.title }}"
+                            (click)="openSeriesDetails(series.series_id)"
+                            (keypress)="openSeriesDetails(series.series_id)"
+                            tabindex="{$index}"
+                            class="cover-image cursor-pointer"
+                        />
+                    } @placeholder {
+                        <div class="cover-image"></div>
                     }
+                    <div class="c c-text">
+                        <a
+                            class="text tw tw-3"
+                            [href]="series.url"
+                            target="_blank"
+                        >
+                            {{ series.title }}
+                        </a>
+                    </div>
+                    <div class="text al_center c c-text">
+                        {{ series.category }}
+                    </div>
+                    <div class="text al_center c c-text">
+                        {{ series.status }}
+                    </div>
+                    <input
+                        type="checkbox"
+                        class="blue-checkbox al_center c"
+                        [checked]="series.series_id"
+                    />
+                    <div class="flex flex-wrap c c-f">
+                        @for (volume of series.volumes; track $index) {
+                            <div
+                                class="volume-mini-box"
+                                [ngStyle]="getVolumeStatusColor(volume)"
+                                (click)="openVolumeDetails(volume.isbn)"
+                                (keypress)="openVolumeDetails(volume.isbn)"
+                                tabindex="{$index}"
+                            >
+                                <span>{{ volume.volume }}</span>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
-
             } @empty {
-            <p class="text">Loading...</p>
+                <p class="text">Loading...</p>
             }
         </div>
     </div>

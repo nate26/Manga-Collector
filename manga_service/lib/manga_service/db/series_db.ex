@@ -27,11 +27,11 @@ defmodule MangaService.SeriesDB do
     |> Repo.preload(:volumes)
   end
 
-  defp filter_order_by("name_desc"),
-    do: [desc: dynamic([_, v], v.display_name)]
+  defp filter_order_by("title_desc"),
+    do: [desc: dynamic([s], s.title)]
 
-  defp filter_order_by("name"),
-    do: [asc: dynamic([_, v], v.display_name)]
+  defp filter_order_by("title"),
+    do: [asc: dynamic([s], s.title)]
 
   defp filter_order_by(_),
     do: []
@@ -41,8 +41,66 @@ defmodule MangaService.SeriesDB do
       {"title", value}, dynamic ->
         dynamic(
           [s],
+          # TODO include associated titles
           ^dynamic and fragment("lower(?) like '%' || lower(?) || '%'", s.title, ^value)
         )
+
+      {"status", value}, dynamic ->
+        dynamic([s], ^dynamic and s.status == ^value)
+
+      {"category", value}, dynamic ->
+        dynamic([s], ^dynamic and s.category == ^value)
+
+      {"genre", value}, dynamic ->
+        dynamic(
+          [s],
+          ^dynamic and fragment("? = Any(?)", ^value, s.genres)
+        )
+
+      {"theme", value}, dynamic ->
+        dynamic(
+          [s],
+          ^dynamic and
+            fragment(
+              "? = ANY(select element ->> 'theme' from unnest(?) as element)",
+              ^value,
+              s.themes
+            )
+        )
+
+      {"author", value}, dynamic ->
+        dynamic(
+          [s],
+          ^dynamic and
+            fragment(
+              "? = ANY(select element ->> 'name' from unnest(?) as element)",
+              ^value,
+              s.authors
+            )
+        )
+
+      {"publisher", value}, dynamic ->
+        dynamic(
+          [s],
+          ^dynamic and
+            fragment(
+              "? = ANY(select element ->> 'name' from unnest(?) as element)",
+              ^value,
+              s.publishers
+            )
+        )
+
+      {"rank_le", value}, dynamic ->
+        dynamic([s], ^dynamic and s.rank <= ^value)
+
+      {"rank_ge", value}, dynamic ->
+        dynamic([s], ^dynamic and s.rank >= ^value)
+
+      {"rating_le", value}, dynamic ->
+        dynamic([s], ^dynamic and s.bayesian_rating <= ^value)
+
+      {"rating_ge", value}, dynamic ->
+        dynamic([s], ^dynamic and s.bayesian_rating >= ^value)
 
       {_, _}, dynamic ->
         dynamic
@@ -147,23 +205,43 @@ defmodule MangaService.SeriesDB do
     Series.changeset(series, attrs)
   end
 
-  def distinct_genres do
-    # query = from(o in Project.Orders.Schemas.Order, where:
-    # fragment("(select count(distinct json->> 'customer_id') from unnest(?) as json)",  o.invoices) >1)
+  def distinct_status do
+    Repo.all(from(v in Series, select: v.status, distinct: true, where: not is_nil(v.status)))
+  end
 
-    # from(
-    #   series in Series,
-    #   where:
-    #     fragment(
-    #       "(select count(distinct json->> 'genres') from unnest(?) as json)",
-    #       series.genres
-    #     ) > 1
-    # )
-    # from(
-    #   series in Series,
-    #   where: fragment("select distinct(genres) from unnest(?)", series.genres)
-    # )
-    # query =
-    #   Repo.all(fragment("select distinct(unnest(genres)) from series"))
+  def distinct_category do
+    Repo.all(from(v in Series, select: v.category, distinct: true, where: not is_nil(v.category)))
+  end
+
+  def distinct_genres do
+    Ecto.Adapters.SQL.query!(
+      Repo,
+      "select distinct(genre) from series, unnest(genres) as genre order by genre"
+    ).rows
+    |> List.flatten()
+  end
+
+  def distinct_themes do
+    Ecto.Adapters.SQL.query!(
+      Repo,
+      "select distinct(element ->> 'theme') as theme from series, unnest(themes) as element order by theme"
+    ).rows
+    |> List.flatten()
+  end
+
+  def distinct_authors do
+    Ecto.Adapters.SQL.query!(
+      Repo,
+      "select distinct(element ->> 'name') as author from series, unnest(authors) as element order by author"
+    ).rows
+    |> List.flatten()
+  end
+
+  def distinct_publishers do
+    Ecto.Adapters.SQL.query!(
+      Repo,
+      "select distinct(element ->> 'name') as publisher from series, unnest(publishers) as element order by publisher"
+    ).rows
+    |> List.flatten()
   end
 end
