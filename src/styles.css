@@ -17,6 +17,10 @@
     --mat-dialog-container-max-width: 80vw;
     --mat-autocomplete-background-color: var(--item-background-color);
     --mat-option-label-text-size: 0.85rem;
+    --mat-stepper-header-selected-state-icon-background-color: #818cf8;
+    --mat-stepper-header-selected-state-icon-foreground-color: #4f46e5;
+    --mat-stepper-header-edit-state-icon-background-color: #818cf8;
+    --mat-stepper-header-edit-state-icon-foreground-color: #4f46e5;
     /* --tw-shadow-color: #000000; */
 }
 
@@ -24,6 +28,12 @@ body {
     /* background-color: #292929; */
     background-color: var(--background-color);
     margin: 0;
+}
+
+.big-shadow {
+    box-shadow:
+        0px 4px 6px rgba(0, 0, 0, 0.8),
+        0px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .flex-wrap {

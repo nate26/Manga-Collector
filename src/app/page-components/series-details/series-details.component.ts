@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { from, map, mergeMap, scan, shareReplay, switchMap } from 'rxjs';
 import { AsyncPipe, DatePipe, NgStyle, TitleCasePipe } from '@angular/common';
 import { VolumeCoverTextComponent } from '../../common/volume-cover-text/volume-cover-text.component';
+import { CoverImageComponent } from '../../common/components/cover-image/cover-image.component';
 
 @Component({
     selector: 'app-series-details',
@@ -19,7 +20,8 @@ import { VolumeCoverTextComponent } from '../../common/volume-cover-text/volume-
         AsyncPipe,
         TitleCasePipe,
         DatePipe,
-        VolumeCoverTextComponent
+        VolumeCoverTextComponent,
+        CoverImageComponent
     ],
     templateUrl: './series-details.component.html',
     styleUrl: './series-details.component.css'
@@ -49,9 +51,9 @@ export class SeriesDetailsComponent {
             authors: this.combineSeriesDetails(series.authors),
             publishers: this.combineSeriesDetails(series.publishers),
             release_status: series.release_status
-                .replaceAll('\\~', '~')
-                .split('**S')
-                .flatMap(
+                ?.replaceAll('\\~', '~')
+                ?.split('**S')
+                ?.flatMap(
                     (status, i) =>
                         (i ? 'S' : '') +
                         status.replaceAll(' +', ',').replaceAll('**', '').trim()

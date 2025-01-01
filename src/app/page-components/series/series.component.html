@@ -1,8 +1,12 @@
 <div class="mt-28 flex justify-between">
-    <div class="h-fit w-36 m-8 text-white text-sm text-nowrap">
+    <div
+        class="flex flex-col gap-2 h-fit w-36 m-8 text-white text-sm text-nowrap"
+    >
         <!-- Filter Title -->
-        <div class="text-xs italic">Title</div>
-        <input type="text" class="mc-input" [(ngModel)]="filterTitle" />
+        <div>
+            <div class="text-xs italic">Title</div>
+            <input type="text" class="mc-input" [(ngModel)]="filterTitle" />
+        </div>
 
         <!-- Filter Category -->
         <app-autofill-select-filter
@@ -56,9 +60,14 @@
 
         <!-- Search -->
         <button
-            class="block inactive-button mt-5 mr-auto border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
+            class="flex inactive-button mt-5 mr-auto border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
             (click)="submitFilter()"
         >
+            @if (false) {
+                <svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+                    <!-- ... -->
+                </svg>
+            }
             Search
         </button>
     </div>
@@ -66,55 +75,56 @@
     <div
         #display_items
         id="display_items"
-        class="flex justify-center w-full ml-4 mr-4 text-white"
+        class="flex flex-col items-center w-full text-white overflow-auto"
+        style="height: calc(100vh - 112px); width: calc(100vw - 224px)"
     >
-        <div
-            class="main-grid grid gap-y-2 overflow-auto"
-            style="height: calc(100vh - 112px)"
-        >
+        <div class="main-grid grid gap-y-2">
             @for (series of series$ | async; track $index) {
                 <div
-                    class="sub-grid big-shadow grid grid-cols-subgrid col-start-2 col-end-8 h-16 w-full items-center gap-2 rounded-md drop-shadow-2xl bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
+                    class="big-shadow ml-2 mr-2 pr-4 grid grid-cols-subgrid col-start-2 col-end-8 h-16 w-full items-center gap-2 rounded-md cursor-pointer bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
+                    (click)="openSeriesDetails(series.series_id)"
+                    (keypress)="openSeriesDetails(series.series_id)"
+                    tabindex="{$index}"
                 >
-                    @defer (on viewport) {
-                        <img
-                            [src]="series.cover_image"
-                            appLazyImage
-                            alt="{{ 'cover image for' + series.title }}"
-                            (click)="openSeriesDetails(series.series_id)"
-                            (keypress)="openSeriesDetails(series.series_id)"
-                            tabindex="{$index}"
-                            class="cover-image cursor-pointer"
-                        />
-                    } @placeholder {
-                        <div class="cover-image"></div>
-                    }
-                    <div class="c c-text">
-                        <p class="tw-3">{{ series.title }}</p>
+                    <app-cover-image
+                        [cover_image]="series.cover_image"
+                        [name]="series.title"
+                        size="h-16"
+                    ></app-cover-image>
+                    <div class="flex flex-col gap-1">
+                        <p class="text-nowrap overflow-hidden text-ellipsis">
+                            {{ series.title }}
+                        </p>
                         <div
-                            class="flex gap-1 text-xs text-lime-950 text-nowrap font-semibold"
+                            class="flex gap-1 text-xs text-indigo-950 text-nowrap font-semibold overflow-hidden"
                         >
                             @for (genre of series.genres; track genre) {
                                 <p
-                                    class="pl-1 pr-1 leading-4 rounded-md bg-lime-500"
+                                    class="pl-1 pr-1 leading-4 rounded-md bg-indigo-400"
                                 >
                                     {{ genre }}
                                 </p>
                             }
                         </div>
                     </div>
-                    <div class="text al_center c c-text">
+                    <div class="text-center">
                         {{ series.category }}
                     </div>
-                    <div class="text al_center c c-text">
+                    <div class="text-center">
                         {{ series.status }}
+                    </div>
+                    <div class="text-center">
+                        {{ series.bayesian_rating }}
+                    </div>
+                    <div class="text-center">
+                        {{ series.volumes.length }} Vols
                     </div>
                 </div>
             } @empty {
                 <p class="text">Loading...</p>
             }
         </div>
-        <!-- <div class="flex justify-center gap-3 m-8">
+        <div class="flex justify-center gap-3 mt-8 mb-8 w-full">
             <button
                 class="active-button mr-1 border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
                 (click)="previous()"
@@ -128,6 +138,6 @@
             >
                 Next
             </button>
-        </div> -->
+        </div>
     </div>
 </div>

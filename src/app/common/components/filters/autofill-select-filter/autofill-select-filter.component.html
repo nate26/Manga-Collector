@@ -1,10 +1,10 @@
 <div class="text-xs italic">{{ title() }}</div>
-<form class="example-form">
+<form>
     <input
         type="text"
         [formControl]="control"
         [matAutocomplete]="auto"
-        class="mc-input mb-2"
+        class="mc-input"
     />
     <mat-autocomplete #auto="matAutocomplete">
         <mat-option value="">All</mat-option>

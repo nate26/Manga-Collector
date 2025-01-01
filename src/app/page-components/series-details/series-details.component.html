@@ -2,22 +2,16 @@
 
 @if (series$ | async; as series) {
     <div
-        class="m-auto pl-4 pr-4 max-w-screen-lg text-white overflow-auto"
+        class="flex flex-col items-center pl-4 pr-4 text-white overflow-auto"
         style="height: calc(100vh - 6rem)"
     >
-        <div class="flex justify-center">
+        <div class="flex max-w-screen-lg">
             <div>
-                @defer {
-                    <img
-                        [src]="series.cover_image"
-                        appLazyImage
-                        alt="{{ 'cover image for' + series.title }}"
-                        class="min-w-40 object-cover"
-                        style="aspect-ratio: 1 / 1.45"
-                    />
-                } @placeholder {
-                    <div class="cover-image"></div>
-                }
+                <app-cover-image
+                    [cover_image]="series.cover_image"
+                    [name]="series.title"
+                    size="min-w-40"
+                ></app-cover-image>
                 <div>
                     Creators
                     <div class="flex flex-col gap-1 mt-1">
@@ -121,7 +115,7 @@
                     </a>
                 </div>
                 <div class="flex">
-                    <div>
+                    <div class="flex flex-col gap-2 mt-2">
                         <div>
                             @for (label of headerLabels; track $index) {
                                 <div class="text-gray-400 italic text-xs">
@@ -141,32 +135,34 @@
                             </span>
                             {{ series.description }}
                         </div>
-                        <div class="flex flex-wrap">
+                        <div class="main-grid grid grid-cols-5 gap-y-2 m-4">
                             @for (volume of series.volumes; track $index) {
                                 <div
-                                    class="flex gap-4 m-2 pr-4 h-16 w-full rounded-md shadow-xl cursor-pointer bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
+                                    class="big-shadow gap-2 pr-4 h-16 w-full grid grid-cols-subgrid col-start-2 col-end-8 rounded-md cursor-pointer bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
                                     (click)="openVolumeDetails(volume.isbn)"
                                     (keypress)="openVolumeDetails(volume.isbn)"
                                     tabindex="{$index}"
                                 >
-                                    <img
-                                        [src]="volume.primary_cover_image"
-                                        appLazyImage
-                                        alt="{{
-                                            'cover image for' + volume.name
-                                        }}"
-                                        class="cover-image"
-                                    />
-                                    <div class="max-w-64 w-fit">
-                                        <a class="leading-[4rem] h-full tw-2">
+                                    <app-cover-image
+                                        [cover_image]="
+                                            volume.primary_cover_image
+                                        "
+                                        [name]="volume.name"
+                                        size="h-16"
+                                    ></app-cover-image>
+                                    <div class="flex items-center w-fit">
+                                        <p class="leading-6 tw-2">
                                             {{ volume.name }}
-                                        </a>
+                                        </p>
                                     </div>
                                     <div class="w-fit m-auto text-center">
-                                        {{ volume.category | titlecase }}
+                                        {{
+                                            volume.category.replace('-', ' ')
+                                                | titlecase
+                                        }}
                                     </div>
                                     <div class="w-fit m-auto text-center">
-                                        Volume {{ volume.volume }}
+                                        Vol {{ volume.volume }}
                                     </div>
                                     <div class="w-fit m-auto text-center">
                                         {{ volume.format }}
@@ -179,56 +175,66 @@
                         </div>
                     </div>
                     <div class="ml-4 min-w-40 flex flex-col gap-4">
-                        <div>
-                            Genres:
-                            <div class="flex flex-col gap-1 mt-1">
-                                @for (genre of series.genres; track $index) {
-                                    <div
-                                        class="ml-2 text-sm text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
-                                        (click)="
-                                            openSeriesSearch('genre', genre)
-                                        "
-                                        (keypress)="
-                                            openSeriesSearch('genre', genre)
-                                        "
-                                        tabindex="{$index}"
-                                    >
-                                        {{ genre }}
-                                    </div>
-                                }
+                        @if (series.genres.length > 0) {
+                            <div>
+                                Genres:
+                                <div class="flex flex-col gap-1 mt-1">
+                                    @for (
+                                        genre of series.genres;
+                                        track $index
+                                    ) {
+                                        <div
+                                            class="ml-2 text-sm text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
+                                            (click)="
+                                                openSeriesSearch('genre', genre)
+                                            "
+                                            (keypress)="
+                                                openSeriesSearch('genre', genre)
+                                            "
+                                            tabindex="{$index}"
+                                        >
+                                            {{ genre }}
+                                        </div>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            Themes:
-                            <div class="flex flex-col gap-1 mt-1">
-                                @for (theme of series.themes; track $index) {
-                                    <div
-                                        class="ml-2 text-sm text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
-                                        (click)="
-                                            openSeriesSearch(
-                                                'theme',
-                                                theme.theme
-                                            )
-                                        "
-                                        (keypress)="
-                                            openSeriesSearch(
-                                                'theme',
-                                                theme.theme
-                                            )
-                                        "
-                                        tabindex="{$index}"
-                                    >
-                                        {{ theme.theme }}
-                                    </div>
-                                }
+                        }
+                        @if (series.themes.length > 0) {
+                            <div>
+                                Themes:
+                                <div class="flex flex-col gap-1 mt-1">
+                                    @for (
+                                        theme of series.themes;
+                                        track $index
+                                    ) {
+                                        <div
+                                            class="ml-2 text-sm text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
+                                            (click)="
+                                                openSeriesSearch(
+                                                    'theme',
+                                                    theme.theme
+                                                )
+                                            "
+                                            (keypress)="
+                                                openSeriesSearch(
+                                                    'theme',
+                                                    theme.theme
+                                                )
+                                            "
+                                            tabindex="{$index}"
+                                        >
+                                            {{ theme.theme }}
+                                        </div>
+                                    }
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
         @if (series.recommendations.length > 0) {
-            <hr class="border-gray-300 mt-4 mb-4" />
+            <hr class="border-gray-300 mt-4 mb-4 max-w-screen-lg" />
             <div class="flex flex-col gap-2 mt-4 mb-8">
                 <p>Recommended Series:</p>
                 <div class="flex flex-wrap gap-4 max-w-full">

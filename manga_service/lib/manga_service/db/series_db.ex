@@ -25,7 +25,7 @@ defmodule MangaService.SeriesDB do
     |> offset(^(params["offset"] || 0))
     |> Repo.all()
 
-    # |> Repo.preload(:volumes)
+    # |> Repo.preload(:volume_details)
   end
 
   defp filter_order_by("title_desc"),
@@ -122,7 +122,7 @@ defmodule MangaService.SeriesDB do
       ** (Ecto.NoResultsError)
 
   """
-  def get_series(id), do: Repo.get(Series, id) |> Repo.preload(:volumes)
+  def get_series(id), do: Repo.get(Series, id) |> Repo.preload(:volume_details)
 
   @doc """
   Gets a single series by series_id.
@@ -139,7 +139,7 @@ defmodule MangaService.SeriesDB do
 
   """
   def get_series_by_id(series_id),
-    do: Repo.get_by(Series, %{series_id: series_id}) |> Repo.preload(:volumes)
+    do: Repo.get_by(Series, %{series_id: series_id}) |> Repo.preload(:volume_details)
 
   @doc """
   Creates a series.

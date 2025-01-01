@@ -12,7 +12,6 @@ import {
     SeriesQuery
 } from '../../services/data/series-data.service';
 import { AsyncPipe } from '@angular/common';
-import { LazyImageDirective } from '../../common/directives/lazy-image/lazy-image.directive';
 import { VolumeDetailsComponent } from '../../common/components/volume-details/volume-details.component';
 import { MatDialog } from '@angular/material/dialog';
 import { map, tap } from 'rxjs';
@@ -27,6 +26,7 @@ import {
     NumberRange,
     NumberRangeFilterComponent
 } from '../../common/components/filters/number-range-filter/number-range-filter.component';
+import { CoverImageComponent } from '../../common/components/cover-image/cover-image.component';
 
 @Component({
     selector: 'app-series',
@@ -34,7 +34,7 @@ import {
     imports: [
         FormsModule,
         AsyncPipe,
-        LazyImageDirective,
+        CoverImageComponent,
         AutofillSelectFilterComponent,
         NumberRangeFilterComponent
     ],

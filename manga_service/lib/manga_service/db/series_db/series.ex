@@ -11,6 +11,7 @@ defmodule MangaService.SeriesDB.Series do
     field(:series_id, :string)
     field(:associated_titles, {:array, :string})
     field(:series_match_confidence, :decimal)
+    field(:volumes, {:array, :string})
     field(:editions, {:array, :string})
     field(:cover_image, :string)
     field(:genres, {:array, :string})
@@ -23,7 +24,7 @@ defmodule MangaService.SeriesDB.Series do
     field(:rank, :integer)
     field(:recommendations, {:array, :string})
 
-    has_many(:volumes, MangaService.VolumesDB.Volume,
+    has_many(:volume_details, MangaService.VolumesDB.Volume,
       references: :series_id,
       foreign_key: :series_id
     )

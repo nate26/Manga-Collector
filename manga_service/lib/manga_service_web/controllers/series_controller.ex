@@ -14,8 +14,8 @@ defmodule MangaServiceWeb.SeriesController do
     |> elem(1)
   end
 
-  defp map_volumes(volumes) do
-    volumes
+  defp map_volumes(volume_details) do
+    volume_details
     |> Enum.map(fn v ->
       %{
         isbn: v.isbn,
@@ -58,7 +58,7 @@ defmodule MangaServiceWeb.SeriesController do
           associated_titles: series.associated_titles,
           series_match_confidence: series.series_match_confidence,
           editions: series.editions,
-          #   volumes: map_volumes(series.volumes),
+          volumes: series.volumes,
           cover_image: series.cover_image,
           genres: series.genres,
           themes: series.themes,
@@ -95,7 +95,7 @@ defmodule MangaServiceWeb.SeriesController do
           associated_titles: series.associated_titles,
           series_match_confidence: series.series_match_confidence,
           editions: series.editions,
-          volumes: map_volumes(series.volumes),
+          volumes: map_volumes(series.volume_details),
           cover_image: series.cover_image,
           genres: series.genres,
           themes: series.themes,
@@ -128,7 +128,7 @@ defmodule MangaServiceWeb.SeriesController do
           associated_titles: series.associated_titles,
           series_match_confidence: series.series_match_confidence,
           editions: series.editions,
-          volumes: map_volumes(series.volumes),
+          volumes: map_volumes(series.volume_details),
           cover_image: series.cover_image,
           genres: series.genres,
           themes: series.themes,
@@ -168,7 +168,7 @@ defmodule MangaServiceWeb.SeriesController do
           associated_titles: series.associated_titles,
           series_match_confidence: series.series_match_confidence,
           editions: series.editions,
-          volumes: map_volumes(series.volumes),
+          volumes: map_volumes(series.volume_details),
           cover_image: series.cover_image,
           genres: series.genres,
           themes: series.themes,

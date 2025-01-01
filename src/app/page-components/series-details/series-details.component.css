@@ -1,0 +1,4 @@
+.main-grid {
+    grid-template-columns:
+        auto [a] 60px [b] minmax(100px, 550px) [c] minmax(auto, 100px) [d] minmax(auto, 80px) [e] minmax(auto, 100px) [f] minmax(auto, 100px) [g] auto;
+}

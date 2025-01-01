@@ -10,6 +10,13 @@ module.exports = {
         extend: {
             textShadow: {
                 DEFAULT: '0px 0px 5px var(--tw-shadow-color)'
+            },
+            keyframes: {
+                shimmer: {
+                    "100%": {
+                        transform: "translateX(100%)",
+                    },
+                },
             }
         }
     },

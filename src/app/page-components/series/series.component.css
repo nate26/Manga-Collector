@@ -1,11 +1,11 @@
 .main-grid {
     grid-template-columns:
-        auto [a] 60px [b] minmax(100px, 240px)
-        [c] 80px [d] 90px [e] 36px [f] minmax(240px, 460px) [g] auto;
-}
-
-.big-shadow {
-    box-shadow:
-        0px 4px 6px rgba(0, 0, 0, 0.8),
-        0px 1px 3px rgba(0, 0, 0, 0.5);
+        auto
+        [a] 60px
+        [b] minmax(100px, 550px)
+        [c] minmax(auto, 100px)
+        [d] minmax(auto, 100px)
+        [e] minmax(auto, 100px)
+        [f] minmax(auto, 100px)
+        [g] auto;
 }
