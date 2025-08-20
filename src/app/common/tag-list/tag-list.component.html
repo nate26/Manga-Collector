@@ -1,0 +1,19 @@
+@if (editMode()) {
+    <div>
+        <input type="text" class="text mc-input" (change)="addFilterTag($event)" [(ngModel)]="filterTagText">            
+        <div class="flex flex-wrap">
+            @for (tag of filterTags(); track $index) {
+                <app-tag-chip [tagName]="tag" [editMode]="true" (removeTag)="removeFilterTag(tag)"></app-tag-chip>
+            }
+        </div>
+    </div>
+}
+@else {
+    <div>
+        <div class="flex flex-wrap">
+            @for (tag of filterTags(); track $index) {
+                <app-tag-chip [tagName]="tag" [editMode]="false"></app-tag-chip>
+            }
+        </div>
+    </div>
+}

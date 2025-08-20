@@ -1,0 +1,7 @@
+:root {
+    --text-color: white; /*#dfdfdf*/;
+    --shadow-color: #0000003b;
+    --element-bg-color: #35343b; /* rgb(58, 58, 58); #3d3950*/
+    --primary-border-color: #3b374f;
+    --tile-border-color: #54545491;
+}

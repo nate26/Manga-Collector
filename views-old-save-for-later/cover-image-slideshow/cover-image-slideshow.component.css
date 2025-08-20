@@ -1,0 +1,7 @@
+.cover-image {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 2px 2px 14px 1px var(--shadow);
+}

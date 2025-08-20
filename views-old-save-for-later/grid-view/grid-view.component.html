@@ -1,0 +1,24 @@
+<div class="flex-wrap" style="justify-content: center;">
+    @for (volume of volumes$ | async; track volume.id) {
+    <div class="volume-item" (mouseover)="volume.hovered = true" (focus)="volume.hovered = true"
+        (mouseleave)="volume.hovered = false">
+        <div class="volume-read" *ngIf="volume.read">Read</div>
+        <button class="menu-button" [hidden]="!volume.hovered" [@fade]="volume.hovered"
+            (click)="edit(volume)">...</button>
+        <img [src]="volume.primary_cover" alt="Primary cover image for {{volume.name}}" class="volume-cover">
+        <div class="volume-info">
+            <div class="volume-title">{{volume.name}}</div>
+            <div class="volume-info-content">
+                <div class="volume-left-info">
+                    <div>{{volume.format}}</div>
+                    <div>Volume {{volume.volume}}</div>
+                </div>
+                <div class="volume-right-info">
+                    <div>{{volume.cost | currency}} | {{volume.merchant}}</div>
+                    <div>{{volume.purchaseDate}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>

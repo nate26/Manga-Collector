@@ -1,0 +1,326 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Profile {
+    picture: String
+    banner: String
+    color: String
+    theme: String
+}
+
+type Authentication {
+    token: String!
+    expiration: String!
+    refresh_token: String!
+}
+
+type User {
+    email: String!
+    username: String!
+    user_id: ID!
+    profile: Profile
+    personal_stores: [String]
+    authentication: Authentication
+}
+
+type SeriesVolume {
+    isbn: String!
+    volume: String
+    category: String
+}
+
+type SeriesThemes {
+    theme: String
+    votes: Int
+}
+
+type SeriesDetails {
+    name: String
+    type: String
+}
+
+type Series {
+    series_id: String!
+    title: String
+    associated_titles: [String]
+    url: String!
+    category: String
+    series_match_confidence: Float
+    description: String
+    cover_image: String
+    genres: [String]
+    themes: [SeriesThemes]
+    latest_chapter: Int
+    release_status: String
+    status: String
+    authors: [SeriesDetails]
+    publishers: [SeriesDetails]
+    bayesian_rating: Float
+    rank: Int
+    recommendations: [Float]
+    volumes: [SeriesVolume]
+}
+
+type SeriesRecord {
+    series_id: String
+    title: String
+    associated_titles: [String]
+    url: String!
+    category: String
+    series_match_confidence: Float
+    description: String
+    cover_image: String
+    genres: [String]
+    themes: [SeriesThemes]
+    latest_chapter: Int
+    release_status: String
+    status: String
+    authors: [SeriesDetails]
+    publishers: [SeriesDetails]
+    bayesian_rating: Float
+    rank: Int
+    recommendations: [Float]
+    volumes: [VolumeRecord]
+}
+
+type ShopDetails {
+    store: String!
+    condition: String
+    url: String!
+    store_price: Float
+    stock_status: String
+    last_stock_update: String
+    coupon: String
+    is_on_sale: Boolean
+}
+
+type CollectionData {
+    id: ID
+    temp_id: ID
+    user_id: ID!
+    isbn: ID!
+    state: String
+    cost: Float
+    merchant: String
+    purchaseDate: String
+    giftToMe: Boolean
+    read: Boolean
+    tags: [String]
+    inserted: String
+    updated: String
+}
+
+type WishlistData {
+    id: ID!
+    user_id: ID!
+    isbn: ID!
+    user_list: String
+    priority: String
+    planned_purchase_date: String
+}
+
+type CoverImage {
+    name: String
+    url: String
+}
+
+type VolumeRecord {
+    isbn: ID!
+    brand: String
+    series: String
+    series_id: String
+    display_name: String
+    name: String
+    category: String
+    volume: String
+    url: String!
+    record_added_date: String!
+    record_updated_date: String!
+    release_date: String
+    publisher: String
+    format: String
+    pages: Int
+    authors: String
+    isbn_10: String
+    primary_cover_image_url: String
+    other_images: [CoverImage]
+    description: String
+    series_data: Series
+    retail_price: Float
+    purchase_options: [ShopDetails]
+    user_collection_data: [CollectionData]
+    user_wishlist_data: [WishlistData]
+}
+
+type ShopVolume {
+    isbn: String
+    display_name: String
+    primary_cover_image_url: String
+    retail_price: Float
+    store: String
+    store_price: Float
+    is_on_sale: Boolean
+    stock_status: String
+    sale_price: Float
+    condition: String
+    coupon: String
+    last_stock_update: String
+    url: String
+}
+
+type SingleVolumeRecordResult {
+    success: Boolean!
+    errors: [String]
+    record: VolumeRecord
+}
+
+type MultipleVolumeRecordResult {
+    success: Boolean!
+    errors: [String]
+    records: [VolumeRecord]
+}
+
+type MultipleSeriesRecordResult {
+    success: Boolean!
+    errors: [String]
+    records: [SeriesRecord]
+}
+
+type MultipleShopVolumeResult {
+    success: Boolean!
+    errors: [String]
+    records: [ShopVolume]
+}
+
+type Query {
+    login(email: String!, password: String!): User!
+    get_user(username: String!): User!
+    get_record(isbn: ID!, user_id: ID): SingleVolumeRecordResult!
+    all_records(user_id: ID): MultipleVolumeRecordResult!
+    get_collection_series(user_id: ID!): MultipleSeriesRecordResult!
+    get_collection_volumes(user_id: ID): MultipleVolumeRecordResult!
+    get_on_sale_volumes: MultipleShopVolumeResult!
+}
+
+
+
+
+input CollectionDataInput {
+    id: ID # not required if new
+    temp_id: ID # temp used if new
+    user_id: ID!
+    isbn: ID!
+    state: String
+    cost: Float
+    merchant: String
+    purchaseDate: String
+    giftToMe: Boolean
+    read: Boolean
+    tags: [String]
+    inserted: String
+    updated: String
+}
+
+input SeriesVolumeInput {
+    isbn: String!
+    volume: String
+    category: String
+}
+
+input SeriesThemesInput {
+    theme: String
+    votes: Int
+}
+
+input SeriesDetailsInput {
+    name: String
+    type: String
+}
+
+input SeriesInput {
+    series_id: String!
+    title: String
+    associated_titles: [String]
+    url: String!
+    category: String
+    series_match_confidence: Float
+    volumes: [SeriesVolumeInput]
+    description: String
+    cover_image: String
+    genres: [String]
+    themes: [SeriesThemesInput]
+    latest_chapter: Int
+    release_status: String
+    status: String
+    authors: [SeriesDetailsInput]
+    publishers: [SeriesDetailsInput]
+    bayesian_rating: Float
+    rank: Int
+    recommendations: [Float]
+}
+
+input CoverImageInput {
+    name: String
+    url: String
+}
+
+input VolumeRecordInput {
+    isbn: ID!
+    brand: String
+    series: String
+    series_id: String
+    display_name: String
+    name: String
+    category: String
+    volume: String
+    url: String!
+    record_added_date: String!
+    record_updated_date: String!
+    release_date: String
+    publisher: String
+    format: String
+    pages: Int
+    authors: String
+    isbn_10: String
+    primary_cover_image_url: String
+    other_images: [CoverImageInput]
+    description: String
+    series_data: SeriesInput
+}
+
+type ModifyAWSResult {
+    success: Boolean!
+    errors: [String]
+    response: [CollectionData]
+}
+
+type DeleteAWSResult {
+    success: Boolean!
+    errors: [String]
+    response: [String]
+}
+
+type Mutation {
+    sign_up(
+        email: String!
+        username: String!
+        password: String!
+    ): User!
+    refresh_token(
+        username: String!
+        refresh_token: String!
+    ): Authentication!
+    # modify_volumes(
+    #     volumes_input: [VolumeRecordInput]!
+    # ): SingleVolumeRecordResult!
+    modify_collection(
+        user_id: ID!,
+        volumes_update: [CollectionDataInput]!
+    ): ModifyAWSResult!
+    delete_collection_records(
+        user_id: ID!,
+        ids_delete: [String]!
+    ): DeleteAWSResult!
+}

@@ -1,0 +1,45 @@
+.search-box {
+    position: relative;
+    width: 300px;
+    margin: 8px;
+}
+
+.search-input {
+    height: 36px;
+}
+
+.select-area {
+    position: absolute;
+    top: 38px;
+    max-width: 600px;
+    width: max-content;
+    max-height: 500px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: var(--background-color-contrast);
+    padding: 4px;
+    overflow: auto;
+    margin-top: 6px;
+}
+
+.option {
+    padding: 4px;
+    height: 60px;
+    user-select: none;
+}
+
+.option:hover {
+    background-color: var(--background-color);
+    transition: background-color ease-in 0.2s;
+}
+
+.option-text {
+    margin-left: 6px;
+}
+
+.option-series-text {
+    font-size: 10pt;
+    font-style: italic;
+    -webkit-line-clamp: 1;
+    filter: brightness(0.7)
+}

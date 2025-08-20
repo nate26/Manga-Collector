@@ -1,0 +1,35 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Scraper Mock",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${cwd}/bin",
+            "program": "./run_scraper_mock.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Run Rest Service",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${cwd}/bin",
+            "program": "./manga_library_rest.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Run GQL",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${cwd}/bin",
+            "program": "./graphql_manga_api.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}

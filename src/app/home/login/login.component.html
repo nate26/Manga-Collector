@@ -1,0 +1,62 @@
+<ng-template #invalidText let-error="error">
+    @if (error | async; as errorText) {
+        <div class="login-input-invalid">
+            <span class="login-invalid-text error-text">
+                {{ errorText }}
+            </span>
+        </div>
+    }
+    @else {
+        <div class="login-input-invalid">
+            <span class="login-invalid-text"></span>
+        </div>
+    }
+</ng-template>
+
+<div class="login-area relative">
+    <button class="btn-sm inactive-button absolute top-2 right-2" (click)="closeLogin()">X</button>
+
+    <h1 class="text login-title">{{pathContext().name}}</h1>
+    <form class="text login-form" [formGroup]="userForm" (ngSubmit)="login()">
+
+        <div id="email-form">
+            <label for="email">Email</label>
+            <input class="login-input" type="email" formControlName="email">
+            <ng-container *ngTemplateOutlet="invalidText; context: { error: emailError$ }"></ng-container>
+        </div>
+
+        @if (!isPathLogin()) {
+            <div id="username-form">
+                <label for="username">Username</label>
+                <input class="login-input" type="text" formControlName="username">
+                <ng-container *ngTemplateOutlet="invalidText; context: { error: usernameError$ }"></ng-container>
+            </div>
+        }
+
+        <div id="password-form">
+            <label for="password">Password</label>
+            <input class="login-input" type="password" formControlName="password">
+            <ng-container *ngTemplateOutlet="invalidText; context: { error: passwordError$ }"></ng-container>
+        </div>
+
+        @if (loginError()) {
+            <span class="login-input-invalid login-error error-text">{{loginError()}}</span>
+        }
+
+        <button type="submit" class="btn active-button login-button" [disabled]="!userForm.valid">
+            {{pathContext().name}}
+        </button>
+
+        <button id="login-nav-link" type="button" class="link-button" (click)="switchPath()">
+            @if (isPathLogin()) {
+                Don't have an account? Sign up here.
+            }
+            @else {
+                Already have an account? Login here.
+            }
+        </button>
+
+    </form>
+
+
+</div>

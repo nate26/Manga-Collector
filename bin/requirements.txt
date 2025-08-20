@@ -1,0 +1,13 @@
+ariadne
+asyncio
+bs4
+flask
+flask-cors
+# flask-sqlalchemy
+# psycopg2
+pyjwt
+pytz
+requests
+requests_aws4auth
+# sqlalchemy_json
+websockets

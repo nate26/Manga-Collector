@@ -1,0 +1,34 @@
+<div class="search-box">
+    <input
+        type="text"
+        class="search-input"
+        placeholder="search volume..."
+        [formControl]="searchControl"
+        (focus)="searchActive.set(true)"
+    />
+    @if (searchResults$ | async; as results) { @if (results.length > 0 &&
+    searchActive()) {
+    <div class="select-area">
+        @for (option of results; track $index) {
+        <div
+            class="option flex"
+            (click)="selectVolume.emit(option)"
+            (keydown)="selectVolume.emit(option)"
+            tabindex="{{ $index }}"
+        >
+            <img
+                [src]="option.primary_cover_image_url"
+                alt="{{ 'cover image for' + option.name }}"
+                class="cover-image"
+            />
+            <div class="option-text">
+                <div class="text t-wrap">{{ option.display_name }}</div>
+                <div class="text t-wrap option-series-text">
+                    {{ option.series }}
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    } }
+</div>

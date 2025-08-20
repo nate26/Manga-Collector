@@ -1,0 +1,20 @@
+.series-volume {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    margin: 5px;
+    text-align: center;
+    box-shadow: 1px 1px 4px 1px var(--shadow-color);
+    font-family: var(--manga-font);
+    font-size: 12pt;
+    line-height: 12pt;
+    padding: 0 8px 0 9px;
+    border: 1px solid var(--tile-border-color);
+}
+
+.text {
+    font-size: 12pt;
+    font-family: var(--manga-font);
+    line-height: 12pt;
+    color: lightgray;
+}

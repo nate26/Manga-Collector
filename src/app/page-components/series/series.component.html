@@ -1,0 +1,79 @@
+<div class="mt-20">
+    <div class="display-area" style="height: calc(100vh - 80px)">
+        <div class="series overflow-auto">
+            @for (series of series(); track $index) {
+            <div class="series-row">
+                @defer (on viewport) {
+                <img
+                    [src]="series.cover_image"
+                    appLazyImage
+                    alt="{{ 'cover image for' + series.title }}"
+                    class="cover-image cursor-pointer"
+                    (click)="showVolumeDetails(series)"
+                    (keypress)="selectedSeries.set(series)"
+                    tabindex="{$index}"
+                />
+                } @placeholder {
+                <div class="cover-image"></div>
+                }
+                <div class="c c-text">
+                    <a
+                        class="text tw tw-3"
+                        [href]="series.url"
+                        target="_blank"
+                        >{{ series.title }}</a
+                    >
+                </div>
+                <div class="text al_center c c-text">{{ series.category }}</div>
+                <div class="text al_center c c-text">{{ series.status }}</div>
+                <input
+                    type="checkbox"
+                    class="blue-checkbox al_center c"
+                    [checked]="series.series_id"
+                />
+                <div class="flex flex-wrap c c-f">
+                    @for (volume of series.volumes; track $index) {
+                    <div
+                        class="volume-mini-box"
+                        [ngStyle]="getVolumeStatusColor(volume)"
+                        (click)="navTo(volume.url)"
+                        (keypress)="navTo(volume.url)"
+                        tabindex="{$index}"
+                    >
+                        <span>{{ volume.volume }}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            @defer (on viewport) { @if (seriesIsSelected(series)) {
+            <div
+                [ngClass]="
+                    seriesIsSelected(series)
+                        ? 'series-volumes grow-container'
+                        : 'shrink-container'
+                "
+            >
+                @for (volume of series.volumes; track $index) { @defer (on
+                viewport) {
+                <div class="vol-cover">
+                    <img
+                        [src]="volume.primary_cover_image_url"
+                        appLazyImage
+                        alt="{{ 'cover image for' + series.title }}"
+                        class="cover-image vol-cover-image cursor-pointer"
+                    />
+                    <app-volume-cover-text [title]="volume.display_name" />
+                </div>
+                } @placeholder {
+                <div class="vol-cover"></div>
+                } }
+            </div>
+            } } @placeholder {
+            <div></div>
+            } } @empty {
+            <p class="text">Loading...</p>
+            }
+        </div>
+    </div>
+</div>
