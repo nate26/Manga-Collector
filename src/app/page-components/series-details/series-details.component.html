@@ -1,0 +1,264 @@
+<div class="h-24"></div>
+
+@if (series$ | async; as series) {
+    <div
+        class="flex flex-col items-center pl-4 pr-4 text-white overflow-auto"
+        style="height: calc(100vh - 6rem)"
+    >
+        <div class="flex max-w-screen-lg">
+            <div>
+                <app-cover-image
+                    [cover_image]="series.cover_image"
+                    [name]="series.title"
+                    size="min-w-40"
+                ></app-cover-image>
+                <div>
+                    Creators
+                    <div class="flex flex-col gap-1 mt-1">
+                        @for (author of series.authors; track $index) {
+                            <div class="ml-2 text-sm">
+                                <span class="italic text-zinc-200">
+                                    {{ author.type }}:
+                                </span>
+                                @for (
+                                    name of author.names;
+                                    track $index;
+                                    let count = $count
+                                ) {
+                                    <span
+                                        class="ml-3 text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
+                                        [ngStyle]="
+                                            count === 1
+                                                ? { margin: '0px' }
+                                                : { display: 'block' }
+                                        "
+                                        (click)="
+                                            openSeriesSearch('author', name)
+                                        "
+                                        (keypress)="
+                                            openSeriesSearch('author', name)
+                                        "
+                                        tabindex="{$index}"
+                                    >
+                                        {{ name }}
+                                    </span>
+                                }
+                            </div>
+                        }
+                    </div>
+                    Publishers
+                    <div class="flex flex-col gap-1 mt-1">
+                        @for (publisher of series.publishers; track $index) {
+                            <div class="ml-2 text-sm">
+                                <span class="italic text-zinc-200">
+                                    {{ publisher.type }}:
+                                </span>
+                                @for (
+                                    name of publisher.names;
+                                    track $index;
+                                    let count = $count
+                                ) {
+                                    <span
+                                        class="ml-3 text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
+                                        [ngStyle]="
+                                            count === 1
+                                                ? { margin: '0px' }
+                                                : { display: 'block' }
+                                        "
+                                        (click)="
+                                            openSeriesSearch('publisher', name)
+                                        "
+                                        (keypress)="
+                                            openSeriesSearch('publisher', name)
+                                        "
+                                        tabindex="{$index}"
+                                    >
+                                        {{ name }}
+                                    </span>
+                                }
+                            </div>
+                        }
+                    </div>
+                    Stats
+                    <div class="ml-2 text-sm text-zinc-400">
+                        @for (stat of statLabels; track $index) {
+                            <p>
+                                <span class="italic text-zinc-200">
+                                    {{ stat.header }}:
+                                </span>
+                                {{ series[stat.field] }}
+                            </p>
+                        }
+                        <p>
+                            <span class="italic text-zinc-200">
+                                Printed Volumes:
+                            </span>
+                            {{ series.volumes.length }}
+                        </p>
+                    </div>
+                    Publishing Status
+                    <div class="ml-2 text-sm text-zinc-400">
+                        @for (status of series.release_status; track $index) {
+                            <p>{{ status }}</p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="ml-4">
+                <div class="align-baseline">
+                    <a
+                        class="text-2xl underline"
+                        [href]="series.url"
+                        target="_blank"
+                    >
+                        {{ series.title }}
+                    </a>
+                </div>
+                <div class="flex">
+                    <div class="flex flex-col gap-2 mt-2">
+                        <div>
+                            @for (label of headerLabels; track $index) {
+                                <div class="text-gray-400 italic text-xs">
+                                    {{ label.header }}:
+                                    <span
+                                        class="text-white text-base not-italic"
+                                    >
+                                        {{ series[label.field] }}
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                        <hr class="border-gray-300" />
+                        <div class="text-wrap">
+                            <span class="mr-1 text-xs italic text-gray-400">
+                                Description:
+                            </span>
+                            {{ series.description }}
+                        </div>
+                        <div class="main-grid grid grid-cols-5 gap-y-2 m-4">
+                            @for (volume of series.volumes; track $index) {
+                                <div
+                                    class="big-shadow gap-2 pr-4 h-16 w-full grid grid-cols-subgrid col-start-2 col-end-8 rounded-md cursor-pointer bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
+                                    (click)="openVolumeDetails(volume.isbn)"
+                                    (keypress)="openVolumeDetails(volume.isbn)"
+                                    tabindex="{$index}"
+                                >
+                                    <app-cover-image
+                                        [cover_image]="
+                                            volume.primary_cover_image
+                                        "
+                                        [name]="volume.name"
+                                        size="h-16"
+                                    ></app-cover-image>
+                                    <div class="flex items-center w-fit">
+                                        <p class="leading-6 tw-2">
+                                            {{ volume.name }}
+                                        </p>
+                                    </div>
+                                    <div class="w-fit m-auto text-center">
+                                        {{
+                                            volume.category.replace('-', ' ')
+                                                | titlecase
+                                        }}
+                                    </div>
+                                    <div class="w-fit m-auto text-center">
+                                        Vol {{ volume.volume }}
+                                    </div>
+                                    <div class="w-fit m-auto text-center">
+                                        {{ volume.format }}
+                                    </div>
+                                    <div class="w-fit m-auto text-center">
+                                        {{ volume.release_date | date }}
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="ml-4 min-w-40 flex flex-col gap-4">
+                        @if (series.genres.length > 0) {
+                            <div>
+                                Genres:
+                                <div class="flex flex-col gap-1 mt-1">
+                                    @for (
+                                        genre of series.genres;
+                                        track $index
+                                    ) {
+                                        <div
+                                            class="ml-2 text-sm text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
+                                            (click)="
+                                                openSeriesSearch('genre', genre)
+                                            "
+                                            (keypress)="
+                                                openSeriesSearch('genre', genre)
+                                            "
+                                            tabindex="{$index}"
+                                        >
+                                            {{ genre }}
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        @if (series.themes.length > 0) {
+                            <div>
+                                Themes:
+                                <div class="flex flex-col gap-1 mt-1">
+                                    @for (
+                                        theme of series.themes;
+                                        track $index
+                                    ) {
+                                        <div
+                                            class="ml-2 text-sm text-zinc-400 hover:text-indigo-400 hover:font-semibold hover:cursor-pointer"
+                                            (click)="
+                                                openSeriesSearch(
+                                                    'theme',
+                                                    theme.theme
+                                                )
+                                            "
+                                            (keypress)="
+                                                openSeriesSearch(
+                                                    'theme',
+                                                    theme.theme
+                                                )
+                                            "
+                                            tabindex="{$index}"
+                                        >
+                                            {{ theme.theme }}
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (series.recommendations.length > 0) {
+            <hr class="border-gray-300 mt-4 mb-4 max-w-screen-lg" />
+            <div class="flex flex-col gap-2 mt-4 mb-8">
+                <p>Recommended Series:</p>
+                <div class="flex flex-wrap gap-4 max-w-full">
+                    @for (rec of recommendations$ | async; track $index) {
+                        @defer {
+                            <div
+                                class="relative h-40"
+                                class="relative h-40 rounded-lg shadow-lg bg-cover bg-center hover:scale-105 transition-transform duration-300 cursor-pointer"
+                                style="aspect-ratio: 1 / 1.45"
+                                [style.background-image]="
+                                    'url(' + rec.cover_image + ')'
+                                "
+                                (click)="openSeriesDetails(rec.series_id)"
+                                (keypress)="openSeriesDetails(rec.series_id)"
+                                tabindex="{$index}"
+                            >
+                                <app-volume-cover-text [title]="rec.title" />
+                            </div>
+                        } @placeholder {
+                            <div class="cover-image"></div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

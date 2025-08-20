@@ -1,7 +1,7 @@
 <div class="flex space-between mt-20">
     <div>
         @if (canUserEdit()) {
-        <app-search-volumes (selectVolume)="createCollection($event)" />
+            <app-search-volumes (selectVolume)="createCollection($event)" />
         }
         <div class="h-fit w-36 m-8 text-white text-sm text-nowrap">
             <!-- Filter Name -->
@@ -13,9 +13,9 @@
             <select class="mc-input mb-2" [(ngModel)]="filterCategory">
                 <option value="">Filter by Category</option>
                 @for (category of availableCategories; track $index) {
-                <option [value]="category">
-                    {{ category ?? "[BLANK]" | titlecase }}
-                </option>
+                    <option [value]="category">
+                        {{ category ?? '[BLANK]' | titlecase }}
+                    </option>
                 }
             </select>
 
@@ -42,9 +42,9 @@
             <select class="mc-input mb-2" [(ngModel)]="filterStore">
                 <option value="">Filter by Store</option>
                 @for (store of availableStores; track $index) {
-                <option [value]="store">
-                    {{ store ?? "[BLANK]" }}
-                </option>
+                    <option [value]="store">
+                        {{ store ?? '[BLANK]' }}
+                    </option>
                 }
             </select>
 
@@ -74,130 +74,179 @@
                 [editMode]="true"
                 (updateTags)="filterTags.set($event)"
             ></app-tag-list>
+
+            <button
+                class="block inactive-button mt-5 mr-auto border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
+                (click)="submitFilter()"
+            >
+                Search
+            </button>
         </div>
     </div>
 
     <div class="flex justify-center w-full m-4">
-        <div class="w-full overflow-auto" style="height: calc(100vh - 112px)">
-            @if (collections$ | async; as collections) { @for (collection of
-            collections; track $index) { @defer (on viewport) {
-            <!-- TODO remove hardcoded color -->
-            <div
-                class="volume-row bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
-            >
-                <img
-                    [src]="collection.volume.primary_cover_image"
-                    appLazyImage
-                    alt="{{ 'cover image for' + collection.volume.name }}"
-                    class="cover-image cursor-pointer"
-                    (click)="openVolumeDetails(collection.volume.isbn)"
-                    (keypress)="openVolumeDetails(collection.volume.isbn)"
-                    tabindex="{$index}"
-                />
-                <div class="cell w260">
-                    <a
-                        class="text t-wrap cursor-pointer"
-                        (click)="openVolumeDetails(collection.volume.isbn)"
-                        (keypress)="openVolumeDetails(collection.volume.isbn)"
-                        tabindex="{$index}"
-                        >{{ collection.volume.name }}</a
-                    >
-                </div>
-                <div class="cell w60">
-                    <div class="text al_center">
-                        {{ collection.volume.category | titlecase }}
-                    </div>
-                </div>
-                <div class="cell w50">
-                    <div class="text al_center">
-                        {{ collection.volume.volume }}
-                    </div>
-                </div>
-                <div class="cell w60">
-                    @if (canUserEdit()) {
-                    <input
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        class="text"
-                        [value]="collection.cost"
-                        (change)="updateValue(collection, 'cost', $event)"
-                    />
-                    } @else {
-                    <div class="text al_right">
-                        {{ collection.cost | currency }}
-                    </div>
+        <div
+            #display_items
+            id="display_items"
+            class="w-full overflow-auto"
+            style="height: calc(100vh - 112px)"
+        >
+            @if (collections$ | async; as collections) {
+                @for (collection of collections; track $index) {
+                    @defer (on viewport) {
+                        <!-- TODO remove hardcoded color -->
+                        <div
+                            class="volume-row bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
+                        >
+                            <img
+                                [src]="collection.volume.primary_cover_image"
+                                appLazyImage
+                                alt="{{
+                                    'cover image for' + collection.volume.name
+                                }}"
+                                class="cover-image cursor-pointer"
+                                (click)="
+                                    openVolumeDetails(collection.volume.isbn)
+                                "
+                                (keypress)="
+                                    openVolumeDetails(collection.volume.isbn)
+                                "
+                                tabindex="{$index}"
+                            />
+                            <div class="cell w260">
+                                <a
+                                    class="text t-wrap cursor-pointer"
+                                    (click)="
+                                        openVolumeDetails(
+                                            collection.volume.isbn
+                                        )
+                                    "
+                                    (keypress)="
+                                        openVolumeDetails(
+                                            collection.volume.isbn
+                                        )
+                                    "
+                                    tabindex="{$index}"
+                                >
+                                    {{ collection.volume.name }}
+                                </a>
+                            </div>
+                            <div class="cell w60">
+                                <div class="text al_center">
+                                    {{ collection.volume.category | titlecase }}
+                                </div>
+                            </div>
+                            <div class="cell w50">
+                                <div class="text al_center">
+                                    {{ collection.volume.volume }}
+                                </div>
+                            </div>
+                            <div class="cell w60">
+                                @if (canUserEdit()) {
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        class="text"
+                                        [value]="collection.cost"
+                                        (change)="
+                                            updateValue(
+                                                collection,
+                                                'cost',
+                                                $event
+                                            )
+                                        "
+                                    />
+                                } @else {
+                                    <div class="text al_right">
+                                        {{ collection.cost | currency }}
+                                    </div>
+                                }
+                            </div>
+                            <div class="cell w75">
+                                @if (canUserEdit()) {
+                                    <input
+                                        type="text"
+                                        class="text"
+                                        [value]="collection.store"
+                                        (change)="
+                                            updateValue(
+                                                collection,
+                                                'store',
+                                                $event
+                                            )
+                                        "
+                                    />
+                                } @else {
+                                    <div class="text al_center">
+                                        {{ collection.store }}
+                                    </div>
+                                }
+                            </div>
+                            <div class="cell w90">
+                                @if (canUserEdit()) {
+                                    <input
+                                        type="text"
+                                        class="text"
+                                        [value]="collection.purchase_date"
+                                        (change)="
+                                            updateValue(
+                                                collection,
+                                                'purchase_date',
+                                                $event
+                                            )
+                                        "
+                                    />
+                                } @else {
+                                    <div class="text al_center">
+                                        {{ collection.purchase_date }}
+                                    </div>
+                                }
+                            </div>
+                            <div class="cell w50">
+                                <input
+                                    type="checkbox"
+                                    class="green-checkbox al_center"
+                                    [checked]="collection.read"
+                                    [disabled]="!canUserEdit()"
+                                    (change)="
+                                        updateValue(collection, 'read', $event)
+                                    "
+                                />
+                            </div>
+                            <div class="cell w150 items-center">
+                                <app-tag-list
+                                    [filterTags]="collection.tags"
+                                    [editMode]="canUserEdit()"
+                                    (updateTags)="
+                                        updateTags(collection, $event)
+                                    "
+                                ></app-tag-list>
+                            </div>
+                            @if (canUserEdit()) {
+                                <div class="cell w50">
+                                    <button
+                                        class="btn-sm inactive-button"
+                                        (click)="deleteCollection(collection)"
+                                    >
+                                        X
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    } @placeholder {
+                        <div
+                            style="
+                                display: flex;
+                                margin: 10px;
+                                background-color: rgb(12, 17, 24);
+                                border-radius: 5px;
+                                height: 30px;
+                            "
+                        ></div>
                     }
-                </div>
-                <div class="cell w75">
-                    @if (canUserEdit()) {
-                    <input
-                        type="text"
-                        class="text"
-                        [value]="collection.store"
-                        (change)="updateValue(collection, 'store', $event)"
-                    />
-                    } @else {
-                    <div class="text al_center">
-                        {{ collection.store }}
-                    </div>
-                    }
-                </div>
-                <div class="cell w90">
-                    @if (canUserEdit()) {
-                    <input
-                        type="text"
-                        class="text"
-                        [value]="collection.purchase_date"
-                        (change)="
-                            updateValue(collection, 'purchase_date', $event)
-                        "
-                    />
-                    } @else {
-                    <div class="text al_center">
-                        {{ collection.purchase_date }}
-                    </div>
-                    }
-                </div>
-                <div class="cell w50">
-                    <input
-                        type="checkbox"
-                        class="green-checkbox al_center"
-                        [checked]="collection.read"
-                        [disabled]="!canUserEdit()"
-                        (change)="updateValue(collection, 'read', $event)"
-                    />
-                </div>
-                <div class="cell w150 items-center">
-                    <app-tag-list
-                        [filterTags]="collection.tags"
-                        [editMode]="canUserEdit()"
-                        (updateTags)="updateTags(collection, $event)"
-                    >
-                    </app-tag-list>
-                </div>
-                @if (canUserEdit()) {
-                <div class="cell w50">
-                    <button
-                        class="btn-sm inactive-button"
-                        (click)="deleteCollection(collection)"
-                    >
-                        X
-                    </button>
-                </div>
                 }
-            </div>
-            } @placeholder {
-            <div
-                style="
-                    display: flex;
-                    margin: 10px;
-                    background-color: rgb(12, 17, 24);
-                    border-radius: 5px;
-                    height: 30px;
-                "
-            ></div>
-            } } }
+            }
         </div>
     </div>
 </div>

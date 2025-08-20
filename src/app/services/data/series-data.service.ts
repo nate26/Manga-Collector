@@ -1,109 +1,89 @@
 import { Injectable, inject } from '@angular/core';
-import { Apollo, gql } from 'apollo-angular';
-import { EMPTY, Observable, catchError, map, switchMap, tap } from 'rxjs';
-import { ISeriesRecord } from '../../interfaces/iSeries.interface';
-import { IGQLGetCollectionSeries } from '../../interfaces/iGQLRequests.interface';
-import { UserService } from './user.service';
+import { EMPTY, catchError, debounceTime, map, pipe, switchMap } from 'rxjs';
+import { APIQueryService, Query } from './api-query.service';
+import { HttpClient } from '@angular/common/http';
+
+export type SeriesVolume = {
+  isbn: string;
+  name: string;
+  volume: string;
+  category: string;
+  stock_status: string;
+  release_date: string;
+  primary_cover_image: string;
+  format: string;
+};
+
+type Theme = {
+  theme: string;
+  votes: number;
+};
+
+export type SeriesDetails = {
+  name: string;
+  type: string;
+};
+
+export type SeriesOutput = {
+  title: string;
+  cover_image: string;
+  category: string;
+  status: string;
+  url: string;
+  series_id: string;
+  volumes: SeriesVolume[];
+  genres: string[];
+  themes: Theme[];
+  description: string;
+  release_status: string;
+  latest_chapter: number;
+  authors: SeriesDetails[];
+  publishers: SeriesDetails[];
+  bayesian_rating: number;
+  rank: number;
+  recommendations: number[];
+};
+
+export type SeriesQuery = Query & {
+  title?: string;
+  status?: string;
+  category?: string;
+  genre?: string;
+  theme?: string;
+  author?: string;
+  publisher?: string;
+  rank_le?: number;
+  rank_ge?: number;
+  rating_le?: number;
+  rating_ge?: number;
+};
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class SeriesDataService {
+  private readonly _http = inject(HttpClient);
+  private readonly _queryService = inject(APIQueryService);
 
-    private readonly _apollo = inject(Apollo);
-    private readonly _userService = inject(UserService);
+  private readonly SERIES_PATH = 'http://localhost:4000/api/series';
 
-    private readonly SERIES_VOLUMES_QUERY = gql`
-        query get_collection_series($user_id: ID!) {
-            get_collection_series(user_id: $user_id) {
-                records {
-                    series_id
-                    title
-                    associated_titles
-                    url
-                    category
-                    series_match_confidence
-                    description
-                    cover_image
-                    genres
-                    themes {
-                        theme
-                    }
-                    latest_chapter
-                    release_status
-                    status
-                    authors {
-                        name
-                        type
-                    }
-                    publishers {
-                        name
-                        type
-                    }
-                    bayesian_rating
-                    rank
-                    recommendations
-                    volumes {
-                        isbn
-                        brand
-                        series
-                        series_id
-                        display_name
-                        name
-                        category
-                        volume
-                        url
-                        record_added_date
-                        record_updated_date
-                        release_date
-                        publisher
-                        format
-                        pages
-                        authors
-                        isbn_10
-                        primary_cover_image_url
-                        other_images {
-                            name
-                            url
-                        }
-                        description
-                        retail_price
-                        user_collection_data {
-                            id
-                        }
-                    }
-                }
-                success
-                errors
-            }
-        }
-    `;
+  seriesSearch = pipe(
+    map((query: SeriesQuery) => this.SERIES_PATH + '?' + this._queryService.parseQuery(query)),
+    debounceTime(300),
+    switchMap(url => this._http.get<SeriesOutput[]>(url)),
+    catchError((err: Error) => {
+      console.error('Could not get all series data because ', err);
+      return EMPTY;
+    })
+  );
 
-    readonly collectionSeries$: Observable<ISeriesRecord[]> = this._userService.userIdFromRoute$.pipe(
-        switchMap(user_id =>
-            this._apollo.watchQuery<IGQLGetCollectionSeries>({
-                query: this.SERIES_VOLUMES_QUERY,
-                variables: { user_id }
-            }).valueChanges
-        ),
-        tap(({ error }) => {
-            if (error) throw error;
-        }),
-        map(response => response.data.get_collection_series.records.map(series => ({
-            ...series,
-            volumes: series.volumes.map(vol => ({
-                ...vol,
-                // this should probably be handled in the backend
-                user_collection_data: (vol.user_collection_data ?? []).map(collection => ({
-                    ...collection,
-                    tags: collection.tags ?? []
-                }))
-            }))
-        }))),
-        catchError((err: Error) => {
-            console.error('Could not get data because ', err);
-            return EMPTY;
-        })
+  getSeries(series_id: number) {
+    const url = this.SERIES_PATH + '/' + series_id;
+    return this._http.get<SeriesOutput>(url).pipe(
+      catchError((err: Error) => {
+        console.error('Could not get series data because ', err);
+        return EMPTY;
+      })
     );
-
+  }
 }

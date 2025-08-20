@@ -1,78 +1,83 @@
 ## TODO List
 
 ### Quality Checklist:
+
 - [ ] authorization with edit mode and login features
 - [ ] refresh token if server has been restarted or something goes stale with user token
 
 ### Epics:
+
 - [x] <font color="gray"> ~~Collection Editor~~ </font>
 - [x] <font color="gray"> ~~Authorization~~ </font>
-- [ ] [<font color="limegreen"> IN PROGRESS </font>] Series Viewer
-- [ ] [<font color="limegreen"> IN PROGRESS </font>] Browse Volume Sales
+- [x] <font color="gray"> ~~Series Viewer~~ </font>
+- [x] <font color="gray"> ~~Browse Volume Sales~~ </font>
 - [ ] [<font color="orange"> REQUIRED </font>] Admin Records Editor
 - [ ] Admin Add Volumes
 - [ ] Item Search
 - [ ] User Lists (Wishlists, etc...)
 - [ ] Series Editions
-- [ ] Browse Series
+- [ ] [<font color="limegreen"> IN PROGRESS </font>] Browse Series
 
 ### One-Off Enhancements:
+
 - [ ] [<font color="orange"> REQUIRED </font>] Error Handling on Data Fetching
 - [ ] [<font color="orange"> REQUIRED </font>] Loading Wheel on Data Fetching and Filtering
 - [ ] Stylized Scrollbar
 
 ### Bugfixes:
+
 - None 😎
 
 ### Tech Debt:
-- [ ] Move Login to GQL
+
+- [ ] [<font color="orange"> REQUIRED </font>] Move Login to Elixir
 - [ ] [<font color="orange"> REQUIRED </font>] Unit Testing
 - [ ] Functional Testing
-- [ ] Improve Filtering Performance
-- [ ] Display Grid for Volume Viewer
-- [ ] Moving Style to Tailwind
-- [ ] Add Batching on Get for Performance
+- [x] <font color="gray"> ~~Improve Filtering Performance~~ </font>
+- [ ] [<font color="limegreen"> IN PROGRESS </font>] Display Grid for Volume Viewer
+- [ ] [<font color="limegreen"> IN PROGRESS </font>] Moving Style to Tailwind
 - [ ] Address Cover Images (performance, safety, cookies)
-- [ ] GQL Rate Limiting
-- [ ] Cleanup Interfaces with GQL
+- [ ] Cleanup Interfaces with service
 
 ### Series Viewer:
-- [x] Fix Volume Image Display
+
+- [x] <font color="gray"> ~~Fix Volume Image Display~~ </font>
 - [ ] Add Volume Tags (Owned, Unowned, Sale, Read)
-- [ ] Volume Details Window
-- [ ] Lazy Load Volume Data
+- [x] <font color="gray"> ~~Volume Details Window~~ </font>
+- [x] <font color="gray"> ~~Lazy Load Volume Data~~ </font>
 - [ ] Add Sale Data to Volume Details if Unowned
 - [ ] Add Collection Data to Volume Details if Owned
-- [ ] Create Series Page
+- [x] <font color="gray"> ~~Create Series Page~~ </font>
 - [ ] Link to Series Page
 
 ### Browse Volume Sales:
-- [x] Display Volumes With Sales
-- [x] Display Sale Price Tag
-- [x] Move Model Change to Service
+
+- [x] <font color="gray"> ~~Display Volumes With Sales~~ </font>
+- [x] <font color="gray"> ~~Display Sale Price Tag~~ </font>
+- [x] <font color="gray"> ~~Move Model Change to Service~~ </font>
 - [ ] Provide Link To Store
-- [ ] Volume Details Window
-- [ ] Display Link to Series Page
-- [ ] Enhance Filtering
+- [x] <font color="gray"> ~~Volume Details Window~~ </font>
+- [ ] [<font color="limegreen"> IN PROGRESS </font>] Display Link to Series Page
+- [ ] [<font color="limegreen"> IN PROGRESS </font>] Enhance Filtering (series filters)
 - [ ] Add to Purchase List
 - [ ] Remove from Purchase List
 - [ ] Display Current Cost in Purchase List
 - [ ] Enable Disabling on Purchase List
 
 ### Browse Series:
-- [ ] Display Series Suggestions
+
+- [x] <font color="gray"> ~~Display Series Suggestions~~ </font>
+- [ ] Filter by owned series
 
 ### Editing:
+
 - [ ] [<font color="orange"> REQUIRED </font>] Error Message on Save Fail
-- [ ] [<font color="orange"> REQUIRED </font>] Loading Wheel on Save
 - [ ] Volume Bulk Editing
-- [ ] Prompt User On Cancel
-- [ ] Press and Hold to Delete
-- [ ] Max Editing Limit
-- [ ] Interactive Stylization of Buttons
 
 ### Filtering:
+
 - [ ] Enhanced Date Filter (ranges for since, before, between)
 - [ ] Enhanced Tag Filter (inline, select autofill dropdown, add button)
-- [ ] Enhanced Cost Filter (min, max, range)
+- [x] <font color="gray"> ~~Enhanced Cost Filter (min, max, range)~~ </font>
+- [x] <font color="gray"> ~~Autofill Filter~~ </font>
 - [ ] Investigate Options for Other Filters on Data

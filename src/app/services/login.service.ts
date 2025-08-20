@@ -1,31 +1,27 @@
+import { Dialog } from '@angular/cdk/dialog';
 import { Injectable, inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { LoginComponent } from '../home/login/login.component';
 import { UserData } from '../interfaces/iUserData.type';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class LoginService {
+  readonly #dialog = inject(Dialog);
 
-    private readonly _matDialog = inject(MatDialog);
-
-    constructor() { }
-
-    /**
-     * Open the login dialog.
-     * @returns An observable that emits whether the user is logged in
-     * when the dialog is closed.
-     */
-    openLogin(): Observable<UserData | undefined> {
-        return this._matDialog.open(LoginComponent, {
-            data: {
-                path: '/login',
-                name: 'Login'
-            },
-            disableClose: true
-        }).afterClosed();
-    }
-
+  /**
+   * Open the login dialog.
+   * @returns An observable that emits whether the user is logged in
+   * when the dialog is closed.
+   */
+  openLogin(): Observable<UserData | undefined> {
+    return this.#dialog.open<UserData>(LoginComponent, {
+      data: {
+        path: '/login',
+        name: 'Login'
+      },
+      disableClose: true
+    }).closed;
+  }
 }

@@ -1,0 +1,10 @@
+<div class="text-xs italic">{{ title() }}</div>
+<p-slider
+  [min]="min()"
+  [max]="max()"
+  [step]="step()"
+  [disabled]="disabled()"
+  [range]="true"
+  [(ngModel)]="rangeValues"
+  class="w-56"
+/>

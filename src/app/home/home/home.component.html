@@ -1,19 +1,51 @@
 <div class="app-header flex">
     <div class="flex">
         <h1 class="text">Manga Collector</h1>
-        <button id="browse-sales" class="nav-button text" (click)="routeTo('sales')">Browse Sales</button>
+        <button
+            id="browse-sales"
+            class="nav-button"
+            (click)="routeTo('sales', defaultSalesQuery)"
+        >
+            Browse Sales
+        </button>
+        <button
+            id="browse-sales"
+            class="nav-button"
+            (click)="routeTo('series', defaultSeriesQuery)"
+        >
+            Browse Series
+        </button>
         @if (userService.userDataIsValid()) {
-            <button id="my-series" class="nav-button text" (click)="routeToUserPage('series')">My Series</button>
-            <button id="my-collection" class="nav-button text" (click)="routeToUserPage('collection')">My Volumes</button>
+            <button
+                id="my-collection"
+                class="nav-button"
+                (click)="routeToUserPage('collection', defaultCollectionQuery)"
+            >
+                My Volumes
+            </button>
+            <button
+                id="my-series"
+                class="nav-button"
+                (click)="routeToUserPage('series', defaultSeriesQuery)"
+            >
+                My Series
+            </button>
         }
     </div>
     <div>
         <!-- user icon -->
         @if (userService.userDataIsValid()) {
-            <button id="sign-out" class="nav-button text" (click)="userService.logout()">Sign Out</button>
-        }
-        @else {
-            <button id="log-in" class="nav-button text" (click)="callOpenLogin()">Login</button>
+            <button
+                id="sign-out"
+                class="nav-button"
+                (click)="userService.logout()"
+            >
+                Sign Out
+            </button>
+        } @else {
+            <button id="log-in" class="nav-button" (click)="callOpenLogin()">
+                Login
+            </button>
         }
     </div>
 </div>

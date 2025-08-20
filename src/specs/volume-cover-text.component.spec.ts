@@ -9,9 +9,8 @@ describe('VolumeCoverTextComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [VolumeCoverTextComponent]
-    })
-    .compileComponents();
-    
+    }).compileComponents();
+
     fixture = TestBed.createComponent(VolumeCoverTextComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

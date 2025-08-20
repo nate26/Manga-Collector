@@ -9,9 +9,8 @@ describe('VolumeDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [VolumeDetailsComponent]
-    })
-    .compileComponents();
-    
+    }).compileComponents();
+
     fixture = TestBed.createComponent(VolumeDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

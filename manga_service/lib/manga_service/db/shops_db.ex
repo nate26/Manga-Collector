@@ -234,13 +234,25 @@ defmodule MangaService.ShopsDB do
     Shop.changeset(shop, attrs)
   end
 
-  def distinct(key) do
-    query =
-      from(v in Shop,
-        select: v.promotion,
-        distinct: true
-      )
+  def distinct_stores() do
+    Repo.all(from(v in Shop, select: v.store, distinct: true, where: not is_nil(v.store)))
+  end
 
-    Repo.all(query)
+  def distinct_conditions() do
+    Repo.all(from(v in Shop, select: v.condition, distinct: true, where: not is_nil(v.condition)))
+  end
+
+  def distinct_stock_statuses() do
+    Repo.all(
+      from(v in Shop, select: v.stock_status, distinct: true, where: not is_nil(v.stock_status))
+    )
+  end
+
+  def distinct_coupons() do
+    Repo.all(from(v in Shop, select: v.coupon, distinct: true, where: not is_nil(v.coupon)))
+  end
+
+  def distinct_promotions() do
+    Repo.all(from(v in Shop, select: v.promotion, distinct: true, where: not is_nil(v.promotion)))
   end
 end

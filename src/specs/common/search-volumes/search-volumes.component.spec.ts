@@ -4,30 +4,27 @@ import { VolumeService } from '../../../app/services/data/volume.service';
 import { of } from 'rxjs';
 
 describe('SearchVolumesComponent', () => {
-    let component: SearchVolumesComponent;
-    let fixture: ComponentFixture<SearchVolumesComponent>;
+  let component: SearchVolumesComponent;
+  let fixture: ComponentFixture<SearchVolumesComponent>;
 
-    let volumeServiceMock: jasmine.SpyObj<VolumeService>;
+  let volumeServiceMock: jasmine.SpyObj<VolumeService>;
 
-    beforeEach(async () => {
-        volumeServiceMock = {
-            ...jasmine.createSpyObj([], ['volumesBasic$']),
-            volumesBasic$: of([])
-        };
-        await TestBed.configureTestingModule({
-            imports: [SearchVolumesComponent],
-            providers: [
-                { provide: VolumeService, useValue: volumeServiceMock }
-            ]
-        })
-            .compileComponents();
+  beforeEach(async () => {
+    volumeServiceMock = {
+      ...jasmine.createSpyObj([], ['volumesBasic$']),
+      volumesBasic$: of([])
+    };
+    await TestBed.configureTestingModule({
+      imports: [SearchVolumesComponent],
+      providers: [{ provide: VolumeService, useValue: volumeServiceMock }]
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(SearchVolumesComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+    fixture = TestBed.createComponent(SearchVolumesComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

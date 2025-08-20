@@ -7,40 +7,39 @@ import { UserService } from '../../../app/services/data/user.service';
 import { of } from 'rxjs';
 
 describe('CollectionComponent', () => {
-    let component: CollectionComponent;
-    let fixture: ComponentFixture<CollectionComponent>;
+  let component: CollectionComponent;
+  let fixture: ComponentFixture<CollectionComponent>;
 
-    let collectionDataServiceMock: jasmine.SpyObj<CollectionDataService>;
-    let volumeServiceMock: jasmine.SpyObj<VolumeService>;
-    let destroyRefMock: jasmine.SpyObj<DestroyRef>;
-    let userServiceMock: jasmine.SpyObj<UserService>;
+  let collectionDataServiceMock: jasmine.SpyObj<CollectionDataService>;
+  let volumeServiceMock: jasmine.SpyObj<VolumeService>;
+  let destroyRefMock: jasmine.SpyObj<DestroyRef>;
+  let userServiceMock: jasmine.SpyObj<UserService>;
 
-    beforeEach(async () => {
-        collectionDataServiceMock = {
-            ...jasmine.createSpyObj(['saveToCollection', 'deleteFromCollection',
-                'buildNewRecord']),
-            collectionVolumes$: of([])
-        };
-        volumeServiceMock = jasmine.createSpyObj(['queryVolume']);
-        destroyRefMock = jasmine.createSpyObj(['onDestroy']);
-        userServiceMock = jasmine.createSpyObj(['canUserEdit', 'userDataIsValid']);
+  beforeEach(async () => {
+    collectionDataServiceMock = {
+      ...jasmine.createSpyObj(['saveToCollection', 'deleteFromCollection', 'buildNewRecord']),
+      collectionVolumes$: of([])
+    };
+    volumeServiceMock = jasmine.createSpyObj(['queryVolume']);
+    destroyRefMock = jasmine.createSpyObj(['onDestroy']);
+    userServiceMock = jasmine.createSpyObj(['canUserEdit', 'userDataIsValid']);
 
-        await TestBed.configureTestingModule({
-            imports: [CollectionComponent],
-            providers: [
-                { provide: CollectionDataService, useValue: collectionDataServiceMock },
-                { provide: VolumeService, useValue: volumeServiceMock },
-                { provide: DestroyRef, useValue: destroyRefMock },
-                { provide: UserService, useValue: userServiceMock }
-            ]
-        }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [CollectionComponent],
+      providers: [
+        { provide: CollectionDataService, useValue: collectionDataServiceMock },
+        { provide: VolumeService, useValue: volumeServiceMock },
+        { provide: DestroyRef, useValue: destroyRefMock },
+        { provide: UserService, useValue: userServiceMock }
+      ]
+    }).compileComponents();
 
-        fixture = TestBed.createComponent(CollectionComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+    fixture = TestBed.createComponent(CollectionComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

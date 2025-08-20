@@ -1,128 +1,154 @@
 @if (volume$ | async; as volume) {
-<div
-    class="flex m-auto p-4 w-[1024px] min-w-fit h-fit bg-zinc-700 overflow-hidden"
->
-    <div class="h-fit min-w-[230px] text-sm">
-        <img
-            [src]="volume.primary_cover_image"
-            appLazyImage
-            alt="{{ 'cover image for' + volume.name }}"
-            class="cover-image rounded-lg shadow-lg mb-2"
-        />
-        <div class="text">
-            <span
-                class="mr-1 text-xs italic text-gray-300"
-                class="mr-1 text-xs italic text-gray-300"
-                >Added to Your Collection:</span
-            >
-            <!-- {{ volume.user_collection_data[0].inserted | date }} -->
+    <div
+        class="flex m-auto p-4 w-[1024px] min-w-fit h-fit bg-zinc-700 overflow-hidden"
+    >
+        <div class="h-fit min-w-[230px] text-sm">
+            <img
+                [src]="volume.primary_cover_image"
+                appLazyImage
+                alt="{{ 'cover image for' + volume.name }}"
+                class="cover-image rounded-lg shadow-lg mb-2"
+            />
+            <div class="text">
+                <span
+                    class="mr-1 text-xs italic text-gray-300"
+                    class="mr-1 text-xs italic text-gray-300"
+                >
+                    Added to Your Collection:
+                </span>
+                <!-- {{ volume.user_collection_data[0].inserted | date }} -->
+            </div>
+            <div class="text">
+                <span class="mr-1 text-xs italic text-gray-300">
+                    Updated in Your Collection:
+                </span>
+                <!-- {{ volume.user_collection_data[0].updated | date }} -->
+            </div>
+            <div class="text">
+                <span class="mr-1 text-xs italic text-gray-300">
+                    Added to Library:
+                </span>
+                {{ volume.inserted_at | date }}
+            </div>
+            <div class="text">
+                <span class="mr-1 text-xs italic text-gray-300">
+                    Updated in Library:
+                </span>
+                {{ volume.updated_at | date }}
+            </div>
         </div>
-        <div class="text">
-            <span class="mr-1 text-xs italic text-gray-300"
-                >Updated in Your Collection:</span
-            >
-            <!-- {{ volume.user_collection_data[0].updated | date }} -->
-        </div>
-        <div class="text">
-            <span class="mr-1 text-xs italic text-gray-300"
-                >Added to Library:</span
-            >
-            {{ volume.inserted_at | date }}
-        </div>
-        <div class="text">
-            <span class="mr-1 text-xs italic text-gray-300"
-                >Updated in Library:</span
-            >
-            {{ volume.updated_at | date }}
-        </div>
-    </div>
-    <div class="flex flex-col gap-2 ml-4 h-fit">
-        <a class="text t-wrap text-lg" [href]="volume.url" target="_blank">{{
-            volume.display_name
-        }}</a>
-        <div class="text t-wrap">
-            <span class="mr-1 text-xs italic text-gray-300">Series: </span>
-            @if (volume.series) { {{ volume.series }} } @else {
-            <span class="text-g">Unknown</span> }
-        </div>
-        <hr class="border-gray-300" />
-        <div class="text t-wrap" style="display: block">
-            <span class="mr-1 text-xs italic text-gray-300">Description: </span>
-            @if (volume.description) { {{ volume.description }} } @else {
-            <span class="text-g">None</span> }
-        </div>
-        <hr class="border-gray-300" />
-        <div class="flex">
-            <div class="mr-auto">
-                <div class="text">
-                    <span class="mr-1 text-xs italic text-gray-300"
-                        >Author(s):
-                    </span>
-                    @if (volume.authors) { {{ volume.authors }} } @else {
-                    <span class="text-g">Unknown</span> }
-                </div>
-                <div class="text">
-                    <span class="mr-1 text-xs italic text-gray-300"
-                        >Release Date:
-                    </span>
-                    @if (volume.release_date) {
-                    {{ volume.release_date | date }} } @else {
-                    <span class="text-g">Unknown</span> }
-                </div>
-                <div class="text">
-                    <span class="mr-1 text-xs italic text-gray-300"
-                        >Cost:
-                    </span>
-                    <!-- {{ volume.user_collection_data[0].cost | currency }}
+        <div class="flex flex-col gap-2 ml-4 h-fit">
+            <a class="text t-wrap text-lg" [href]="volume.url" target="_blank">
+                {{ volume.display_name }}
+            </a>
+            <div class="text t-wrap">
+                <span class="mr-1 text-xs italic text-gray-300">Series:</span>
+                @if (volume.series) {
+                    {{ volume.series }}
+                } @else {
+                    <span class="text-g">Unknown</span>
+                }
+            </div>
+            <hr class="border-gray-300" />
+            <div class="text t-wrap" style="display: block">
+                <span class="mr-1 text-xs italic text-gray-300">
+                    Description:
+                </span>
+                @if (volume.description) {
+                    {{ volume.description }}
+                } @else {
+                    <span class="text-g">None</span>
+                }
+            </div>
+            <hr class="border-gray-300" />
+            <div class="flex">
+                <div class="mr-auto">
+                    <div class="text">
+                        <span class="mr-1 text-xs italic text-gray-300">
+                            Author(s):
+                        </span>
+                        @if (volume.authors) {
+                            {{ volume.authors }}
+                        } @else {
+                            <span class="text-g">Unknown</span>
+                        }
+                    </div>
+                    <div class="text">
+                        <span class="mr-1 text-xs italic text-gray-300">
+                            Release Date:
+                        </span>
+                        @if (volume.release_date) {
+                            {{ volume.release_date | date }}
+                        } @else {
+                            <span class="text-g">Unknown</span>
+                        }
+                    </div>
+                    <div class="text">
+                        <span class="mr-1 text-xs italic text-gray-300">
+                            Cost:
+                        </span>
+                        <!-- {{ volume.user_collection_data[0].cost | currency }}
                     <span class="text retail-price text-g">{{
                         volume.retail_price | currency
                     }}</span> -->
+                    </div>
+                    <div class="text">
+                        <span class="mr-1 text-xs italic text-gray-300">
+                            Publisher:
+                        </span>
+                        @if (volume.publisher) {
+                            {{ volume.publisher }}
+                        } @else {
+                            <span class="text-g">Unknown</span>
+                        }
+                    </div>
                 </div>
-                <div class="text">
-                    <span class="mr-1 text-xs italic text-gray-300"
-                        >Publisher:
-                    </span>
-                    @if (volume.publisher) { {{ volume.publisher }} } @else {
-                    <span class="text-g">Unknown</span> }
+                <div class="mr-auto">
+                    <div class="text">
+                        <span class="mr-1 text-xs italic text-gray-300">
+                            Format:
+                        </span>
+                        @if (volume.format) {
+                            {{ volume.format }}
+                        } @else {
+                            <span class="text-g">Unknown</span>
+                        }
+                    </div>
+                    <div class="text">
+                        <span class="mr-1 text-xs italic text-gray-300">
+                            Pages:
+                        </span>
+                        @if (volume.pages) {
+                            {{ volume.pages }}
+                        } @else {
+                            <span class="text-g">Unknown</span>
+                        }
+                    </div>
+                    <div class="text">
+                        <span class="mr-1 text-xs italic text-gray-300">
+                            ISBN (13):
+                        </span>
+                        {{ volume.isbn }}
+                    </div>
+                    <div class="text">
+                        <span class="mr-1 text-xs italic text-gray-300">
+                            ISBN (10):
+                        </span>
+                        @if (volume.isbn_10) {
+                            {{ volume.isbn_10 }}
+                        } @else {
+                            <span class="text-g">Unknown</span>
+                        }
+                    </div>
                 </div>
             </div>
-            <div class="mr-auto">
-                <div class="text">
-                    <span class="mr-1 text-xs italic text-gray-300"
-                        >Format:
-                    </span>
-                    @if (volume.format) { {{ volume.format }} } @else {
-                    <span class="text-g">Unknown</span> }
+            <hr class="border-gray-300" />
+            @if (volume.brand) {
+                <div class="text t-wrap">
+                    Checkout more from
+                    <span class="underline">{{ volume.brand }}</span>
                 </div>
-                <div class="text">
-                    <span class="mr-1 text-xs italic text-gray-300"
-                        >Pages:
-                    </span>
-                    @if (volume.pages) { {{ volume.pages }} } @else {
-                    <span class="text-g">Unknown</span> }
-                </div>
-                <div class="text">
-                    <span class="mr-1 text-xs italic text-gray-300"
-                        >ISBN (13):
-                    </span>
-                    {{ volume.isbn }}
-                </div>
-                <div class="text">
-                    <span class="mr-1 text-xs italic text-gray-300"
-                        >ISBN (10):
-                    </span>
-                    @if (volume.isbn_10) { {{ volume.isbn_10 }} } @else {
-                    <span class="text-g">Unknown</span> }
-                </div>
-            </div>
+            }
         </div>
-        <hr class="border-gray-300" />
-        @if (volume.brand) {
-        <div class="text t-wrap">
-            Checkout more from
-            <span class="underline">{{ volume.brand }}</span>
-        </div>
-        }
     </div>
-</div>
 }
