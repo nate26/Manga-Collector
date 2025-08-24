@@ -3,6 +3,8 @@ import { AsyncPipe } from '@angular/common';
 import { Component, computed, ElementRef, inject, model, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { switchMap, tap } from 'rxjs';
 import { VolumeDetailsComponent } from '../../common/components/volume-details/volume-details.component';
 import { VolumeCoverTextComponent } from '../../common/volume-cover-text/volume-cover-text.component';
@@ -10,7 +12,7 @@ import { SaleDataService, ShopQuery } from '../../services/data/sale-data.servic
 
 @Component({
   selector: 'app-browse-sales',
-  imports: [AsyncPipe, FormsModule, VolumeCoverTextComponent],
+  imports: [AsyncPipe, FormsModule, InputTextModule, ToggleSwitchModule, VolumeCoverTextComponent],
   templateUrl: './browse-sales.component.html',
   styleUrl: './browse-sales.component.css'
 })

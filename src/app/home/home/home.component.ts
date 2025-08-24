@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { MenubarModule } from 'primeng/menubar';
@@ -9,16 +9,21 @@ import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-home',
-  imports: [NgClass, ButtonModule, MenubarModule],
+  imports: [NgClass, RouterModule, ButtonModule, MenubarModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  private readonly _router = inject(Router);
-  private readonly _loginService = inject(LoginService);
-  protected readonly userService = inject(UserService);
+  #loginService = inject(LoginService);
+  #userService = inject(UserService);
 
-  protected readonly menuItems = computed<MenuItem[]>(() => [
+  private _currentUser = computed(
+    () => this.#userService.userData().username || localStorage.getItem('username')
+  );
+
+  userDataIsValid = computed(() => this.#userService.userDataIsValid());
+
+  menuItems = computed<MenuItem[]>(() => [
     {
       label: 'Browse Sales',
       icon: 'pi pi-tags',
@@ -39,7 +44,7 @@ export class HomeComponent {
     {
       label: 'My Collection',
       icon: 'pi pi-th-large',
-      visible: this.userService.userDataIsValid(),
+      visible: this.#userService.userDataIsValid(),
       items: [
         {
           label: 'My Volumes',
@@ -49,47 +54,25 @@ export class HomeComponent {
             order_by: 'name',
             limit: 100,
             offset: 0,
-            collection: 'Collection'
+            collection: 'Collection',
+            username: this._currentUser()
           }
         },
         {
           label: 'My Series',
           icon: 'pi pi-objects-column',
           path: 'series',
-          queryParams: { order_by: 'title', limit: 20 }
+          queryParams: { order_by: 'title', limit: 20, username: this._currentUser() }
         }
       ]
     }
   ]);
 
-  // readonly defaultSalesQuery = {
-  //   order_by: 'name',
-  //   limit: 100,
-  //   store: 'Crunchyroll',
-  //   condition: 'New'
-  // };
-  // readonly defaultSeriesQuery = { order_by: 'title', limit: 20 };
-  // readonly defaultCollectionQuery = {
-  //   order_by: 'name',
-  //   limit: 100,
-  //   offset: 0,
-  //   collection: 'Collection'
-  // };
-
-  routeTo(path: string, queryParams = {}) {
-    this._router.navigate([path], { queryParams });
+  openLogin() {
+    this.#loginService.openLogin().subscribe();
   }
 
-  routeToUserPage(path: string, queryParams = {}) {
-    this._router.navigate([path], {
-      queryParams: {
-        ...queryParams,
-        username: localStorage.getItem('username')
-      }
-    });
-  }
-
-  callOpenLogin() {
-    this._loginService.openLogin().subscribe();
+  logout() {
+    this.#userService.logout();
   }
 }

@@ -1,252 +1,195 @@
-<div class="flex space-between mt-20">
-    <div>
-        @if (canUserEdit()) {
-            <app-search-volumes (selectVolume)="createCollection($event)" />
+<div class="space-between mt-20 flex">
+  <div>
+    @if (canUserEdit()) {
+      <app-search-volumes (selectVolume)="createCollection($event)" />
+    }
+    <div class="m-8 h-fit w-36 text-sm text-nowrap text-white">
+      <!-- Filter Name -->
+      <div class="text-xs italic">Name</div>
+      <input type="text" class="mb-2" pInputText [(ngModel)]="filterName" />
+
+      <!-- Filter Category -->
+      <div class="text-xs italic">Category</div>
+      <select class="mc-input mb-2" [(ngModel)]="filterCategory">
+        <option value="">Filter by Category</option>
+        @for (category of availableCategories; track $index) {
+          <option [value]="category">
+            {{ category ?? '[BLANK]' | titlecase }}
+          </option>
         }
-        <div class="h-fit w-36 m-8 text-white text-sm text-nowrap">
-            <!-- Filter Name -->
-            <div class="text-xs italic">Name</div>
-            <input type="text" class="mc-input mb-2" [(ngModel)]="filterName" />
+      </select>
 
-            <!-- Filter Category -->
-            <div class="text-xs italic">Category</div>
-            <select class="mc-input mb-2" [(ngModel)]="filterCategory">
-                <option value="">Filter by Category</option>
-                @for (category of availableCategories; track $index) {
-                    <option [value]="category">
-                        {{ category ?? '[BLANK]' | titlecase }}
-                    </option>
+      <!-- Filter Volume -->
+      <div class="text-xs italic">Volume</div>
+      <input type="text" class="mb-2" pInputText [(ngModel)]="filterVolume" />
+
+      <!-- Filter Cost -->
+      <div class="text-xs italic">Cost</div>
+      <input type="number" min="0" step="0.01" class="mc-input mb-2" [(ngModel)]="filterCost" />
+
+      <!-- Filter Merchant -->
+      <div class="text-xs italic">Merchant</div>
+      <select class="mc-input mb-2" [(ngModel)]="filterStore">
+        <option value="">Filter by Store</option>
+        @for (store of availableStores; track $index) {
+          <option [value]="store">
+            {{ store ?? '[BLANK]' }}
+          </option>
+        }
+      </select>
+
+      <!-- Filter Purchase Date -->
+      <div class="text-xs italic" style="font-size: 10pt">Purchase Date</div>
+      <input type="date" class="mc-input mb-2" [(ngModel)]="filterPurchaseDate" />
+
+      <!-- Filter Read -->
+      <div class="text-xs italic">Read</div>
+      <input
+        type="checkbox"
+        class="green-checkbox mb-2 ml-3"
+        [(ngModel)]="filterRead"
+        [checked]="filterRead()"
+      />
+
+      <!-- Filter Tags -->
+      <div class="mt-1 text-xs text-white italic">Tags</div>
+      <app-tag-list
+        [filterTags]="filterTags()"
+        [editMode]="true"
+        (updateTags)="filterTags.set($event)"
+      ></app-tag-list>
+
+      <button
+        class="inactive-button mt-5 mr-auto block w-fit cursor-pointer rounded-md border-2 border-solid p-2"
+        (click)="submitFilter()"
+      >
+        Search
+      </button>
+    </div>
+  </div>
+
+  <div class="m-4 flex w-full justify-center">
+    <div
+      #display_items
+      id="display_items"
+      class="w-full overflow-auto"
+      style="height: calc(100vh - 112px)"
+    >
+      @if (collections$ | async; as collections) {
+        @for (collection of collections; track $index) {
+          @defer (on viewport) {
+            <!-- TODO remove hardcoded color -->
+            <div class="volume-row bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]">
+              <img
+                [src]="collection.volume.primary_cover_image"
+                appLazyImage
+                alt="{{ 'cover image for' + collection.volume.name }}"
+                class="cover-image cursor-pointer"
+                (click)="openVolumeDetails(collection.volume.isbn)"
+                (keypress)="openVolumeDetails(collection.volume.isbn)"
+                tabindex="{$index}"
+              />
+              <div class="cell w260">
+                <a
+                  class="text t-wrap cursor-pointer"
+                  (click)="openVolumeDetails(collection.volume.isbn)"
+                  (keypress)="openVolumeDetails(collection.volume.isbn)"
+                  tabindex="{$index}"
+                >
+                  {{ collection.volume.name }}
+                </a>
+              </div>
+              <div class="cell w60">
+                <div class="text al_center">
+                  {{ collection.volume.category | titlecase }}
+                </div>
+              </div>
+              <div class="cell w50">
+                <div class="text al_center">
+                  {{ collection.volume.volume }}
+                </div>
+              </div>
+              <div class="cell w60">
+                @if (canUserEdit()) {
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    class="text"
+                    [value]="collection.cost"
+                    (change)="updateValue(collection, 'cost', $event)"
+                  />
+                } @else {
+                  <div class="text al_right">
+                    {{ collection.cost | currency }}
+                  </div>
                 }
-            </select>
-
-            <!-- Filter Volume -->
-            <div class="text-xs italic">Volume</div>
-            <input
-                type="text"
-                class="mc-input mb-2"
-                [(ngModel)]="filterVolume"
-            />
-
-            <!-- Filter Cost -->
-            <div class="text-xs italic">Cost</div>
-            <input
-                type="number"
-                min="0"
-                step="0.01"
-                class="mc-input mb-2"
-                [(ngModel)]="filterCost"
-            />
-
-            <!-- Filter Merchant -->
-            <div class="text-xs italic">Merchant</div>
-            <select class="mc-input mb-2" [(ngModel)]="filterStore">
-                <option value="">Filter by Store</option>
-                @for (store of availableStores; track $index) {
-                    <option [value]="store">
-                        {{ store ?? '[BLANK]' }}
-                    </option>
+              </div>
+              <div class="cell w75">
+                @if (canUserEdit()) {
+                  <input
+                    type="text"
+                    class="text"
+                    [value]="collection.store"
+                    (change)="updateValue(collection, 'store', $event)"
+                  />
+                } @else {
+                  <div class="text al_center">
+                    {{ collection.store }}
+                  </div>
                 }
-            </select>
-
-            <!-- Filter Purchase Date -->
-            <div class="text-xs italic" style="font-size: 10pt">
-                Purchase Date
+              </div>
+              <div class="cell w90">
+                @if (canUserEdit()) {
+                  <input
+                    type="text"
+                    class="text"
+                    [value]="collection.purchase_date"
+                    (change)="updateValue(collection, 'purchase_date', $event)"
+                  />
+                } @else {
+                  <div class="text al_center">
+                    {{ collection.purchase_date }}
+                  </div>
+                }
+              </div>
+              <div class="cell w50">
+                <input
+                  type="checkbox"
+                  class="green-checkbox al_center"
+                  [checked]="collection.read"
+                  [disabled]="!canUserEdit()"
+                  (change)="updateValue(collection, 'read', $event)"
+                />
+              </div>
+              <div class="cell w150 items-center">
+                <app-tag-list
+                  [filterTags]="collection.tags"
+                  [editMode]="canUserEdit()"
+                  (updateTags)="updateTags(collection, $event)"
+                ></app-tag-list>
+              </div>
+              @if (canUserEdit()) {
+                <div class="cell w50">
+                  <button class="btn-sm inactive-button" (click)="deleteCollection(collection)">
+                    X
+                  </button>
+                </div>
+              }
             </div>
-            <input
-                type="date"
-                class="mc-input mb-2"
-                [(ngModel)]="filterPurchaseDate"
-            />
-
-            <!-- Filter Read -->
-            <div class="text-xs italic">Read</div>
-            <input
-                type="checkbox"
-                class="green-checkbox ml-3 mb-2"
-                [(ngModel)]="filterRead"
-                [checked]="filterRead()"
-            />
-
-            <!-- Filter Tags -->
-            <div class="mt-1 text-xs italic text-white">Tags</div>
-            <app-tag-list
-                [filterTags]="filterTags()"
-                [editMode]="true"
-                (updateTags)="filterTags.set($event)"
-            ></app-tag-list>
-
-            <button
-                class="block inactive-button mt-5 mr-auto border-solid border-2 rounded-md p-2 cursor-pointer w-fit"
-                (click)="submitFilter()"
-            >
-                Search
-            </button>
-        </div>
+          } @placeholder {
+            <div
+              style="
+                display: flex;
+                margin: 10px;
+                background-color: rgb(12, 17, 24);
+                border-radius: 5px;
+                height: 30px;
+              "
+            ></div>
+          }
+        }
+      }
     </div>
-
-    <div class="flex justify-center w-full m-4">
-        <div
-            #display_items
-            id="display_items"
-            class="w-full overflow-auto"
-            style="height: calc(100vh - 112px)"
-        >
-            @if (collections$ | async; as collections) {
-                @for (collection of collections; track $index) {
-                    @defer (on viewport) {
-                        <!-- TODO remove hardcoded color -->
-                        <div
-                            class="volume-row bg-zinc-800 hover:scale-[1.01] hover:bg-[#37373a]"
-                        >
-                            <img
-                                [src]="collection.volume.primary_cover_image"
-                                appLazyImage
-                                alt="{{
-                                    'cover image for' + collection.volume.name
-                                }}"
-                                class="cover-image cursor-pointer"
-                                (click)="
-                                    openVolumeDetails(collection.volume.isbn)
-                                "
-                                (keypress)="
-                                    openVolumeDetails(collection.volume.isbn)
-                                "
-                                tabindex="{$index}"
-                            />
-                            <div class="cell w260">
-                                <a
-                                    class="text t-wrap cursor-pointer"
-                                    (click)="
-                                        openVolumeDetails(
-                                            collection.volume.isbn
-                                        )
-                                    "
-                                    (keypress)="
-                                        openVolumeDetails(
-                                            collection.volume.isbn
-                                        )
-                                    "
-                                    tabindex="{$index}"
-                                >
-                                    {{ collection.volume.name }}
-                                </a>
-                            </div>
-                            <div class="cell w60">
-                                <div class="text al_center">
-                                    {{ collection.volume.category | titlecase }}
-                                </div>
-                            </div>
-                            <div class="cell w50">
-                                <div class="text al_center">
-                                    {{ collection.volume.volume }}
-                                </div>
-                            </div>
-                            <div class="cell w60">
-                                @if (canUserEdit()) {
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        class="text"
-                                        [value]="collection.cost"
-                                        (change)="
-                                            updateValue(
-                                                collection,
-                                                'cost',
-                                                $event
-                                            )
-                                        "
-                                    />
-                                } @else {
-                                    <div class="text al_right">
-                                        {{ collection.cost | currency }}
-                                    </div>
-                                }
-                            </div>
-                            <div class="cell w75">
-                                @if (canUserEdit()) {
-                                    <input
-                                        type="text"
-                                        class="text"
-                                        [value]="collection.store"
-                                        (change)="
-                                            updateValue(
-                                                collection,
-                                                'store',
-                                                $event
-                                            )
-                                        "
-                                    />
-                                } @else {
-                                    <div class="text al_center">
-                                        {{ collection.store }}
-                                    </div>
-                                }
-                            </div>
-                            <div class="cell w90">
-                                @if (canUserEdit()) {
-                                    <input
-                                        type="text"
-                                        class="text"
-                                        [value]="collection.purchase_date"
-                                        (change)="
-                                            updateValue(
-                                                collection,
-                                                'purchase_date',
-                                                $event
-                                            )
-                                        "
-                                    />
-                                } @else {
-                                    <div class="text al_center">
-                                        {{ collection.purchase_date }}
-                                    </div>
-                                }
-                            </div>
-                            <div class="cell w50">
-                                <input
-                                    type="checkbox"
-                                    class="green-checkbox al_center"
-                                    [checked]="collection.read"
-                                    [disabled]="!canUserEdit()"
-                                    (change)="
-                                        updateValue(collection, 'read', $event)
-                                    "
-                                />
-                            </div>
-                            <div class="cell w150 items-center">
-                                <app-tag-list
-                                    [filterTags]="collection.tags"
-                                    [editMode]="canUserEdit()"
-                                    (updateTags)="
-                                        updateTags(collection, $event)
-                                    "
-                                ></app-tag-list>
-                            </div>
-                            @if (canUserEdit()) {
-                                <div class="cell w50">
-                                    <button
-                                        class="btn-sm inactive-button"
-                                        (click)="deleteCollection(collection)"
-                                    >
-                                        X
-                                    </button>
-                                </div>
-                            }
-                        </div>
-                    } @placeholder {
-                        <div
-                            style="
-                                display: flex;
-                                margin: 10px;
-                                background-color: rgb(12, 17, 24);
-                                border-radius: 5px;
-                                height: 30px;
-                            "
-                        ></div>
-                    }
-                }
-            }
-        </div>
-    </div>
+  </div>
 </div>

@@ -18,16 +18,16 @@ export const routes: Routes = [
   {
     path: 'series',
     loadComponent: () =>
-      import('./page-components/series/series.component').then(m => m.SeriesComponent),
-    canActivate: [loggedInGuard]
+      import('./page-components/series/series.component').then(m => m.SeriesComponent)
+    // canActivate: [loggedInGuard]
   },
   {
     path: 'series/:series_id',
     loadComponent: () =>
       import('./page-components/series-details/series-details.component').then(
         m => m.SeriesDetailsComponent
-      ),
-    canActivate: [loggedInGuard]
+      )
+    // canActivate: [loggedInGuard]
   },
   {
     path: 'collection',

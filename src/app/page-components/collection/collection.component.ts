@@ -13,6 +13,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { InputTextModule } from 'primeng/inputtext';
 import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
 import { VolumeDetailsComponent } from '../../common/components/volume-details/volume-details.component';
 import { LazyImageDirective } from '../../common/directives/lazy-image/lazy-image.directive';
@@ -34,6 +35,7 @@ import { UserService } from '../../services/data/user.service';
     TitleCasePipe,
     CurrencyPipe,
     FormsModule,
+    InputTextModule,
     SearchVolumesComponent,
     TagListComponent,
     LazyImageDirective

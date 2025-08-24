@@ -3,6 +3,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, computed, ElementRef, inject, model, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { InputTextModule } from 'primeng/inputtext';
 import { map, tap } from 'rxjs';
 import { CoverImageComponent } from '../../common/components/cover-image/cover-image.component';
 import { AutofillSelectFilterComponent } from '../../common/components/filters/autofill-select-filter/autofill-select-filter.component';
@@ -19,6 +20,7 @@ import { SeriesDataService, SeriesQuery } from '../../services/data/series-data.
   imports: [
     FormsModule,
     AsyncPipe,
+    InputTextModule,
     CoverImageComponent,
     AutofillSelectFilterComponent,
     NumberRangeFilterComponent

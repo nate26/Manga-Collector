@@ -73,7 +73,11 @@ m424 -444 c11 -9 12 -17 4 -32 -16 -29 -99 -78 -133 -78 -39 0 -111 35 -136
     </svg>
   </ng-template>
   <ng-template #item let-item let-root="root">
-    <a class="p-menubar-item-link flex items-center">
+    <a
+      class="p-menubar-item-link flex items-center"
+      [routerLink]="item.path"
+      [queryParams]="item.queryParams"
+    >
       <span>{{ item.label }}</span>
       @if (item.items) {
         <i [ngClass]="['pi ml-auto', root ? 'pi-angle-down' : 'pi-angle-right']"></i>
@@ -82,10 +86,10 @@ m424 -444 c11 -9 12 -17 4 -32 -16 -29 -99 -78 -133 -78 -39 0 -111 35 -136
   </ng-template>
   <ng-template #end>
     <div class="flex items-center gap-2">
-      @if (userService.userDataIsValid()) {
-        <p-button label="Sign Out" id="sign-out" (click)="userService.logout()" />
+      @if (userDataIsValid()) {
+        <p-button label="Sign Out" id="sign-out" (click)="logout()" />
       } @else {
-        <p-button label="Login" id="log-in" (click)="callOpenLogin()" size="small" />
+        <p-button label="Login" id="log-in" (click)="openLogin()" size="small" />
       }
     </div>
   </ng-template>
