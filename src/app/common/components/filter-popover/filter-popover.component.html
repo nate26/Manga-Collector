@@ -1,0 +1,52 @@
+<div class="m-8 h-fit w-36 text-sm text-nowrap text-white">
+  <!-- Filter Name -->
+  <div class="text-xs italic">Name</div>
+  <input type="text" pInputText pSize="small" [(ngModel)]="filterName" />
+
+  <div class="text-xs italic">Store</div>
+  <select class="mc-input mb-2" [(ngModel)]="filterStore">
+    <option value="">All</option>
+    <option value="Crunchyroll">Crunchyroll</option>
+    <option value="Amazon">Amazon</option>
+  </select>
+  <div class="text-xs italic">Condition</div>
+  <select class="mc-input mb-2" [(ngModel)]="filterCondition">
+    <option value="">All</option>
+    <option value="New">New</option>
+    <option value="Used">Used</option>
+  </select>
+  <div class="text-xs italic">In Stock</div>
+  <select class="mc-input mb-2" [(ngModel)]="filterInStock">
+    <option value="">All</option>
+    <option value="In Stock">In Stock</option>
+    <option value="Backorder">Backorder</option>
+    <option value="Pre-Order">Pre-Order</option>
+    <option value="Out of Print">Out of Print</option>
+  </select>
+  <div class="text-xs italic">Promotion</div>
+  <select class="mc-input mb-2" [(ngModel)]="filterPromo">
+    @for (option of promoOptions; track option) {
+      <option [value]="option">{{ option }}</option>
+    }
+  </select>
+  <div class="text-xs italic">Type</div>
+  <select class="mc-input mb-2" [(ngModel)]="filterBundle">
+    <option value="">All</option>
+    <option [value]="false">Single Manga</option>
+    <option [value]="true">Bundle</option>
+  </select>
+  <div class="flex w-full flex-col gap-0.5">
+    <label for="onSale" class="text-xs italic">On Sale</label>
+    <p-toggle-switch #onSale [(ngModel)]="filterOnSale"></p-toggle-switch>
+  </div>
+  <div class="flex w-full flex-col gap-0.5">
+    <label for="crunchyExclusive" class="text-xs italic">Crunchyroll Exclusive</label>
+    <p-toggle-switch #crunchyExclusive [(ngModel)]="filterExclusive"></p-toggle-switch>
+  </div>
+  <button
+    class="inactive-button mt-5 mr-auto block w-fit cursor-pointer rounded-md border-2 border-solid p-2"
+    (click)="submitFilter()"
+  >
+    Search
+  </button>
+</div>

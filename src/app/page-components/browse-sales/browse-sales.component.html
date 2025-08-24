@@ -1,124 +1,71 @@
-<div class="mt-28 flex justify-between">
-  <div class="m-8 h-fit w-36 text-sm text-nowrap text-white">
-    <!-- Filter Name -->
-    <div class="text-xs italic">Name</div>
-    <input type="text" pInputText psize="small" [(ngModel)]="filterName" />
-
-    <div class="text-xs italic">Store</div>
-    <select class="mc-input mb-2" [(ngModel)]="filterStore">
-      <option value="">All</option>
-      <option value="Crunchyroll">Crunchyroll</option>
-      <option value="Amazon">Amazon</option>
-    </select>
-    <div class="text-xs italic">Condition</div>
-    <select class="mc-input mb-2" [(ngModel)]="filterCondition">
-      <option value="">All</option>
-      <option value="New">New</option>
-      <option value="Used">Used</option>
-    </select>
-    <div class="text-xs italic">In Stock</div>
-    <select class="mc-input mb-2" [(ngModel)]="filterInStock">
-      <option value="">All</option>
-      <option value="In Stock">In Stock</option>
-      <option value="Backorder">Backorder</option>
-      <option value="Pre-Order">Pre-Order</option>
-      <option value="Out of Print">Out of Print</option>
-    </select>
-    <div class="text-xs italic">Promotion</div>
-    <select class="mc-input mb-2" [(ngModel)]="filterPromo">
-      @for (option of promoOptions; track option) {
-        <option [value]="option">{{ option }}</option>
-      }
-    </select>
-    <div class="text-xs italic">Type</div>
-    <select class="mc-input mb-2" [(ngModel)]="filterBundle">
-      <option value="">All</option>
-      <option [value]="false">Single Manga</option>
-      <option [value]="true">Bundle</option>
-    </select>
-    <div class="flex w-full flex-col gap-0.5">
-      <label for="onSale" class="text-xs italic">On Sale</label>
-      <p-toggle-switch #onSale [(ngModel)]="filterOnSale"></p-toggle-switch>
-    </div>
-    <div class="flex w-full flex-col gap-0.5">
-      <label for="crunchyExclusive" class="text-xs italic">Crunchyroll Exclusive</label>
-      <p-toggle-switch #crunchyExclusive [(ngModel)]="filterExclusive"></p-toggle-switch>
-    </div>
-    <button
-      class="inactive-button mt-5 mr-auto block w-fit cursor-pointer rounded-md border-2 border-solid p-2"
-      (click)="submitFilter()"
-    >
-      Search
-    </button>
-  </div>
-  <div
-    #display_items
-    id="display_items"
-    class="w-full overflow-auto"
-    style="max-height: calc(100vh - 112px)"
-  >
-    <div class="m-auto grid w-fit grid-cols-5">
-      @for (item of items$ | async; track item.item_id; let i = $index) {
-        @defer (on viewport) {
-          <div
-            class="relative m-3 w-[12vw] cursor-pointer rounded-lg bg-cover bg-center shadow-lg transition-transform duration-300 hover:scale-105"
-            style="aspect-ratio: 1 / 1.45"
-            [style.background-image]="'url(' + item.volume.primary_cover_image + ')'"
-            (click)="openVolumeDetails(item.isbn)"
-            (keypress)="openVolumeDetails(item.isbn)"
-            tabindex="{$index}"
-          >
+<div class="m-4 flex flex-col items-center gap-4">
+  <form class="flex w-full max-w-2xl items-start gap-3">
+    <input
+      type="text"
+      pInputText
+      pSize="small"
+      [(ngModel)]="filterName"
+      placeholder="Search Volumes by Name..."
+      class="flex-1"
+    />
+    <!-- TODO icon button for advanced filter popover -->
+    <!-- todo fix form to submit on enter key -->
+    <p-button size="small" (click)="submitFilter()">Search</p-button>
+  </form>
+  <div #display_items class="mx-auto grid grid-cols-5 gap-4 max-lg:grid-cols-4 max-sm:grid-cols-2">
+    @for (item of items$ | async; track item.item_id; let i = $index) {
+      @defer (on viewport) {
+        <div
+          class="relative aspect-[1/1.45] w-40 cursor-pointer rounded-lg bg-cover bg-center shadow-lg transition-transform duration-300 hover:scale-105 max-lg:w-[calc(25vw-2rem)] max-sm:w-[calc(50vw-2rem)]"
+          [style.background-image]="'url(' + item.volume.primary_cover_image + ')'"
+          (click)="openVolumeDetails(item.isbn)"
+          (keypress)="openVolumeDetails(item.isbn)"
+          tabindex="{$index}"
+        >
+          <div class="absolute top-1 right-1 flex flex-col items-end gap-1">
             @if (item.promotion_percentage) {
-              <span
-                class="absolute top-1 right-1 rounded-md border-2 border-green-500 bg-[#2f4f4fd4] pr-1 pl-1 font-semibold text-green-300 shadow-lg"
-              >
+              <p-tag class="w-fit border-green-500 bg-[#2f4f4fd4] font-semibold text-green-300">
                 {{ item.promotion_percentage }}% off
-              </span>
+              </p-tag>
             }
             @switch (item.stock_status) {
               @case ('Pre-Order') {
-                <span
-                  class="absolute right-1 bottom-1 rounded-md border-2 border-orange-500 bg-[#4f3f2fd4] pr-1 pl-1 font-semibold text-orange-300 shadow-lg"
-                >
+                <p-tag class="w-fit border-orange-500 bg-[#4f3f2fd4] font-semibold text-orange-300">
                   Pre-Order
-                </span>
+                </p-tag>
               }
               @case ('Backorder') {
-                <span
-                  class="absolute right-1 bottom-1 rounded-md border-2 border-violet-500 bg-[#422f4fd4] pr-1 pl-1 font-semibold text-violet-300 shadow-lg"
-                >
+                <p-tag class="w-fit border-violet-500 bg-[#422f4fd4] font-semibold text-violet-300">
                   Backorder
-                </span>
+                </p-tag>
               }
               @case ('Out of Print') {
-                <span
-                  class="absolute right-1 bottom-1 rounded-md border-2 border-gray-500 bg-[#4d4d4dd4] pr-1 pl-1 font-semibold text-gray-300 shadow-lg"
-                >
+                <p-tag class="w-fit border-gray-500 bg-[#4d4d4dd4] font-semibold text-gray-300">
                   Out of Print
-                </span>
+                </p-tag>
               }
             }
-            <app-volume-cover-text [title]="item.volume.display_name" />
           </div>
-        } @placeholder {
-          <div class="h-60 rounded-lg shadow-lg" style="aspect-ratio: 1 / 1.45"></div>
-        }
+          <!-- TODO can this be removed? -->
+          <div class="peer h-full w-full opacity-0"></div>
+          <div
+            class="text-shadow absolute bottom-0 h-fit w-full bg-[#00000077] stroke-black p-1 pt-8 text-left text-base opacity-100 shadow-black transition-opacity duration-300 select-none peer-hover:opacity-0 hover:opacity-0"
+          >
+            {{ item.volume.display_name }}
+          </div>
+        </div>
+      } @placeholder {
+        <p-skeleton
+          class="aspect-[1/1.45] w-40 max-lg:w-[calc(25vw-2rem)] max-sm:w-[calc(50vw-2rem)]"
+          height="100%"
+          borderRadius="var(--radius-lg)"
+        ></p-skeleton>
       }
-    </div>
-    <div class="m-8 flex justify-center gap-3">
-      <button
-        class="active-button mr-1 w-fit cursor-pointer rounded-md border-2 border-solid p-2"
-        (click)="previous()"
-        [disabled]="disablePrevious()"
-      >
-        Previous
-      </button>
-      <button
-        class="active-button ml-1 w-fit cursor-pointer rounded-md border-2 border-solid p-2"
-        (click)="next()"
-      >
-        Next
-      </button>
-    </div>
+    }
+  </div>
+  <div class="my-4 flex justify-center gap-3">
+    <!-- TODO pagination -->
+    <p-button size="small" (click)="previous()" [disabled]="disablePrevious()">Previous</p-button>
+    <p-button size="small" (click)="next()">Next</p-button>
   </div>
 </div>

@@ -32,7 +32,8 @@ export class HomeComponent {
         order_by: 'name',
         limit: 100,
         store: 'Crunchyroll',
-        condition: 'New'
+        condition: 'New',
+        on_sale: true
       }
     },
     {

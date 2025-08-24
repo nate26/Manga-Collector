@@ -3,16 +3,17 @@ import { AsyncPipe } from '@angular/common';
 import { Component, computed, ElementRef, inject, model, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TagModule } from 'primeng/tag';
 import { switchMap, tap } from 'rxjs';
 import { VolumeDetailsComponent } from '../../common/components/volume-details/volume-details.component';
-import { VolumeCoverTextComponent } from '../../common/volume-cover-text/volume-cover-text.component';
 import { SaleDataService, ShopQuery } from '../../services/data/sale-data.service';
 
 @Component({
   selector: 'app-browse-sales',
-  imports: [AsyncPipe, FormsModule, InputTextModule, ToggleSwitchModule, VolumeCoverTextComponent],
+  imports: [AsyncPipe, FormsModule, InputTextModule, ButtonModule, TagModule, SkeletonModule],
   templateUrl: './browse-sales.component.html',
   styleUrl: './browse-sales.component.css'
 })
@@ -24,62 +25,23 @@ export class BrowseSalesComponent {
 
   readonly displayItems = viewChild.required<ElementRef>('display_items');
 
-  // SELECT distinct(unnest(themes)) from series
-  promoOptions = [
-    '',
-    'Black Friday',
-    'Holiday Sale Week 3',
-    "Crunchyroll's Price",
-    'Solo Leveling Sale',
-    'Free Crunchyroll Pin with $150+ Purchase!',
-    'Bundle Price',
-    'Clearance - Final Sale'
-  ];
-
   orderBy = model('name');
   offset = signal(0);
   disablePrevious = computed(() => this.offset() === 0);
-
   filterName = model<string>();
-  filterStore = model('Crunchyroll');
-  filterCondition = model('New');
-  filterInStock = model('In Stock');
-  filterPromo = model<string>('Black Friday');
-  filterOnSale = model(true);
-  filterExclusive = model(false);
-  filterBundle = model<boolean | string>();
 
-  filter = computed(
-    () =>
-      ({
-        order_by: this.orderBy(),
-        limit: 100,
-        offset: this.offset(),
-        name: this.filterName(),
-        store: this.filterStore(),
-        condition: this.filterCondition(),
-        stock: this.filterInStock(),
-        promo: this.filterPromo(),
-        on_sale: this.filterOnSale(),
-        exclusive: this.filterExclusive(),
-        bundle: this.filterBundle()
-      }) as ShopQuery
-  );
+  filter = computed<ShopQuery>(() => ({
+    order_by: this.orderBy(),
+    limit: 100,
+    offset: this.offset(),
+    name: this.filterName()
+  }));
 
   items$ = this._activatedRoute.queryParams.pipe(
     tap(query => {
       this.orderBy.set(query['order_by'] || 'name');
       this.offset.set(+query['offset'] || 0);
       this.filterName.set(query['name'] || '');
-      this.filterStore.set(query['store'] || '');
-      this.filterCondition.set(query['condition'] || '');
-      this.filterInStock.set(query['stock'] || '');
-      this.filterPromo.set(query['promo'] || '');
-      this.filterOnSale.set(query['on_sale'] === 'true');
-      this.filterExclusive.set(query['exclusive'] === 'true');
-      this.filterBundle.set(
-        query['bundle'] === 'true' ? true : query['bundle'] === 'false' ? false : ''
-      );
     }),
     switchMap(query => this._saleDataService.getSaleVolumes$(query)),
     tap(() =>
@@ -99,11 +61,6 @@ export class BrowseSalesComponent {
     });
   }
 
-  submitFilter() {
-    this.offset.set(0);
-    this.routeByQuery();
-  }
-
   next() {
     // TODO check if over max
     this.offset.update(offset => offset + 100);
@@ -117,5 +74,10 @@ export class BrowseSalesComponent {
 
   openVolumeDetails(isbn: string) {
     this._dialog.open(VolumeDetailsComponent, { data: isbn });
+  }
+
+  submitFilter() {
+    this.offset.set(0);
+    this.routeByQuery();
   }
 }
