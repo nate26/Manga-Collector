@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { LoginService } from '../../app/services/login.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { LoginComponent } from '../../app/home/login/login.component';
 import { Subject } from 'rxjs';
+import { LoginComponent } from '../../app/common/login/login.component';
+import { LoginService } from '../../app/services/login.service';
 
 describe('LoginService', () => {
   let service: LoginService;

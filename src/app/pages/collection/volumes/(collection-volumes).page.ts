@@ -15,18 +15,18 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { BehaviorSubject, combineLatest, map, switchMap, tap } from 'rxjs';
-import { VolumeDetailsComponent } from '../../common/components/volume-details/volume-details.component';
-import { LazyImageDirective } from '../../common/directives/lazy-image/lazy-image.directive';
-import { SearchVolumesComponent } from '../../common/search-volumes/search-volumes.component';
-import { TagListComponent } from '../../common/tag-list/tag-list.component';
+import { VolumeDetailsComponent } from '../../../common/components/volume-details/volume-details.component';
+import { LazyImageDirective } from '../../../common/directives/lazy-image/lazy-image.directive';
+import { SearchVolumesComponent } from '../../../common/search-volumes/search-volumes.component';
+import { TagListComponent } from '../../../common/tag-list/tag-list.component';
 import {
   CollectionDataService,
   CollectionInput,
   CollectionOutput,
-  CollectionQuery,
-  Volume
-} from '../../services/data/collection-data.service';
-import { UserService } from '../../services/data/user.service';
+  CollectionQuery
+} from '../../../services/data/collection-data.service';
+import { UserService } from '../../../services/data/user.service';
+import { Volume } from '../../../services/data/volume.type';
 
 @Component({
   selector: 'app-collection',
@@ -40,10 +40,10 @@ import { UserService } from '../../services/data/user.service';
     TagListComponent,
     LazyImageDirective
   ],
-  templateUrl: './collection.component.html',
-  styleUrl: './collection.component.css'
+  templateUrl: './(collection-volumes).page.html',
+  styleUrl: './(collection-volumes).page.css'
 })
-export class CollectionComponent {
+export class CollectionVolumesPage {
   private readonly _router = inject(Router);
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _dialog = inject(Dialog);

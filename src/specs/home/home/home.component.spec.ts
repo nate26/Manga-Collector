@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HomeComponent } from '../../../app/home/home/home.component';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
+import { HomeComponent } from '../../../app/components/header/header.component';
 import { UserService } from '../../../app/services/data/user.service';
 import { LoginService } from '../../../app/services/login.service';
-import { of } from 'rxjs';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;

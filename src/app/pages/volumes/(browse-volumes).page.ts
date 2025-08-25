@@ -14,10 +14,9 @@ import { SaleDataService, ShopQuery } from '../../services/data/sale-data.servic
 @Component({
   selector: 'app-browse-sales',
   imports: [AsyncPipe, FormsModule, InputTextModule, ButtonModule, TagModule, SkeletonModule],
-  templateUrl: './browse-sales.component.html',
-  styleUrl: './browse-sales.component.css'
+  templateUrl: './(browse-volumes).page.html'
 })
-export class BrowseSalesComponent {
+export class BrowseVolumesPage {
   private readonly _router = inject(Router);
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _dialog = inject(Dialog);

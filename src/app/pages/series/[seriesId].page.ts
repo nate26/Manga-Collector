@@ -22,10 +22,10 @@ import {
     VolumeCoverTextComponent,
     CoverImageComponent
   ],
-  templateUrl: './series-details.component.html',
-  styleUrl: './series-details.component.css'
+  templateUrl: './[seriesId].page.html',
+  styleUrl: './[seriesId].page.css'
 })
-export class SeriesDetailsComponent {
+export class SeriesIdPage {
   private readonly _route = inject(Router);
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _dialog = inject(Dialog);

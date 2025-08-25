@@ -1,9 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { catchError, of, throwError, switchMap, EMPTY, pipe, map, debounceTime } from 'rxjs';
-import { UserService } from './user.service';
-import { APIQueryService, Query } from './api-query.service';
 import { HttpClient } from '@angular/common/http';
-import { UserDataPartial } from '../../interfaces/iUserData.type';
+import { Injectable, inject } from '@angular/core';
+import { EMPTY, catchError, debounceTime, map, of, pipe, switchMap, throwError } from 'rxjs';
+import { APIQueryService, Query } from './api-query.service';
+import { UserService } from './user.service';
+import { UserDataPartial } from './user.type';
 
 export type Volume = {
   isbn: string;

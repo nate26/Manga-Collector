@@ -1,3 +1,4 @@
+import { signal, WritableSignal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
   ActivatedRouteSnapshot,
@@ -5,11 +6,10 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
-import { loggedInGuard } from '../../app/guards/logged-in.guard';
+import { Observable, of } from 'rxjs';
+import { loggedInGuard } from '../../app/routing/guards/logged-in.guard';
 import { UserData, UserDataPartial, UserService } from '../../app/services/data/user.service';
 import { LoginService } from '../../app/services/login.service';
-import { signal, WritableSignal } from '@angular/core';
-import { Observable, of } from 'rxjs';
 
 describe('loggedInGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>

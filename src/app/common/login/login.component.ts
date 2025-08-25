@@ -12,12 +12,12 @@ import {
   Validators
 } from '@angular/forms';
 import { debounceTime, iif, map } from 'rxjs';
-import { UserData } from '../../interfaces/iUserData.type';
 import {
   LOGIN_PATH_CONTEXT,
   SIGNUP_PATH_CONTEXT,
   UserService
 } from '../../services/data/user.service';
+import { UserData } from '../../services/data/user.type';
 
 @Component({
   selector: 'app-login',

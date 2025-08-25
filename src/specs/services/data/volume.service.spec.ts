@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
-import { VolumeService } from '../../../app/services/data/volume.service';
-import { Apollo, QueryRef } from 'apollo-angular';
-import { UserService } from '../../../app/services/data/user.service';
-import { of } from 'rxjs';
-import { ApolloError, ApolloQueryResult, OperationVariables } from '@apollo/client/core';
-import { IGQLAllRecord, IGQLGetRecord } from '../../../app/interfaces/iGQLRequests.interface';
-import { IVolume } from '../../../app/interfaces/iVolume.interface';
 import { signal } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { ApolloError, ApolloQueryResult, OperationVariables } from '@apollo/client/core';
+import { Apollo, QueryRef } from 'apollo-angular';
+import { of } from 'rxjs';
+import { IGQLAllRecord, IGQLGetRecord } from '../../../app/interfaces/iGQLRequests.interface';
+import { UserService } from '../../../app/services/data/user.service';
+import { VolumeService } from '../../../app/services/data/volume.service';
+import { IVolume } from '../../../app/services/data/volume.type';
 
 describe('VolumeService', () => {
   let service: VolumeService;

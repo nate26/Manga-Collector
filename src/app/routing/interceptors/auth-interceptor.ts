@@ -2,7 +2,7 @@ import { HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, iif, map, of, switchMap, tap } from 'rxjs';
 import { REST_SERVER_URL } from '../../app.config';
-import { UserData } from '../../interfaces/iUserData.type';
+import { UserData } from '../../services/data/user.type';
 import { UserService } from '../data/user.service';
 import { LoginService } from '../login.service';
 

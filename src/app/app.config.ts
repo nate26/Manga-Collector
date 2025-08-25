@@ -5,7 +5,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
-import { routes } from './app.routes';
+import { routes } from './routing/app.routes';
 
 export const REST_SERVER_URL = 'http://localhost:8050';
 

@@ -4,6 +4,7 @@ import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-inter
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, debounceTime, filter, map, startWith } from 'rxjs';
 import { VolumeService } from '../../services/data/volume.service';
+import { Volume } from '../../services/data/volume.type';
 
 @Component({
   selector: 'app-search-volumes',
@@ -14,7 +15,7 @@ import { VolumeService } from '../../services/data/volume.service';
 export class SearchVolumesComponent {
   private readonly _volumeService = inject(VolumeService);
 
-  readonly selectVolume = output<any>();
+  readonly selectVolume = output<Volume>();
   protected readonly disableSearchOnSelect = outputToObservable(this.selectVolume)
     .pipe(takeUntilDestroyed())
     .subscribe(() => this.searchActive.set(false));

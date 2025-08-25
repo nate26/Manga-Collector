@@ -8,12 +8,11 @@ import { UserService } from '../../services/data/user.service';
 import { LoginService } from '../../services/login.service';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-header',
   imports: [NgClass, RouterModule, ButtonModule, MenubarModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  templateUrl: './header.component.html'
 })
-export class HomeComponent {
+export class HeaderComponent {
   #loginService = inject(LoginService);
   #userService = inject(UserService);
 

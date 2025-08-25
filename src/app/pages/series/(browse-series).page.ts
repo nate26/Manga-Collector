@@ -25,10 +25,10 @@ import { SeriesDataService, SeriesQuery } from '../../services/data/series-data.
     AutofillSelectFilterComponent,
     NumberRangeFilterComponent
   ],
-  templateUrl: './series.component.html',
-  styleUrl: './series.component.css'
+  templateUrl: './(browse-series).page.html',
+  styleUrl: './(browse-series).page.css'
 })
-export class SeriesComponent {
+export class BrowseSeriesPage {
   private readonly _router = inject(Router);
   private readonly _activatedRoute = inject(ActivatedRoute);
   private readonly _dialog = inject(Dialog);

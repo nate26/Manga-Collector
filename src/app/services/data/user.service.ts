@@ -14,7 +14,7 @@ import {
   tap,
   throwError
 } from 'rxjs';
-import { UserData, UserDataPartial } from '../../interfaces/iUserData.type';
+import { UserData, UserDataPartial } from './user.type';
 
 export const LOGIN_PATH_CONTEXT = {
   path: '/login',

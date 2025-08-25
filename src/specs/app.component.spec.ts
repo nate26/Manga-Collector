@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from '../app/app.component';
-import { HomeComponent } from '../app/home/home/home.component';
+import { HomeComponent } from '../app/components/header/header.component';
 import { CollectionComponent } from '../app/page-components/collection/collection.component';
 
 describe('AppComponent', () => {

@@ -1,13 +1,13 @@
+import { inject } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivateFn,
   Router,
   RouterStateSnapshot
 } from '@angular/router';
-import { UserService } from '../services/data/user.service';
-import { inject } from '@angular/core';
-import { LoginService } from '../services/login.service';
 import { filter, map, tap } from 'rxjs';
+import { UserService } from '../../services/data/user.service';
+import { LoginService } from '../../services/login.service';
 
 const _navigateToPage = (router: Router, url: string, username: string | null) => {
   if (url === '/collection' && username) {

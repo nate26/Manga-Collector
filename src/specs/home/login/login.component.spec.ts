@@ -1,14 +1,14 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { LoginComponent } from '../../../app/home/login/login.component';
 import { DestroyRef } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { of, throwError } from 'rxjs';
+import { LoginComponent } from '../../../app/common/login/login.component';
 import {
   LOGIN_PATH_CONTEXT,
   SIGNUP_PATH_CONTEXT,
   UserData,
   UserService
 } from '../../../app/services/data/user.service';
-import { of, throwError } from 'rxjs';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;

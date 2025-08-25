@@ -1,8 +1,8 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LoginComponent } from '../home/login/login.component';
-import { UserData } from '../interfaces/iUserData.type';
+import { LoginComponent } from '../common/login/login.component';
+import { UserData } from './data/user.type';
 
 @Injectable({
   providedIn: 'root'
